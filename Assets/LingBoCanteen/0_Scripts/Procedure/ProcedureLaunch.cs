@@ -1,101 +1,82 @@
-using GameFramework.Event;
-using GameFramework.Fsm;
-using GameFramework.Procedure;
+
+using GameFramework.Localization;
+using System;
 using UnityGameFramework.Runtime;
+using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
 namespace LingBoCanteen
 {
     /// <summary>
     /// 启动流程。
-    /// 职责：初始化 DataNode 默认值，加载 DefaultConfig，完成后跳转 Preload。
     /// </summary>
     public class ProcedureLaunch : ProcedureBase
     {
-        private bool m_ConfigLoaded = false;
-
-        protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
+        protected override void OnEnter(ProcedureOwner procedureOwner)
         {
             base.OnEnter(procedureOwner);
 
-            // 订阅 Config 加载事件
-            GameEntry.Event.Subscribe(LoadConfigSuccessEventArgs.EventId, OnConfigLoaded);
-            GameEntry.Event.Subscribe(LoadConfigFailureEventArgs.EventId, OnConfigFailed);
+            // 语言配置：设置当前使用的语言，如果不设置，则默认使用操作系统语言
+            InitLanguageSettings();
 
-            // 初始化所有 DataNode 默认值
-            InitDataNodes();
-
-            // 加载默认配置表
-            GameEntry.Config.ReadData(AssetUtility.GetConfigAsset("DefaultConfig"));
+            // 声音配置：根据用户配置数据，设置即将使用的声音选项
+            InitSoundSettings();
         }
 
-        protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
+        protected override void OnUpdate(ProcedureOwner procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
-            if (m_ConfigLoaded)
+            // 运行一帧即切换到 Splash 展示流程
+            ChangeState<ProcedureSplash>(procedureOwner);
+        }
+
+        private void InitLanguageSettings()
+        {
+            if (GameEntry.Base.EditorResourceMode && GameEntry.Base.EditorLanguage != Language.Unspecified)
             {
-                ChangeState<ProcedurePreload>(procedureOwner);
+                // 编辑器资源模式直接使用 Inspector 上设置的语言
+                return;
             }
+
+            Language language = GameEntry.Localization.Language;
+            if (GameEntry.Setting.HasSetting(Constant.Setting.Language))
+            {
+                try
+                {
+                    string languageString = GameEntry.Setting.GetString(Constant.Setting.Language);
+                    language = (Language)Enum.Parse(typeof(Language), languageString);
+                }
+                catch
+                {
+                }
+            }
+
+            if (language != Language.English
+                && language != Language.ChineseSimplified
+                && language != Language.ChineseTraditional
+                && language != Language.Korean)
+            {
+                // 若是暂不支持的语言，则使用英语
+                language = Language.English;
+
+                GameEntry.Setting.SetString(Constant.Setting.Language, language.ToString());
+                GameEntry.Setting.Save();
+            }
+
+            GameEntry.Localization.Language = language;
+            Log.Info("Init language settings complete, current language is '{0}'.", language.ToString());
         }
 
-        protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
+
+        private void InitSoundSettings()
         {
-            GameEntry.Event.Unsubscribe(LoadConfigSuccessEventArgs.EventId, OnConfigLoaded);
-            GameEntry.Event.Unsubscribe(LoadConfigFailureEventArgs.EventId, OnConfigFailed);
-            base.OnLeave(procedureOwner, isShutdown);
-        }
-
-        private void InitDataNodes()
-        {
-            // 玩家永久属性
-            GameEntry.DataNode.SetData("Player.San", (VarInt32)GameConst.InitSan);
-            GameEntry.DataNode.SetData("Player.Gold", (VarInt32)GameConst.InitGold);
-            GameEntry.DataNode.SetData("Player.HaveRecruitHelper", (VarBoolean)false);
-
-            // 当前天数
-            GameEntry.DataNode.SetData("DayCurrent.Value", (VarInt32)1);
-            GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)0); // 0=市场 1=营业 2=结算
-            GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)false);
-
-            // 区域/电梯
-            GameEntry.DataNode.SetData("Area.CurrentType", (VarInt32)0); // 0=人间
-            GameEntry.DataNode.SetData("Area.HasMovedBeforeDay15", (VarBoolean)false);
-            GameEntry.DataNode.SetData("Area.ElevatorUsedOnce", (VarBoolean)false);
-
-            // 当日营业（每天重置）
-            GameEntry.DataNode.SetData("Business.TodayRevenue", (VarInt32)0);
-            GameEntry.DataNode.SetData("Business.TodayServeCustomerCount", (VarInt32)0);
-            GameEntry.DataNode.SetData("Business.WaitingCustomerNum", (VarInt32)0);
-            GameEntry.DataNode.SetData("Business.HasUnservedOrder", (VarBoolean)false);
-
-            // 库存
-            GameEntry.DataNode.SetData("Storage.SeasoningLeftCount", (VarInt32)99);
-
-            // 剧情 NPC 对话次数
-            GameEntry.DataNode.SetData("Story.NPC.GeniusTalkCount", (VarInt32)0);
-            GameEntry.DataNode.SetData("Story.NPC.VIPTalkCount", (VarInt32)0);
-            GameEntry.DataNode.SetData("Story.NPC.DeserterTalkCount", (VarInt32)0);
-
-            // 怀疑/剧情状态
-            GameEntry.DataNode.SetData("Story.Suspect.CardNum", (VarInt32)0);
-            GameEntry.DataNode.SetData("Story.Suspect.TriggerHiddenPlot", (VarBoolean)false);
-            GameEntry.DataNode.SetData("Story.Suspect.PlotInterrupt", (VarBoolean)false);
-            GameEntry.DataNode.SetData("Story.PlotStage", (VarInt32)0);
-            GameEntry.DataNode.SetData("Story.IsAllStoryFinish", (VarBoolean)false);
-        }
-
-        private void OnConfigLoaded(object sender, GameEventArgs e)
-        {
-            LoadConfigSuccessEventArgs args = (LoadConfigSuccessEventArgs)e;
-            Log.Info("Config loaded: {0}", args.ConfigAssetName);
-            m_ConfigLoaded = true;
-        }
-
-        private void OnConfigFailed(object sender, GameEventArgs e)
-        {
-            LoadConfigFailureEventArgs args = (LoadConfigFailureEventArgs)e;
-            Log.Fatal("Load config failure, asset name '{0}', error message '{1}'.",
-                args.ConfigAssetName, args.ErrorMessage);
+            GameEntry.Sound.Mute("Music", GameEntry.Setting.GetBool(Constant.Setting.MusicMuted, false));
+            GameEntry.Sound.SetVolume("Music", GameEntry.Setting.GetFloat(Constant.Setting.MusicVolume, 0.3f));
+            GameEntry.Sound.Mute("Sound", GameEntry.Setting.GetBool(Constant.Setting.SoundMuted, false));
+            GameEntry.Sound.SetVolume("Sound", GameEntry.Setting.GetFloat(Constant.Setting.SoundVolume, 1f));
+            GameEntry.Sound.Mute("UISound", GameEntry.Setting.GetBool(Constant.Setting.UISoundMuted, false));
+            GameEntry.Sound.SetVolume("UISound", GameEntry.Setting.GetFloat(Constant.Setting.UISoundVolume, 1f));
+            Log.Info("Init sound settings complete.");
         }
     }
 }

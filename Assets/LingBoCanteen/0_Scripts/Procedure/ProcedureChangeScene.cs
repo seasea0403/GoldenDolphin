@@ -81,7 +81,7 @@ namespace LingBoCanteen
             }
             else
             {
-                ChangeState<ProcedureMain>(procedureOwner);
+                ChangeState<ProcedureGame>(procedureOwner);
             }
         }
 

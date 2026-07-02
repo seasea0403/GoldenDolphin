@@ -1,7 +1,8 @@
+using GameFramework;
 using GameFramework.Event;
-using GameFramework.Fsm;
-using GameFramework.Procedure;
+using GameFramework.Resource;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityGameFramework.Runtime;
 using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
@@ -10,7 +11,7 @@ namespace LingBoCanteen
     /// <summary>
     /// 预加载流程。
     /// 职责：依次加载所有 DataTable（Ingredient/Dish/Day/Guest/Scene/UIForm/Music/Sound/UISound），
-    ///       全部完成后跳转 Menu。
+    ///    
     /// </summary>
     public class ProcedurePreload : ProcedureBase
     {
@@ -83,7 +84,7 @@ namespace LingBoCanteen
 
 
             // Preload fonts
-            //LoadFont("MainFont");
+            LoadFont("MainFont");
         }
 
         private void LoadConfig(string configName)
@@ -98,13 +99,6 @@ namespace LingBoCanteen
             string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, false);
             m_LoadedFlag.Add(dataTableAssetName, false);
             GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, this);
-        }
-
-        private void LoadDictionary(string dictionaryName)
-        {
-            string dictionaryAssetName = AssetUtility.GetDictionaryAsset(dictionaryName, false);
-            m_LoadedFlag.Add(dictionaryAssetName, false);
-            GameEntry.Localization.ReadData(dictionaryAssetName, this);
         }
 
         private void LoadFont(string fontName)
