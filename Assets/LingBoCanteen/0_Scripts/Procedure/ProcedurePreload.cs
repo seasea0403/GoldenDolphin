@@ -3,6 +3,7 @@ using GameFramework.Fsm;
 using GameFramework.Procedure;
 using System.Collections.Generic;
 using UnityGameFramework.Runtime;
+using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
 namespace LingBoCanteen
 {
@@ -29,78 +30,146 @@ namespace LingBoCanteen
 
         private readonly Dictionary<string, bool> m_LoadedFlag = new Dictionary<string, bool>();
 
-        protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
+        protected override void OnEnter(ProcedureOwner procedureOwner)
         {
             base.OnEnter(procedureOwner);
 
-            GameEntry.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, OnDataTableLoaded);
-            GameEntry.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, OnDataTableFailed);
+            GameEntry.Event.Subscribe(LoadConfigSuccessEventArgs.EventId, OnLoadConfigSuccess);
+            GameEntry.Event.Subscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
+            GameEntry.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
+            GameEntry.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
 
             m_LoadedFlag.Clear();
-            foreach (string tableName in DataTableNames)
-            {
-                m_LoadedFlag[tableName] = false;
-                GameEntry.DataTable.LoadDataTable(tableName, AssetUtility.GetDataTableAsset(tableName, false), this);
-            }
+
+            PreloadResources();
         }
 
-        protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
+        protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
         {
-            base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+            GameEntry.Event.Unsubscribe(LoadConfigSuccessEventArgs.EventId, OnLoadConfigSuccess);
+            GameEntry.Event.Unsubscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
+            GameEntry.Event.Unsubscribe(LoadDataTableSuccessEventArgs.EventId, OnLoadDataTableSuccess);
+            GameEntry.Event.Unsubscribe(LoadDataTableFailureEventArgs.EventId, OnLoadDataTableFailure);
 
-            if (IsAllLoaded())
-            {
-                ChangeState<ProcedureMenu>(procedureOwner);
-            }
-        }
-
-        protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
-        {
-            GameEntry.Event.Unsubscribe(LoadDataTableSuccessEventArgs.EventId, OnDataTableLoaded);
-            GameEntry.Event.Unsubscribe(LoadDataTableFailureEventArgs.EventId, OnDataTableFailed);
             base.OnLeave(procedureOwner, isShutdown);
         }
 
-        private bool IsAllLoaded()
+        protected override void OnUpdate(ProcedureOwner procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
-            foreach (var kv in m_LoadedFlag)
+            base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+
+            foreach (KeyValuePair<string, bool> loadedFlag in m_LoadedFlag)
             {
-                if (!kv.Value) return false;
+                if (!loadedFlag.Value)
+                {
+                    return;
+                }
             }
-            return m_LoadedFlag.Count > 0;
+
+            procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Menu"));
+            ChangeState<ProcedureChangeScene>(procedureOwner);
         }
 
-        private void OnDataTableLoaded(object sender, GameEventArgs e)
+        private void PreloadResources()
         {
-            LoadDataTableSuccessEventArgs args = (LoadDataTableSuccessEventArgs)e;
-            // UserData 为 ProcedurePreload 自身，排除其他流程触发的同名事件
-            if (args.UserData != this) return;
+            // Preload configs
+            LoadConfig("DefaultConfig");
 
-            // 从路径提取表名（取不含扩展名的文件名末段）
-            string tableName = GetTableNameFromAssetName(args.DataTableAssetName);
-            if (m_LoadedFlag.ContainsKey(tableName))
+            // Preload data tables
+            foreach (string dataTableName in DataTableNames)
             {
-                m_LoadedFlag[tableName] = true;
-                Log.Info("DataTable '{0}' loaded.", tableName);
+                LoadDataTable(dataTableName);
             }
+
+
+            // Preload fonts
+            //LoadFont("MainFont");
         }
 
-        private void OnDataTableFailed(object sender, GameEventArgs e)
+        private void LoadConfig(string configName)
         {
-            LoadDataTableFailureEventArgs args = (LoadDataTableFailureEventArgs)e;
-            if (args.UserData != this) return;
-
-            Log.Fatal("Load data table failure, asset name '{0}', error message '{1}'.",
-                args.DataTableAssetName, args.ErrorMessage);
+            string configAssetName = AssetUtility.GetConfigAsset(configName, false);
+            m_LoadedFlag.Add(configAssetName, false);
+            GameEntry.Config.ReadData(configAssetName, this);
         }
 
-        private static string GetTableNameFromAssetName(string assetName)
+        private void LoadDataTable(string dataTableName)
         {
-            // assetName 格式例: "Assets/LingBoCanteen/Datatables/Ingredient.bytes"
-            int lastSlash = assetName.LastIndexOf('/');
-            string fileName = lastSlash >= 0 ? assetName.Substring(lastSlash + 1) : assetName;
-            int dotIndex = fileName.LastIndexOf('.');
-            return dotIndex >= 0 ? fileName.Substring(0, dotIndex) : fileName;
+            string dataTableAssetName = AssetUtility.GetDataTableAsset(dataTableName, false);
+            m_LoadedFlag.Add(dataTableAssetName, false);
+            GameEntry.DataTable.LoadDataTable(dataTableName, dataTableAssetName, this);
         }
+
+        private void LoadDictionary(string dictionaryName)
+        {
+            string dictionaryAssetName = AssetUtility.GetDictionaryAsset(dictionaryName, false);
+            m_LoadedFlag.Add(dictionaryAssetName, false);
+            GameEntry.Localization.ReadData(dictionaryAssetName, this);
+        }
+
+        private void LoadFont(string fontName)
+        {
+            m_LoadedFlag.Add(Utility.Text.Format("Font.{0}", fontName), false);
+            GameEntry.Resource.LoadAsset(AssetUtility.GetFontAsset(fontName), Constant.AssetPriority.FontAsset, new LoadAssetCallbacks(
+                (assetName, asset, duration, userData) =>
+                {
+                    m_LoadedFlag[Utility.Text.Format("Font.{0}", fontName)] = true;
+                    UGuiForm.SetMainFont((Font)asset);
+                    Log.Info("Load font '{0}' OK.", fontName);
+                },
+
+                (assetName, status, errorMessage, userData) =>
+                {
+                    Log.Error("Can not load font '{0}' from '{1}' with error message '{2}'.", fontName, assetName, errorMessage);
+                }));
+        }
+
+        private void OnLoadConfigSuccess(object sender, GameEventArgs e)
+        {
+            LoadConfigSuccessEventArgs ne = (LoadConfigSuccessEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            m_LoadedFlag[ne.ConfigAssetName] = true;
+            Log.Info("Load config '{0}' OK.", ne.ConfigAssetName);
+        }
+
+        private void OnLoadConfigFailure(object sender, GameEventArgs e)
+        {
+            LoadConfigFailureEventArgs ne = (LoadConfigFailureEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            Log.Error("Can not load config '{0}' from '{1}' with error message '{2}'.", ne.ConfigAssetName, ne.ConfigAssetName, ne.ErrorMessage);
+        }
+
+        private void OnLoadDataTableSuccess(object sender, GameEventArgs e)
+        {
+            LoadDataTableSuccessEventArgs ne = (LoadDataTableSuccessEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            m_LoadedFlag[ne.DataTableAssetName] = true;
+            Log.Info("Load data table '{0}' OK.", ne.DataTableAssetName);
+        }
+
+        private void OnLoadDataTableFailure(object sender, GameEventArgs e)
+        {
+            LoadDataTableFailureEventArgs ne = (LoadDataTableFailureEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            Log.Error("Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableAssetName, ne.DataTableAssetName, ne.ErrorMessage);
+        }
+
+    
     }
 }
