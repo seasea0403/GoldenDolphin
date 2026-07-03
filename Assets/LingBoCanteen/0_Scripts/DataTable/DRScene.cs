@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2026-07-02 16:53:05.005
+// 生成时间：2026-07-03 14:39:52.676
 //------------------------------------------------------------
 
 using GameFramework;
@@ -16,7 +16,7 @@ using System.Text;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace LingBoCanteen
+namespace StarForce
 {
     /// <summary>
     /// 场景配置表。
@@ -39,16 +39,7 @@ namespace LingBoCanteen
         /// <summary>
         /// 获取资源名称。
         /// </summary>
-        public string AssetName
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取背景音乐编号。
-        /// </summary>
-        public int BackgroundMusicId
+        public string SceneAssetName
         {
             get;
             private set;
@@ -66,8 +57,9 @@ namespace LingBoCanteen
             index++;
             m_Id = int.Parse(columnStrings[index++]);
             index++;
-            AssetName = columnStrings[index++];
-            BackgroundMusicId = int.Parse(columnStrings[index++]);
+            SceneAssetName = columnStrings[index++];
+            index++;
+            index++;
 
             GeneratePropertyArray();
             return true;
@@ -80,8 +72,7 @@ namespace LingBoCanteen
                 using (BinaryReader binaryReader = new BinaryReader(memoryStream, Encoding.UTF8))
                 {
                     m_Id = binaryReader.Read7BitEncodedInt32();
-                    AssetName = binaryReader.ReadString();
-                    BackgroundMusicId = binaryReader.Read7BitEncodedInt32();
+                    SceneAssetName = binaryReader.ReadString();
                 }
             }
 
