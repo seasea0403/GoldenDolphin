@@ -15,11 +15,13 @@ namespace LingBoCanteen
     /// </summary>
     public class ProcedureLaunch : ProcedureBase
     {
+        private const string DishIconsFlagKey = "DishIcons";
+
         // 需要加载的所有数据表名称
         private static readonly string[] DataTableNames = new string[]
         {
             // "Entity",
-            // "Ingredient",
+            //"Ingredient",
             // "Music",
              "Scene",
             // "Sound",
@@ -44,6 +46,7 @@ namespace LingBoCanteen
             InitSoundSettings();
 
             m_LoadedFlag.Clear();
+            m_LoadedFlag.Add(DishIconsFlagKey, false);
             PreloadResources();
             // 初始化 DataNode（将初始化逻辑集中到启动流程，避免早期脚本执行顺序问题）
             GameDataNodeInitializer.Initialize();
@@ -166,6 +169,16 @@ namespace LingBoCanteen
 
             m_LoadedFlag[ne.DataTableAssetName] = true;
             Log.Info("Load data table '{0}' OK.", ne.DataTableAssetName);
+
+            if (ne.DataTableAssetName == AssetUtility.GetDataTableAsset("Dish", false))
+            {
+                Log.Info("Dish table loaded, start preloading all dish icons.");
+                DishUnlockService.PreloadAllDishIcons(() =>
+                {
+                    m_LoadedFlag[DishIconsFlagKey] = true;
+                    Log.Info("All dish icons preloaded.");
+                });
+            }
         }
 
         private void OnLoadDataTableFailure(object sender, GameEventArgs e)

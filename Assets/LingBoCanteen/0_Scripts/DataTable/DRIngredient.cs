@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 // 此文件由工具自动生成，请勿直接修改。
-// 生成时间：2026-07-04 17:30:00.000
+// 生成时间：2026-07-05 00:54:54.575
 //------------------------------------------------------------
 
 using GameFramework;
@@ -37,7 +37,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取食材名称。
+        /// 获取食材名。
         /// </summary>
         public string Name
         {
@@ -55,7 +55,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取是否可切。
+        /// 获取能否被切。
         /// </summary>
         public bool CanCut
         {
@@ -64,7 +64,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取是否可榨汁。
+        /// 获取能否被榨汁。
         /// </summary>
         public bool CanSqueeze
         {
@@ -82,7 +82,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取二次处理产物资源名称。
+        /// 获取二次处理产物资源。
         /// </summary>
         public string CutKnobName
         {
@@ -91,7 +91,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取最终产出资源名称。
+        /// 获取产出物资源名称。
         /// </summary>
         public string FinalAssetName
         {
@@ -109,7 +109,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取产出物名称。
+        /// 获取产出物名。
         /// </summary>
         public string OutputName
         {
@@ -118,7 +118,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取购买消耗金币。
+        /// 获取购买食材所需金币。
         /// </summary>
         public int ConsumeMoney
         {
@@ -127,7 +127,7 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 获取处理方式类型。
+        /// 获取食材的处理方式。
         /// </summary>
         public int ProcessType
         {
@@ -146,28 +146,20 @@ namespace LingBoCanteen
             int index = 0;
             index++;
             m_Id = int.Parse(columnStrings[index++]);
-            index++;
             Name = columnStrings[index++];
-            index++;
             InitialAssetName = columnStrings[index++];
-            index++;
             CanCut = bool.Parse(columnStrings[index++]);
-            index++;
             CanSqueeze = bool.Parse(columnStrings[index++]);
-            index++;
             MidAssetName = columnStrings[index++];
-            index++;
             CutKnobName = columnStrings[index++];
-            index++;
             FinalAssetName = columnStrings[index++];
-            index++;
             OutputId = int.Parse(columnStrings[index++]);
-            index++;
             OutputName = columnStrings[index++];
-            index++;
             ConsumeMoney = int.Parse(columnStrings[index++]);
-            index++;
             ProcessType = int.Parse(columnStrings[index++]);
+            index++;
+            index++;
+            index++;
 
             GeneratePropertyArray();
             return true;

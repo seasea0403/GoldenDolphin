@@ -15,6 +15,8 @@ namespace LingBoCanteen
     /// </summary>
     public class ProcedurePreload : ProcedureBase
     {
+        private const string DishIconsFlagKey = "DishIcons";
+
         // 需要加载的所有数据表名称
         private static readonly string[] DataTableNames = new string[]
         {
@@ -44,6 +46,8 @@ namespace LingBoCanteen
 
             Log.Info("Enter ProcedurePreload, cleared load flags.");
             UnityEngine.Debug.Log("ProcedurePreload.OnEnter");
+
+            m_LoadedFlag.Add(DishIconsFlagKey, false);
 
             PreloadResources();
         }
@@ -177,6 +181,16 @@ namespace LingBoCanteen
             m_LoadedFlag[ne.DataTableAssetName] = true;
             Log.Info("Load data table '{0}' OK.", ne.DataTableAssetName);
             UnityEngine.Debug.Log("OnLoadDataTableSuccess: " + ne.DataTableAssetName);
+
+            if (ne.DataTableAssetName == AssetUtility.GetDataTableAsset("Dish", false))
+            {
+                Log.Info("Dish table loaded, start preloading all dish icons.");
+                DishUnlockService.PreloadAllDishIcons(() =>
+                {
+                    m_LoadedFlag[DishIconsFlagKey] = true;
+                    Log.Info("All dish icons preloaded.");
+                });
+            }
         }
 
         private void OnLoadDataTableFailure(object sender, GameEventArgs e)

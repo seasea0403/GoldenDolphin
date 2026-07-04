@@ -838,7 +838,7 @@ MonoBehaviour:
   m_SettingBtn: {fileID: 3301643279010775310}
   m_ExitBtn: {fileID: 4269369135246289552}
   m_StartHoverAnimator: {fileID: 8363183623769129268}
-  m_HoverAnimName: MainMenu_Chopstick
+  m_HoverAnimName: Hover
 --- !u!1 &8397234406618701161
 GameObject:
   m_ObjectHideFlags: 0

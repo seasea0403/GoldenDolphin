@@ -39,6 +39,11 @@ namespace LingBoCanteen
             return Utility.Text.Format("Assets/LingBoCanteen/Entities/{0}.prefab", assetName);
         }
 
+        public static string GetDishIconAsset(string assetName)
+        {
+            return Utility.Text.Format("Assets/LingBoCanteen/4_Arts/Foods/Dishes/{0}.png", assetName);
+        }
+
         public static string GetUIFormAsset(string assetName)
         {
             return Utility.Text.Format("Assets/LingBoCanteen/UI/UIForms/{0}.prefab", assetName);
