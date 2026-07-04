@@ -89,6 +89,11 @@ namespace UnityGameFramework.Runtime
                 string configLineString = null;
                 while ((configLineString = configString.ReadLine(ref position)) != null)
                 {
+                    if (string.IsNullOrEmpty(configLineString))
+                    {
+                        continue;
+                    }
+
                     if (configLineString[0] == '#')
                     {
                         continue;

@@ -42,18 +42,29 @@ namespace LingBoCanteen
             // 还原游戏速度
             GameEntry.Base.ResetNormalGameSpeed();
 
-            int sceneId = procedureOwner.GetData<VarInt32>("NextSceneId");
+            VarInt32 varNextSceneId = procedureOwner.GetData<VarInt32>("NextSceneId");
+            int sceneId = (varNextSceneId != null) ? varNextSceneId.Value : MenuSceneId;
+
+            UnityEngine.Debug.Log("ProcedureChangeScene OnEnter, SceneId to load: " + sceneId);
+
             m_ChangeToMenu = sceneId == MenuSceneId;
             IDataTable<DRScene> dtScene = GameEntry.DataTable.GetDataTable<DRScene>();
+            if (dtScene == null)
+            {
+                UnityEngine.Debug.LogError("DRScene DataTable is null! Make sure Scene.txt loaded successfully.");
+                return;
+            }
+
             DRScene drScene = dtScene.GetDataRow(sceneId);
             if (drScene == null)
             {
+                UnityEngine.Debug.LogError("Can not load scene detail for ID: " + sceneId + ". Make sure ID exists in Scene.txt.");
                 Log.Warning("Can not load scene '{0}' from data table.", sceneId.ToString());
                 return;
             }
 
-            GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset(drScene.AssetName), Constant.AssetPriority.SceneAsset, this);
-            m_BackgroundMusicId = drScene.BackgroundMusicId;
+            GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset(drScene.SceneAssetName), Constant.AssetPriority.SceneAsset, this);
+            //m_BackgroundMusicId = drScene.BackgroundMusicId;
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
