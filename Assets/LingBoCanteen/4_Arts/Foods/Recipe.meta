@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 57c1d8276674525408446ca8e0459a33
+=======
+guid: f45668a5cb2341840815dd287d55a98f
+>>>>>>> origin/feature/scene
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
