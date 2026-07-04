@@ -25,6 +25,8 @@ namespace LingBoCanteen
             // "Sound",
             // "UIForm",
             // "UISound",
+            "Day",
+            "Dish",
         };
 
         private readonly Dictionary<string, bool> m_LoadedFlag = new Dictionary<string, bool>();
@@ -43,6 +45,8 @@ namespace LingBoCanteen
 
             m_LoadedFlag.Clear();
             PreloadResources();
+            // 初始化 DataNode（将初始化逻辑集中到启动流程，避免早期脚本执行顺序问题）
+            GameDataNodeInitializer.Initialize();
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)

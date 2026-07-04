@@ -29,7 +29,13 @@ namespace LingBoCanteen
 
             canvasGroup.alpha = alpha;
         }
-
+        /// <summary>
+        /// 平滑过渡Slider的值
+        /// </summary>
+        /// <param name="slider">要操作的Slider组件</param>
+        /// <param name="value">目标值</param>
+        /// <param name="duration">过渡时间</param>
+        /// <returns>协程</returns>
         public static IEnumerator SmoothValue(this Slider slider, float value, float duration)
         {
             float time = 0f;

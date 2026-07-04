@@ -13,6 +13,14 @@ namespace LingBoCanteen
     {
         private void Start()
         {
+            // Initialization moved to ProcedureLaunch to guarantee GameEntry is ready.
+        }
+
+        /// <summary>
+        /// 初始化所有需要的 DataNode 数据，供 Procedure 在合适时机调用。
+        /// </summary>
+        public static void Initialize()
+        {
             // 1. 玩家永久属性（存档项）
             GameEntry.DataNode.SetData("Player.San", (VarInt32)Constant.GameConstant.INITIAL_SAN);
             GameEntry.DataNode.SetData("Player.Gold", (VarInt32)Constant.GameConstant.INITIAL_GOLD);

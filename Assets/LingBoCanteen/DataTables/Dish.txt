@@ -1,0 +1,26 @@
+#	菜品配置表									
+#	Id	Name	AssetName	IngList	SeasoningList	Pot	RecipeAsset	Weight	EarnMoney	
+#	int	string	string	string	string	string	string	int	int	
+#	菜品编号	菜品名	资源名称	所需食材列表	所需调料列表	所需锅	关联配方资源	需求抽取权重	出售菜品可获金币	
+	2001	金纹南瓜浓汤	Dishes_PumpkinSoup	3001	4005	5004	Recipe_PumpkinSoup	1	15	
+	2002	蘑菇滑鸡煲	Dishes_ChickenWithMushroom	"3002,3018"	4004	5003	Recipe_ChickenWithMushroom	1	16	
+	2003	柠檬雪葩	Dishes_LemonSorbet	3003	4005	5004	Recipe_LemonSorbet	1	14	
+	2004	鱼汤	Dishes_FishSoup	"3007,3019"	"4001,4004,4006"	5004	Recipe_FishSoup	2	15	
+	2005	盐葱香煎牛肉	Dishes_BeefWithScallions	"3004,3007,3017"	"4001,4004,4006"	5001	Recipe_BeefWithScallions	2	20	
+	2006	牛排	Dishes_Steak	"3002,3005,3017"	"4001,4004,4006"	5001	Recipe_Steak	2	26	
+	2007	柠檬虾滑	Dishes_LemonShrimpPaste	"3003,3006,3007,3021"	"4002,4005"	5004	Recipe_LemonShrimpPaste	2	32	
+	2008	仰望星空派	Dishes_StargazyPie	"3008,3019,3022"	4002	5005	Recipe_StargazyPie	3	30	
+	2009	石板烤肉	Dishes_StoneGrilledMeat	"3006,3020"	"4002,4004"	5005	Recipe_StoneGrilledMeat	3	21	
+	2010	蒜泥青苹果鸡排	Dishes_AppleChickenCutlet	"3004,3009,3018"	"4002,4004,4006"	5001	Recipe_AppleChickenCutlet	3	30	
+	2011	青苹果柠檬果冻杯	Dishes_AppleJellyCup	"3003,3009,3010,3011"	"4003,4005"	5004	Recipe_AppleJellyCup	4	42	
+	2012	烤鱼	Dishes_ToastedFish	"3003,3006,3007,3019"	"4001,4004,4006"	5005	Recipe_ToastedFish	4	34	
+	2013	番茄肉酱面	Dishes_TomatoMeatNoodles	"2014,3022"		5001	Recipe_TomatoMeatNoodles	4	30	
+	2014	番茄肉酱	TamotoMeatSauce	"3004,3012,3020"	"4002,4004,4005"	5001				
+	2015	蛋炒饭	Dishes_EggFriedRice	"3007,3013,3018,3023"	4004	5001	Recipe_EggFriedRice	5	30	
+	2016	水晶山楂糕	Dishes_HawthornJelly	"3011,3014"	4005	5002	Recipe_HawthornJelly	5	50	
+	2017	牛肉滑蛋饭	Dishes_RiceWithSlicedBeefEggs	"3013,3017,3023"	"4004,4006"	5001	Recipe_RiceWithSlicedBeefEggs	5	50	
+	2018	番茄酿肉	Dishes_TomatoStuffedWithMeat	"3002,3004,3012,3020,3023"	"4004,4006"	5005	Recipe_TomatoStuffedWithMeat	5	40	
+	2019	芝士肉酱土豆饼	Dishes_CheesePotatoPancake	"3008,3015,3017,1023"	"4001,4004,4006"	5001	Recipe_CheesePotatoPancake	6	57	
+	2020	青菜鸡蛋面	Dishes_VeggieAndEggNoodles	"3007,3016,3022,3023"	"4001,4004,4006"	5004	Recipe_VeggieAndEggNoodles	6	60	
+	2021	沙拉	Dishes_Salad	"3004,3016,3018,3023,"	"4001,4004,4006"	5001	Recipe_Salad	6	82	
+	2022	小鸡滑蛋盖浇饭	Dishes_Oyakodon	"3008,3010,3013,3015,3017,3023"	"4002,4004"	5004	Recipe_Oyakodon	6	72	

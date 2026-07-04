@@ -7,6 +7,7 @@
 
 using GameFramework.DataTable;
 using System;
+using System.IO;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -86,6 +87,41 @@ namespace LingBoCanteen
         {
             string[] splitedValue = value.Split(',');
             return new Vector4(float.Parse(splitedValue[0]), float.Parse(splitedValue[1]), float.Parse(splitedValue[2]), float.Parse(splitedValue[3]));
+        }
+
+        /// <summary>
+        /// 解析形如 "1001,1002,1003" 的英文逗号分隔整数列表，空字符串返回长度为 0 的数组。
+        /// </summary>
+        public static int[] ParseInt32Array(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return new int[0];
+            }
+
+            string[] splitedValue = value.Split(',');
+            int[] result = new int[splitedValue.Length];
+            for (int i = 0; i < splitedValue.Length; i++)
+            {
+                result[i] = int.Parse(splitedValue[i]);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 从二进制流中读取一个整型数组（长度前缀 + 逐个 7 位编码整数），与 ParseInt32Array 的字符串格式对应。
+        /// </summary>
+        public static int[] ReadInt32Array(this BinaryReader reader)
+        {
+            int count = reader.Read7BitEncodedInt32();
+            int[] result = new int[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = reader.Read7BitEncodedInt32();
+            }
+
+            return result;
         }
     }
 }
