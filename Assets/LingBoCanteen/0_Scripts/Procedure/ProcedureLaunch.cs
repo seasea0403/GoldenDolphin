@@ -26,45 +26,15 @@ namespace LingBoCanteen
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
-            // 运行一帧即切换到 Splash 展示流程
-            ChangeState<ProcedureSplash>(procedureOwner);
+            // 运行一帧即切换到 Preload 流程
+            ChangeState<ProcedurePreload>(procedureOwner);
         }
 
         private void InitLanguageSettings()
         {
-            if (GameEntry.Base.EditorResourceMode && GameEntry.Base.EditorLanguage != Language.Unspecified)
-            {
-                // 编辑器资源模式直接使用 Inspector 上设置的语言
-                return;
-            }
-
-            Language language = GameEntry.Localization.Language;
-            if (GameEntry.Setting.HasSetting(Constant.Setting.Language))
-            {
-                try
-                {
-                    string languageString = GameEntry.Setting.GetString(Constant.Setting.Language);
-                    language = (Language)Enum.Parse(typeof(Language), languageString);
-                }
-                catch
-                {
-                }
-            }
-
-            if (language != Language.English
-                && language != Language.ChineseSimplified
-                && language != Language.ChineseTraditional
-                && language != Language.Korean)
-            {
-                // 若是暂不支持的语言，则使用英语
-                language = Language.English;
-
-                GameEntry.Setting.SetString(Constant.Setting.Language, language.ToString());
-                GameEntry.Setting.Save();
-            }
-
-            GameEntry.Localization.Language = language;
-            Log.Info("Init language settings complete, current language is '{0}'.", language.ToString());
+            // 已禁用自动设置语言。直接使用配置文本（Text）中的原始显示内容。
+            // 如果以后需要恢复自动语言选择，可在此处恢复原先逻辑。
+            return;
         }
 
 
