@@ -77,7 +77,7 @@ namespace LingBoCanteen
             // 后续接入真实 Customer 预制体后即可正常触发 OnShow。
             m_SlotStates[slotIndex] = SlotState.Occupied;
 
-            int currentDay = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Value").Value;
+            int currentDay = GetCurrentDaySafely();
             List<int> unlockedDishIds = m_DishService.GetUnlockedDishIds(currentDay);
 
             int dishCount = Random.value < Constant.GameConstant.DUAL_ORDER_CHANCE ? 2 : 1;
@@ -106,6 +106,23 @@ namespace LingBoCanteen
 
             int entityId = m_NextEntityId++;
             GameEntry.Entity.ShowEntity<CustomerEntity>(entityId, AssetUtility.GetEntityAsset("Customer"), "Customer", spawnData);
+        }
+
+        /// <summary>
+        /// 安全读取 DataNode 里的 "DayCurrent.Value"。
+        /// 如果该节点还不存在（例如没有从 Launch 流程正常进入，而是直接在 Game 场景按 Play 测试），
+        /// 不会抛异常导致整个槽位卡死，而是回退到第 1 天并打印一条警告方便排查。
+        /// </summary>
+        private int GetCurrentDaySafely()
+        {
+            const string path = "DayCurrent.Value";
+            if (GameEntry.DataNode.GetNode(path) == null)
+            {
+                Log.Warning("DataNode '{0}' 不存在，可能没有经过 ProcedureLaunch 完整初始化（比如直接在 Game 场景按 Play）。已回退为第 1 天。", path);
+                return 1;
+            }
+
+            return GameEntry.DataNode.GetData<VarInt32>(path).Value;
         }
 
         /// <summary>

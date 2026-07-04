@@ -119,22 +119,16 @@ namespace LingBoCanteen
             int index = 0;
             index++;
             m_Id = int.Parse(columnStrings[index++]);
-            index++;
             Name = columnStrings[index++];
-            index++;
             AssetName = columnStrings[index++];
-            index++;
             IngList = columnStrings[index++];
-            index++;
             SeasoningList = columnStrings[index++];
-            index++;
             Pot = columnStrings[index++];
-            index++;
             RecipeAsset = columnStrings[index++];
+            Weight = string.IsNullOrEmpty(columnStrings[index]) ? 0 : int.Parse(columnStrings[index]);
             index++;
-            Weight = int.Parse(columnStrings[index++]);
+            EarnMoney = string.IsNullOrEmpty(columnStrings[index]) ? 0 : int.Parse(columnStrings[index]);
             index++;
-            EarnMoney = int.Parse(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;

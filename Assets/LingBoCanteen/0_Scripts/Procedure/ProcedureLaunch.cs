@@ -23,7 +23,7 @@ namespace LingBoCanteen
             // "Music",
              "Scene",
             // "Sound",
-            // "UIForm",
+             "UIForm",
             // "UISound",
             "Day",
             "Dish",

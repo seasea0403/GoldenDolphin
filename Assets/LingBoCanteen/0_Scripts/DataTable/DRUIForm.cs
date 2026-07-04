@@ -83,7 +83,6 @@ namespace LingBoCanteen
             int index = 0;
             index++;
             m_Id = int.Parse(columnStrings[index++]);
-            index++;
             AssetName = columnStrings[index++];
             UIGroupName = columnStrings[index++];
             AllowMultiInstance = bool.Parse(columnStrings[index++]);

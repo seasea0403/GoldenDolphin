@@ -19,11 +19,11 @@ namespace LingBoCanteen
         private static readonly string[] DataTableNames = new string[]
         {
             // "Ingredient",
-            // "Dish",
-            // "Day",
-            // "Guest",
+             "Dish",
+             "Day",
+             "Guest",
              "Scene",
-            // "UIForm",
+             "UIForm",
             // "Music",
             // "Sound",
             // "UISound",

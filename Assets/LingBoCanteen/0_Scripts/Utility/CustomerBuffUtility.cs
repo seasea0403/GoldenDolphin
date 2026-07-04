@@ -83,14 +83,14 @@ namespace LingBoCanteen
         {
             switch (buff)
             {
-                case CustomerBuff.Temperate: return "温和：耐心+10s";
-                case CustomerBuff.Diligent: return "勤奋：烹饪速度+10%";
-                case CustomerBuff.Thoughtful: return "慎虑：报酬+10%";
-                case CustomerBuff.Frugal: return "节制：少耗1份材料";
-                case CustomerBuff.Wrath: return "暴怒：耐心-10s";
-                case CustomerBuff.Sloth: return "懒惰：等待10s后有几率离开";
-                case CustomerBuff.Greed: return "贪婪：报酬-10%";
-                case CustomerBuff.Gluttony: return "暴食：多耗1份材料";
+                case CustomerBuff.Temperate: return "温和";
+                case CustomerBuff.Diligent: return "勤奋";
+                case CustomerBuff.Thoughtful: return "慎虑";
+                case CustomerBuff.Frugal: return "节制";
+                case CustomerBuff.Wrath: return "暴怒";
+                case CustomerBuff.Sloth: return "懒惰";
+                case CustomerBuff.Greed: return "贪婪";
+                case CustomerBuff.Gluttony: return "暴食";
                 default: return string.Empty;
             }
         }

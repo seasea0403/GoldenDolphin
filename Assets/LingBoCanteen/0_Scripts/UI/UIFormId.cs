@@ -1,37 +1,45 @@
-﻿//------------------------------------------------------------
-// Game Framework
-// Copyright © 2013-2021 Jiang Yin. All rights reserved.
-// Homepage: https://gameframework.cn/
-// Feedback: mailto:ellan@gameframework.cn
-//------------------------------------------------------------
-
-namespace LingBoCanteen
+﻿namespace LingBoCanteen
 {
     /// <summary>
     /// 界面编号。
     /// </summary>
-    public enum UIFormId : byte
+    public enum UIFormId : int
     {
         Undefined = 0,
 
         /// <summary>
-        /// 弹出框。
+        /// 剧情对话弹窗
         /// </summary>
-        DialogForm = 1,
+        DialogueForm = 1,
 
         /// <summary>
-        /// 主菜单。
+        /// 主菜单界面
         /// </summary>
         MenuForm = 100,
 
         /// <summary>
-        /// 设置。
+        /// 设置界面
         /// </summary>
         SettingForm = 101,
 
         /// <summary>
-        /// 关于。
+        /// HUD常驻界面
         /// </summary>
-        AboutForm = 102,
+        HUDForm = 200,
+
+        /// <summary>
+        /// 选锅界面
+        /// </summary>
+        PotForm = 201,
+
+        /// <summary>
+        /// 每日结算界面
+        /// </summary>
+        SettleForm = 300,
+
+        /// <summary>
+        /// 食材超市采购界面
+        /// </summary>
+        MarketForm = 400,
     }
 }
