@@ -1,59 +1,114 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using DG.Tweening;
 
 public class ElevatorController : MonoBehaviour
 {
-    public Transform elevatorContainer; // °Ñ ElevatorContainer ÍÏ½øÀ´
-    public float moveTime = 0.8f;
+    public RectTransform container;
 
-    private float floorHeight = 10.8f; // Ä¬ÈÏ¸ß¶È£¬StartÀï»á×Ô¶¯»ñÈ¡×¼È·µÄ
-    private int currentFloor = 1;      // 0=µØÓü, 1=ÈË¼ä, 2=ÌìÌÃ
+    public float floorHeight = 450f;
+
+    public float moveTime = 0.8f;
+    public float shakeIntensity = 12f;
+
+    public GameObject humanButtons;
+
+    //å½“å‰æ¥¼å±‚ç´¢å¼•ï¼ˆ0=å¤©å ‚, 1=äººé—´, 2=åœ°ç‹±ï¼‰
+    public static int CurrentFloorIndex { get; private set; } = 1;
+
+    //å½“å‰æ¥¼å±‚åç§°ï¼ˆ"å¤©å ‚"/"äººé—´"/"åœ°ç‹±"ï¼‰
+    public static string CurrentFloorName { get; private set; } = "äººé—´";
+
+    // äº‹ä»¶ï¼šåˆ°è¾¾æ–°æ¥¼å±‚æ—¶è‡ªåŠ¨å¹¿æ’­ï¼ˆå‚æ•°æ˜¯æ¥¼å±‚åç§°ï¼‰
+    public static event System.Action<string> OnFloorChanged;
+
+
+    private int currentFloor = 1;        // 0=å¤©å ‚, 1=äººé—´, 2=åœ°ç‹±
     private bool isMoving = false;
+    private string currentFloorName = "äººé—´";
 
     void Start()
     {
-        // ×Ô¶¯»ñÈ¡×ÓÎïÌå£¨ÈË¼ä£©µÄÊÀ½ç¸ß¶È£¬È·±£ÊÊÅä²»Í¬·Ö±æÂÊµÄÍ¼Æ¬
-        SpriteRenderer sr = elevatorContainer.GetChild(0).GetComponent<SpriteRenderer>();
-        if (sr != null)
+        if (container == null)
         {
-            floorHeight = sr.bounds.size.y;
+            return;
         }
 
-        // ³õÊ¼»¯£ºÍ£ÔÚÈË¼ä
-        elevatorContainer.position = new Vector3(0, 0, 0);
+        container.anchoredPosition = Vector2.zero;
+        UpdateButtonsVisibility();
+
+        CurrentFloorIndex = currentFloor;
+        CurrentFloorName = currentFloorName;
     }
 
-    // ÉÏÉı°´Å¥µ÷ÓÃ
-    public void GoUp()
-    {
-        if (isMoving || currentFloor >= 2) return;
-        currentFloor++;
-        MoveElevator();
-    }
-
-    // ÏÂ½µ°´Å¥µ÷ÓÃ
     public void GoDown()
     {
-        if (isMoving || currentFloor <= 0) return;
-        currentFloor--;
-        MoveElevator();
+        if (isMoving || currentFloor >= 2) return;
+
+        currentFloor++;
+        UpdateFloorName();
+
+        HideHumanButtons();
+        MoveToFloor(currentFloor);
     }
 
-    void MoveElevator()
+    public void GoUp()
     {
-        isMoving = true;
-        // Ä¿±êY£ºÈË¼äÊÇ0£¬Ã¿ÉÏÒ»²ã£¬ÈİÆ÷ÒªÍùÏÂ×ß£¨¸ºÖµ£©
-        float targetY = -currentFloor * floorHeight;
+        if (isMoving || currentFloor <= 0) return;
 
-        // 1. Æ½»¬ÒÆ¶¯µçÌİ²Õ£¨ÊÀ½ç×ø±êÎ»ÒÆ£©
-        elevatorContainer.DOMoveY(targetY, moveTime)
+        currentFloor--;
+        UpdateFloorName();
+
+        HideHumanButtons();
+        MoveToFloor(currentFloor);
+    }
+
+    void UpdateFloorName()
+    {
+        if (currentFloor == 0) currentFloorName = "å¤©å ‚";
+        else if (currentFloor == 1) currentFloorName = "äººé—´";
+        else if (currentFloor == 2) currentFloorName = "åœ°ç‹±";
+
+        CurrentFloorIndex = currentFloor;
+        CurrentFloorName = currentFloorName;
+    }
+
+    void HideHumanButtons()
+    {
+        if (humanButtons != null)
+            humanButtons.SetActive(false);
+    }
+
+    void UpdateButtonsVisibility()
+    {
+        if (humanButtons != null)
+            humanButtons.SetActive(currentFloor == 1);
+    }
+
+    void MoveToFloor(int floor)
+    {
+        if (container == null) return;
+
+        isMoving = true;
+        float targetY = 0;
+
+        if (floor == 2) targetY = floorHeight;
+        else if (floor == 0) targetY = -floorHeight;
+
+        container.DOAnchorPosY(targetY, moveTime)
             .SetEase(Ease.InOutQuad)
             .OnComplete(() =>
             {
-                // 2. µ½´ïºó£ºµçÌİÉ²³µµÄ»Î¶¯¶Ù´ì¸Ğ£¨ÉÏÏÂÎ¢Õğ£©
-                // ÕâÀïÕğµÄÊÇ ElevatorContainer£¬Ä£ÄâµçÌİÂäµØ
-                elevatorContainer.DOShakePosition(0.3f, new Vector3(0, 0.15f, 0), 20, 90, false, true)
-                    .OnComplete(() => isMoving = false);
+                container.DOShakeAnchorPos(0.3f, new Vector2(0, shakeIntensity), 20, 90)
+                .OnComplete(() =>
+                {
+                    isMoving = false;
+                    Debug.Log("Arrivalï¼š" + currentFloorName);
+
+                    UpdateButtonsVisibility();
+
+                    //æ¥¼å±‚åˆ°è¾¾åå¹¿æ’­äº‹ä»¶
+                    OnFloorChanged?.Invoke(currentFloorName);
+                });
             });
     }
 }
