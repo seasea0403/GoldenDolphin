@@ -7,58 +7,69 @@ public class ElevatorController : MonoBehaviour
 
     public float floorHeight = 450f;
 
-    public float moveTime = 0.8f;        
-    public float shakeIntensity = 12f;  
+    public float moveTime = 0.8f;
+    public float shakeIntensity = 12f;
 
-    public GameObject humanButtons;      
+    public GameObject humanButtons;
+
+    //当前楼层索引（0=天堂, 1=人间, 2=地狱）
+    public static int CurrentFloorIndex { get; private set; } = 1;
+
+    //当前楼层名称（"天堂"/"人间"/"地狱"）
+    public static string CurrentFloorName { get; private set; } = "人间";
+
+    // 事件：到达新楼层时自动广播（参数是楼层名称）
+    public static event System.Action<string> OnFloorChanged;
+
 
     private int currentFloor = 1;        // 0=天堂, 1=人间, 2=地狱
-    private bool isMoving = false;       
-    private string currentFloorName = "人间"; 
+    private bool isMoving = false;
+    private string currentFloorName = "人间";
 
     void Start()
     {
-        // 安全检查
         if (container == null)
         {
             return;
         }
 
         container.anchoredPosition = Vector2.zero;
-
         UpdateButtonsVisibility();
 
+        CurrentFloorIndex = currentFloor;
+        CurrentFloorName = currentFloorName;
     }
-
 
     public void GoDown()
     {
         if (isMoving || currentFloor >= 2) return;
 
-        currentFloor++;              
-        UpdateFloorName();          
+        currentFloor++;
+        UpdateFloorName();
 
-        HideHumanButtons();         
-        MoveToFloor(currentFloor);  
+        HideHumanButtons();
+        MoveToFloor(currentFloor);
     }
 
     public void GoUp()
     {
         if (isMoving || currentFloor <= 0) return;
 
-        currentFloor--;              
-        UpdateFloorName();          
+        currentFloor--;
+        UpdateFloorName();
 
-        HideHumanButtons();         
-        MoveToFloor(currentFloor); 
+        HideHumanButtons();
+        MoveToFloor(currentFloor);
     }
-
 
     void UpdateFloorName()
     {
         if (currentFloor == 0) currentFloorName = "天堂";
         else if (currentFloor == 1) currentFloorName = "人间";
         else if (currentFloor == 2) currentFloorName = "地狱";
+
+        CurrentFloorIndex = currentFloor;
+        CurrentFloorName = currentFloorName;
     }
 
     void HideHumanButtons()
@@ -72,7 +83,6 @@ public class ElevatorController : MonoBehaviour
         if (humanButtons != null)
             humanButtons.SetActive(currentFloor == 1);
     }
-
 
     void MoveToFloor(int floor)
     {
@@ -94,8 +104,10 @@ public class ElevatorController : MonoBehaviour
                     isMoving = false;
                     Debug.Log("Arrival：" + currentFloorName);
 
-                    // 如果回到了人间，重新显示人间的按钮组
                     UpdateButtonsVisibility();
+
+                    //楼层到达后广播事件
+                    OnFloorChanged?.Invoke(currentFloorName);
                 });
             });
     }
