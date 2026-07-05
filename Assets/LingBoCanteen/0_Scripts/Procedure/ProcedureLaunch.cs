@@ -21,7 +21,7 @@ namespace LingBoCanteen
         private static readonly string[] DataTableNames = new string[]
         {
             // "Entity",
-            //"Ingredient",
+            "Ingredient",
             // "Music",
              "Scene",
             // "Sound",

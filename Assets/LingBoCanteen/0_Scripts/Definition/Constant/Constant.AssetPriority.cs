@@ -24,6 +24,7 @@ namespace LingBoCanteen
             public const int UIFormAsset = 50;
             public const int UISoundAsset = 30;
             public const int DishIconAsset = 30;
+            public const int IngredientIconAsset = 30;
 
             public const int MyAircraftAsset = 90;
             public const int AircraftAsset = 80;

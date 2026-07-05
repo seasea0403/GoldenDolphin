@@ -14,8 +14,8 @@ namespace LingBoCanteen
             public const float DEFAULT_GUEST_WAIT_TIME = 45f;    // 顾客默认等待时间（秒）
             public const float DEFAULT_COOK_TIME = 6f;           // 默认烹饪时长（秒）
             public const float COOK_BUFFER_TIME = 5f;            // 成熟后缓冲时间（秒）
-            public const float CUT_ANIM_TIME = 5f;               // 切菜动画时长
-            public const float SQUEEZE_ANIM_TIME = 5f;           // 榨汁动画时长
+            public const float CUT_ANIM_TIME = 1f;               // 切菜动画时长
+            public const float SQUEEZE_ANIM_TIME = 1.6f;           // 榨汁动画时长
             
             // San值区间
             public const int SAN_MORTAL_MIN = 43;
@@ -34,6 +34,14 @@ namespace LingBoCanteen
             public const float NEXT_CUSTOMER_INTERVAL = 10f; // 一个顾客离场后，同一槽位下一位顾客的进入间隔（秒）
             public const float BUFF_PATIENCE_DELTA = 10f;    // 温和/暴怒等 Buff 对耐心时间的修正幅度（秒）
             public const float DUAL_ORDER_CHANCE = 0.5f;     // 顾客点 2 道菜的概率，其余为 1 道菜
+
+            // 备菜区配置
+            public const float CUTTING_MID_TIME = 0.6f;      // 放入菜板后，切到中间态的时间点（秒）
+            public const float CUTTING_FINAL_TIME = 1.1f;    // 放入菜板后，切到最终态的时间点（秒）
+            public const int BOWL_SLOT_COUNT = 4;            // 碗槽数量
+            public const int GLASS_SLOT_COUNT = 4;           // 杯槽数量
+            public const int DEFAULT_DRAWER_CLICK_COUNT = 5; // 抽屉食材（鸡蛋/面粉）默认所需点击次数
+            public const int DEFAULT_UNLOCK_STOCK = 10;      // 货架食材首次解锁时自动赋予的初始库存
         }
     }
 }
