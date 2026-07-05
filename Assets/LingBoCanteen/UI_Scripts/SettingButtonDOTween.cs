@@ -42,14 +42,11 @@ public class SettingButtonDOTween : MonoBehaviour, IPointerEnterHandler, IPointe
 
     void ActivateHover(bool isOn)
     {
-        // 1. 处理物体显隐
         if (hoverImage != null) hoverImage.gameObject.SetActive(isOn);
         if (normalImage != null) normalImage.gameObject.SetActive(!isOn);
 
-        // 2. 处理尺寸动画
         float targetH = isOn ? origH + heightAdd : origH;
 
-        // 如果高度有变化才执行动画
         if (Mathf.Abs(rt.sizeDelta.y - targetH) > 0.1f)
         {
             rt.DOSizeDelta(new Vector2(rt.sizeDelta.x, targetH), dur).SetEase(Ease.OutCubic);
