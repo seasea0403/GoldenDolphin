@@ -61,6 +61,24 @@ namespace LingBoCanteen
     }
 
     /// <summary>
+    /// 烹调区单个炉灶/烤箱工位的状态机。
+    /// Empty(空炉灶，仅普通炉灶会出现，烤箱恒不为此态) -&gt; Preparing(选锅后的准备动画期间，如汤锅倒水，未播完不可投料)
+    /// -&gt; Idle(已选锅/烤箱，等待投料或已投部分料，未开火) -&gt; Cooking(开火烹饪中)
+    /// -&gt; Finished(6秒烹饪结束，5秒关火/取出有效期缓冲) -&gt; ReadyToServe(已关火未糊，可装盘)
+    /// 或 Finished 超时未关火 -&gt; Burnt(已糊锅，仅可将食物拖去垃圾桶重置为 Empty)。
+    /// </summary>
+    public enum PotStationState
+    {
+        Empty = 0,
+        Preparing = 1,
+        Idle = 2,
+        Cooking = 3,
+        Finished = 4,
+        ReadyToServe = 5,
+        Burnt = 6,
+    }
+
+    /// <summary>
     /// 食材存放区域（决定库存/解锁/交互模式规则），按 Id 区间划分：
     /// Shelf 1001-1016，Fridge 1017-1021，Drawer 1022-1023。
     /// </summary>

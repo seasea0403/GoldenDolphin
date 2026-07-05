@@ -42,6 +42,9 @@ namespace LingBoCanteen
             public const int GLASS_SLOT_COUNT = 4;           // 杯槽数量
             public const int DEFAULT_DRAWER_CLICK_COUNT = 5; // 抽屉食材（鸡蛋/面粉）默认所需点击次数
             public const int DEFAULT_UNLOCK_STOCK = 10;      // 货架食材首次解锁时自动赋予的初始库存
+
+            // 烹调区配置
+            public const float COOK_FINISH_HANDLE_TIME = 2f; // 烹饪完成缓冲期内，进度条 handle 保持"完成态"特殊样式的时长（秒）
         }
     }
 }

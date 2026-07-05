@@ -99,14 +99,34 @@ namespace LingBoCanteen
                 return new int[0];
             }
 
-            string[] splitedValue = value.Split(',');
-            int[] result = new int[splitedValue.Length];
-            for (int i = 0; i < splitedValue.Length; i++)
+            // 处理可能包含双引号包裹的情况（如 Excel 导出 CSV 带引号）
+            if (value.StartsWith("\"") && value.EndsWith("\"") && value.Length >= 2)
             {
-                result[i] = int.Parse(splitedValue[i]);
+                value = value.Substring(1, value.Length - 2);
             }
 
-            return result;
+            string[] splitedValue = value.Split(',');
+            System.Collections.Generic.List<int> tempList = new System.Collections.Generic.List<int>();
+            
+            for (int i = 0; i < splitedValue.Length; i++)
+            {
+                string s = splitedValue[i].Trim();
+                if (string.IsNullOrEmpty(s))
+                {
+                    continue;
+                }
+
+                if (int.TryParse(s, out int parsedVal))
+                {
+                    tempList.Add(parsedVal);
+                }
+                else
+                {
+                    UnityEngine.Debug.LogWarning($"ParseInt32Array：无法将值 '{s}' 解析为整数，已忽略。完整输入为：'{value}'");
+                }
+            }
+
+            return tempList.ToArray();
         }
 
         /// <summary>

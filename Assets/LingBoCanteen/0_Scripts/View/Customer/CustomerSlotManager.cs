@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GameFramework;
 using LingBoCanteen.Definition.Enum;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -154,7 +155,8 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 上菜：把做好的菜品交给场上需要它的顾客。
+        /// 上菜：把做好的菜品交给场上需要它的顾客，成功后按 Dish 表 EarnMoney 与
+        /// <see cref="Constant.GameConstant.ORDER_SUCCESS_BASE_SAN"/> 结算金币与 San 值。
         /// 如果多个顾客同时需要该菜品，优先满足剩余耐心值最低（最快超时）的那一位。
         /// </summary>
         /// <returns>是否有顾客成功收下这道菜。</returns>
@@ -175,7 +177,28 @@ namespace LingBoCanteen
                 }
             }
 
-            return target != null && target.TryFulfillDish(dishId);
+            if (target == null || !target.TryFulfillDish(dishId))
+            {
+                return false;
+            }
+
+            SettleServeReward(dishId);
+            return true;
+        }
+
+        /// <summary>
+        /// 上菜成功后的金币/San 结算：金币加 Dish 表的 EarnMoney，San 加固定的成功值。
+        /// </summary>
+        private void SettleServeReward(int dishId)
+        {
+            DRDish dishRow = GameEntry.DataTable.GetDataTable<DRDish>().GetDataRow(dishId);
+            int earnMoney = dishRow != null ? dishRow.EarnMoney : 0;
+
+            int gold = GameEntry.DataNode.GetData<VarInt32>("Player.Gold");
+            GameEntry.DataNode.SetData("Player.Gold", (VarInt32)(gold + earnMoney));
+
+            int san = GameEntry.DataNode.GetData<VarInt32>("Player.San");
+            GameEntry.DataNode.SetData("Player.San", (VarInt32)(san + Constant.GameConstant.ORDER_SUCCESS_BASE_SAN));
         }
     }
 }

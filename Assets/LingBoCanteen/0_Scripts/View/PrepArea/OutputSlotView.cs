@@ -61,6 +61,31 @@ namespace LingBoCanteen
         }
 
         /// <summary>
+        /// 供烹调区拖拽逻辑调用：点击非空槽位即可拖拽该产出物投放到锅具里。
+        /// 场景中若没有摆放 <see cref="KitchenDragController"/>（例如纯备菜区调试场景）则什么都不做。
+        /// </summary>
+        private void OnMouseDown()
+        {
+            if (IsEmpty || KitchenDragController.Instance == null)
+            {
+                return;
+            }
+
+            Sprite icon = m_IconRenderer != null ? m_IconRenderer.sprite : null;
+            if (!TryTakeItem(out int outputId, out string outputName))
+            {
+                return;
+            }
+
+            KitchenDragPayload payload = new KitchenDragPayload(KitchenDragItemKind.Ingredient, outputId, icon)
+            {
+                OnReturnToOrigin = () => SetItem(outputId, outputName, icon),
+            };
+
+            KitchenDragController.Instance.BeginDrag(payload, icon, transform.position);
+        }
+
+        /// <summary>
         /// 供烹调区拖拽逻辑调用：取走该槽产出物（清空槽位并返回其 Id/名称）。
         /// 烹调区的接收逻辑不在本次备菜区范围内，这里只负责清空槽位。
         /// </summary>

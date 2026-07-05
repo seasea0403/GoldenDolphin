@@ -74,6 +74,28 @@ namespace LingBoCanteen
             }
         }
 
+        /// <summary>
+        /// 强制取消当前的拖拽，并安全地将负载弹回到原位
+        /// </summary>
+        public void CancelDrag()
+        {
+            if (!m_IsDragging)
+            {
+                return;
+            }
+
+            m_IsDragging = false;
+            if (m_GhostRenderer != null)
+            {
+                m_GhostRenderer.gameObject.SetActive(false);
+            }
+
+            IngredientDragPayload payload = m_CurrentPayload;
+            m_CurrentPayload = null;
+
+            payload?.OnReturnToOrigin?.Invoke();
+        }
+
         private void Update()
         {
             if (!m_IsDragging)

@@ -4,23 +4,23 @@ using System.Collections.Generic;
 
 public class MenuController : MonoBehaviour
 {
-    [Header("�˵�ҳ��")]
+    [Header("�˵�ҳ��")]
     public GameObject recipeList1;
     public GameObject recipeList2;
 
-    [Header("��ҳ��ť")]
+    [Header("��ҳ��ť")]
     public Button prevButton;
     public Button nextButton;
 
-    [Header("ʳ�����")]
+    [Header("ʳ�����")]
     public GameObject recipePanel;      
     public Image recipeImage;         
     public Button backButton;          
 
-    [Header("����")]
+    [Header("����")]
     public List<Sprite> recipeSprites = new List<Sprite>();
 
-    [Header("���װ�ť")]
+    [Header("���װ�ť")]
     public List<Button> dishButtons = new List<Button>();
 
     private int currentPageIndex = 0;
@@ -82,4 +82,38 @@ public class MenuController : MonoBehaviour
 
     public void PrevPage() { if (currentPageIndex > 0) ShowPage(currentPageIndex - 1); }
     public void NextPage() { if (currentPageIndex < totalPages - 1) ShowPage(currentPageIndex + 1); }
+
+    /// <summary>
+    /// 弹出（打开）菜单，重置到第一页并隐藏详情面板，便于外界调用
+    /// </summary>
+    public void OpenMenu()
+    {
+        gameObject.SetActive(true);
+        if (recipePanel != null) recipePanel.SetActive(false);
+        if (backButton != null) backButton.gameObject.SetActive(false);
+        ShowPage(0);
+    }
+
+    /// <summary>
+    /// 关闭菜单，便于外界调用
+    /// </summary>
+    public void CloseMenu()
+    {
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 切换菜单显示状态，打开时初始化为第一页
+    /// </summary>
+    public void ToggleMenu()
+    {
+        bool active = !gameObject.activeSelf;
+        gameObject.SetActive(active);
+        if (active)
+        {
+            if (recipePanel != null) recipePanel.SetActive(false);
+            if (backButton != null) backButton.gameObject.SetActive(false);
+            ShowPage(0);
+        }
+    }
 }
