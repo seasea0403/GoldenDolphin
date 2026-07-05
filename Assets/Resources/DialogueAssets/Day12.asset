@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1a8ab11dc293247bd037af83258ad0, type: 3}
+  m_Name: Day12
+  m_EditorClassIdentifier: 
+  lines:
+  - id: 1
+    speakerName: "\u6211"
+    speakingContent: "\uFF08\u8FD9\u51E0\u5929\u751F\u610F\u8089\u773C\u53EF\u89C1\u5730\u8D8A\u6765\u8D8A\u597D\u4E86\uFF0C\u4F46\u8FD8\u662F\u6CA1\u53D1\u73B0\u4EC0\u4E48\u91CD\u5927\u7EBF\u7D22\u3002"
+    charImage: {fileID: 0}
+  - id: 2
+    speakerName: "\u6211"
+    speakingContent: "\uFF08\u8BF4\u4E0D\u5B9A\u52E4\u52E4\u6073\u6073\u6253\u5DE5\u672C\u6765\u5C31\u662F\u53D1\u73B0\u771F\u76F8\u7684\u4E00\u90E8\u5206\uFF1F"
+    charImage: {fileID: 0}
+  - id: 3
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u8001\u677F\uFF0C\u628A\u83DC\u5355\u4E0A\u6240\u6709\u98DF\u7269\u5168\u90E8\u6765\u4E09\u4EFD\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 4
+    speakerName: "\u6211"
+    speakingContent: "\uFF08\u9519\u89C9\u5417\uFF1F\u611F\u89C9\u4ED6\u8EAB\u540E\u5DF2\u7ECF\u6CA1\u4EC0\u4E48\u4EBA\u4E86\u3002"
+    charImage: {fileID: 0}
+  - id: 5
+    speakerName: "\u6211"
+    speakingContent: "\u8FD9\u4E48\u591A\uFF0C\u4F60\u548C\u4F60\u7684\u7C89\u4E1D\u52A0\u8D77\u6765\u90FD\u5403\u4E0D\u5B8C\u5427\u3002"
+    charImage: {fileID: 0}
+  - id: 6
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u8BA9\u4F60\u505A\u4F60\u5C31\u505A\uFF01\u672C\u660E\u661F\u6709\u7684\u662F\u94B1\uFF0C\u53EF\u4EE5\u6309\u4E24\u500D...\u4E09\u500D\uFF01"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 7
+    speakerName: "\u6211"
+    speakingContent: "\u4E0D\u4E0D\u4E0D\uFF0C\u62D2\u5BA2\u3002"
+    charImage: {fileID: 0}
+  - id: 8
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u4F60\uFF01\u8FDE\u4F60\u600E\u4E48\u4E5F\u8FD9\u6837?"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 9
+    speakerName: "\u6211"
+    speakingContent: "\u5C0F\u5E97\u53EF\u662F\u6709\u539F\u5219\u7684\uFF0C\u62D2\u7EDD\u8FC7\u5EA6\u6D6A\u8D39\u98DF\u7269\u7684\u5BB6\u4F19\u3002"
+    charImage: {fileID: 0}
+  - id: 10
+    speakerName: "\u6211"
+    speakingContent: "\u8FD8\u6709\uFF0C\u4EC0\u4E48\u53EB\u201C\u4E5F\u201D\uFF1F"
+    charImage: {fileID: 0}
+  - id: 11
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u81EA\u4ECE\u6765\u5230\u8FD9\u91CC\u540E\uFF0C\u6211\u4E00\u76F4\u60F3\u521B\u9020\u4E2A\u548C\u6211\u6709\u5173\u7684\u52B2\u7206\u8BDD\u9898\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 12
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u4F60\u77E5\u9053\u7684\uFF0C\u5982\u679C\u4E00\u4E2A\u516C\u4F17\u4EBA\u7269\u592A\u4E45\u6CA1\u6709\u4EA7\u51FA\u70ED\u5EA6\u8BDD\u9898\uFF0C\u5C31\u548C\u201C\u793E\u4F1A\u6027\u6B7B\u4EA1\u201D\u6CA1\u4EC0\u4E48\u533A\u522B\u4E86\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 13
+    speakerName: "\u6211"
+    speakingContent: "\u6240\u4EE5\u4F60\u9009\u62E9\u6765\u6211\u8FD9\u91CC\u5F53\u5927\u80C3\u738B\uFF1F"
+    charImage: {fileID: 0}
+  - id: 14
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u30FD(\u2267\u0414\u2266)\u30CE\u8FD9\u53EA\u662F\u4E0B\u4E0B\u7B56\uFF01"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 15
+    speakerName: "\u6211"
+    speakingContent: "\u770B\u6765\u4E0A\u4E0A\u7B56\u548C\u4E2D\u4E2D\u7B56\u90FD\u5931\u8D25\u4E86\u3002"
+    charImage: {fileID: 0}
+  - id: 16
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u6700\u8FD1\u6211\u8BD5\u8FC7\u76F4\u64AD\u6574\u6D3B\u3001\u8BD5\u8FC7\u6545\u610F\u8FDF\u5230\u800D\u5927\u724C\u3001\u8BD5\u8FC7\u627E\u4EBA\u6F14\u9ED1\u7C89\u548C\u6211\u5BF9\u9A82\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 17
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u5168\u90FD\u6CA1\u7528\uFF01\u6839\u672C\u6CA1\u6709\u6C34\u82B1\uFF01"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 18
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u6211\u5C31\u60F3\u6765\u4F60\u8FD9\u91CC\u6D88\u8D39\u4E00\u628A\uFF0C\u5230\u65F6\u5019\u201C\u67D0\u660E\u661F\u8857\u5934\u5931\u63A7\u66B4\u98DF\u201D\u603B\u80FD\u4E0A\u4E2A\u70ED\u641C\u5427\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 19
+    speakerName: "\u6211"
+    speakingContent: "\u7ADF\u7136\u4E3A\u4E86\u6D41\u91CF\u81EA\u613F\u8D70\u9ED1\u7EA2\u8DEF\u7EBF..."
+    charImage: {fileID: 0}
+  - id: 20
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u5047\u6E05\u9AD8\uFF0C\u4E16\u9053\u4E0D\u5C31\u662F\u8FD9\u6837\uFF0C\u6709\u5173\u6CE8\u624D\u6709\u94B1\u8D5A\uFF0C\u624D\u6709\u88AB\u8BA4\u53EF\u7684\u8D44\u683C\u3002\u6CA1\u6709\u94B1\uFF0C\u8FDE\u6700\u4EB2\u7684\u5BB6\u4EBA\u90FD\u53EF\u80FD\u7FFB\u8138\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 21
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u6211\u52E4\u52E4\u6073\u6073\u8FD9\u4E48\u4E45\uFF0C\u4E3A\u7684\u90FD\u662F\u6211\u7684\u4EE5\u540E\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 22
+    speakerName: "\u6211"
+    speakingContent: "\u4F60\u7684\u5BB6\u4EBA\u5BF9\u4F60\u4E0D\u597D\u5417\uFF1F"
+    charImage: {fileID: 0}
+  - id: 23
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u4E0D\u91CD\u8981\uFF0C\u4ED6\u4EEC\u5DF2\u7ECF\u53BB\u4E16\u4E86\u3002"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 24
+    speakerName: "\u6211"
+    speakingContent: "\u62B1\u6B49\u3002"
+    charImage: {fileID: 0}
+  - id: 25
+    speakerName: "\u6211"
+    speakingContent: "\u6211\u8FD8\u662F\u60F3\u529D\u4F60\u4F11\u606F\u4E00\u6BB5\u65F6\u95F4\uFF0C\u7075\u611F\u53EF\u4E0D\u662F\u786C\u6324\u51FA\u6765\u7684\u3002\u4F60\u7684\u9ED1\u773C\u5708\u90FD\u5360\u636E\u534A\u5F20\u8138\u4E86\u3002"
+    charImage: {fileID: 0}
+  - id: 26
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u600E\u4E48\u53EF\u80FD\uFF1F\u6211\u4ECA\u65E9\u7279\u610F\u6251\u4E86\u4E24\u5C0F\u65F6\u7C89\u5E95..."
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 27
+    speakerName: "\u6211"
+    speakingContent: "\u7C89\u5E95\u53EF\u906E\u4E0D\u4F4F\u900F\u51FA\u6765\u7684\u6C14\u8272\uFF0C\u6211\u611F\u89C9\u4F60\u7684san\u503C\u90FD\u8981\u6389\u5149\u4E86\u3002"
+    charImage: {fileID: 0}
+  - id: 28
+    speakerName: "\u6211"
+    speakingContent: "\u5FEB\u8FDB\u6765\uFF0C\u65E9\u4E0A\u98DF\u6750\u9F50\u5168\uFF0C\u4EC0\u4E48\u83DC\u90FD\u6709\u54E6\u3002"
+    charImage: {fileID: 0}
+  - id: 29
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u4F60\u521A\u4E0D\u662F\u8BF4\u62D2\u7EDD\u6211\u6765..."
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
+  - id: 30
+    speakerName: "\u6211"
+    speakingContent: "\u5C0F\u5E97\u62D2\u7EDD\u6D6A\u8D39\u98DF\u7269\u7684\u4EBA\uFF0C\u4F46\u4ECE\u4E0D\u62D2\u7EDD\u597D\u597D\u5403\u996D\u7684\u98DF\u5BA2\u3002"
+    charImage: {fileID: 0}
+  - id: 31
+    speakerName: "\u6211"
+    speakingContent: "\u6765\u70B9\u751C\u7684\u6062\u590D\u4E00\u4E0B\u7075\u611F\u600E\u4E48\u6837\uFF1F"
+    charImage: {fileID: 0}
+  - id: 32
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
+    speakingContent: "\u0E3A(*\xB4\u25E1`)...\u597D\u5427\uFF0C\u8981\u4E00\u4EFD\u6700\u914D\u5F97\u4E0A\u672C\u660E\u661F\u7684\u5957\u9910\uFF01"
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}

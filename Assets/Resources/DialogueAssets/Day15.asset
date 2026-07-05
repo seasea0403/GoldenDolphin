@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1a8ab11dc293247bd037af83258ad0, type: 3}
+  m_Name: Day15
+  m_EditorClassIdentifier: 
+  lines:
+  - id: 1
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: ......
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 2
+    speakerName: "\u6211"
+    speakingContent: "\u8001\u7237\u7237\uFF0C\u4F60\u6765\u5566\u3002\u60F3\u5403\u70B9\u4EC0\u4E48\uFF1F"
+    charImage: {fileID: 0}
+  - id: 3
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u4E00\u4EFD...\u6811\u76AE..."
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 4
+    speakerName: "\u6211"
+    speakingContent: "\u54A6\uFF1F\u6211\u4EEC\u5E97\u91CC\u6CA1\u6709\u6811\u76AE\uFF0C\u7ED9\u60A8\u63A8\u8350\u76D0\u8471\u9999\u714E\u725B\u8089\u600E\u4E48\u6837\uFF1F\u98CE\u5473\u53C8\u7BA1\u9971\u3002\u60A8\u7259\u9F7F\u4E0D\u597D\u7684\u8BDD\uFF0C\u53EF\u4EE5\u8BD5\u8BD5\u867E\u6ED1\u6216\u5357\u74DC\u6D53\u6C64\uFF0C\u6211\u5E2E\u60A8\u716E\u70C2\u4E00\u4E9B\u3002"
+    charImage: {fileID: 0}
+  - id: 5
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u591A\u5403\u70B9...\u5C31\u80FD\u8DD1\u56DE\u5BB6..."
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 6
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u4E0D\uFF01\u6211\u4E0D\u8DD1\u4E86...\u6211\u4E0D\u662F\u9B3C..."
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 7
+    speakerName: "\u6211"
+    speakingContent: "\u8001\u7237\u7237\uFF0C\u60A8\u4E0D\u662F\u9B3C\uFF0C\u4EE5\u540E\u4E5F\u4E0D\u4F1A\u662F\u3002"
+    charImage: {fileID: 0}
+  - id: 8
+    speakerName: "\u6211"
+    speakingContent: "\uFF08\u4E4B\u524D\u98DF\u5BA2\u8BF4\u8001\u7237\u7237150\u5C81\u4EE5\u4E0A\u4E86\uFF0C\u4E00\u767E\u591A\u5E74\u524D\uFF0C\u5403\u8FC7\u6811\u76AE..."
+    charImage: {fileID: 0}
+  - id: 9
+    speakerName: "\u6211"
+    speakingContent: "\uFF08\uFF1F\uFF01\u96BE\u9053\u8001\u7237\u7237\u5E74\u8F7B\u65F6\u662F\u519B\u4EBA\u5417\uFF1F"
+    charImage: {fileID: 0}
+  - id: 10
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u6253\u4ED7\u2026\u2026\u5C71\u91CC\u2026\u2026\u6CB3\u2026\u2026"
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 11
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u6211\u60F3\u5BB6\u3002\u5AB3\u5987\u513F\u2026\u2026\u5C0F\u51E4\u2026\u2026"
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 12
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u6211\u8DD1\u2026\u2026\u4E09\u5EA7\u5C71\u2026\u2026\u811A\u2026\u2026\u8840\u2026\u2026"
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 13
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u5BB6\u2026\u2026\u7076\u53F0\u2026\u2026\u957F\u8349\u2026\u2026"
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 14
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u6211\u4E0D\u8BE5......\u9003\u8DD1\u2026\u2026\u6218\u573A....."
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 15
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u5C0F\u5B69...\u6211\u662F\u75AF\u5B50\uFF0C\u5BF9....\u6211\u662F\u9B3C\uFF0C\u9B3C..."
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 16
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u4F25\u9B3C\uFF01\u54C8\u54C8\u54C8\u54C8..\u54B3\u54B3..."
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
+  - id: 17
+    speakerName: "\u6211"
+    speakingContent: "\u5929\u4E0B\u4E4B\u5927\uFF0C\u600E\u4E48\u4F1A\u8BA9\u60F3\u56DE\u5BB6\u7684\u4EBA\u53D8\u6210\u9B3C\u5462\uFF1F\u60A8\u6D3B\u4E86\u8FD9\u4E48\u4E45\uFF0C\u5BB6\u4EBA\u4E00\u5B9A\u662F\u60A8\u6700\u91CD\u8981\u7684\u5BC4\u6258\u3002"
+    charImage: {fileID: 0}
+  - id: 18
+    speakerName: "\u6211"
+    speakingContent: "\u60A8\u559D\u70B9\u6C34\uFF0C\u6162\u6162\u8BF4\u3002\u60A8\u8FD8\u8BB0\u5F97\u4ED6\u4EEC\u7684\u6837\u5B50\u5417\uFF1F\u8BB0\u5F97\u7684\u8BDD\u53EF\u4EE5\u544A\u8BC9\u6211\uFF0C\u6211\u5E2E\u60A8\u627E\u5BB6\u4EBA\u7684\u4E0B\u843D\u3002"
+    charImage: {fileID: 0}
+  - id: 19
+    speakerName: "\u201C\u9B3C\u201D"
+    speakingContent: "\u5C0F\u9F99\u554A..\u90A3\u5C0F\u5B50\u4ECE\u5C0F\u5C31\u8C03\u76AE\uFF0C\u516D\u5C81\u90A3\u5E74\u638F\u9E21\u86CB\u88AB\u7530\u9E21\u8FFD\u7740\u5544\u3002\u5C0F\u51E4\u5531\u6B4C\u7279\u522B\u597D\u542C\uFF0C\u8D70\u5230\u6CB3\u8FB9\u5979\u4FBF\u5531\uFF0C\u6B4C\u58F0\u7A7F\u8FC7\u708A\u70DF\u767E\u91CC\u5230\u54B1\u5BB6..."
+    charImage: {fileID: 21300000, guid: ffe918aa851f4374e8a9283d81de52b7, type: 3}
