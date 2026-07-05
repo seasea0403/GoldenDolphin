@@ -79,19 +79,19 @@ MonoBehaviour:
     charImage: {fileID: 0}
   - id: 17
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u5FEB\u70B9\u5FEB\u70B9\uFF0C\u6211\u7684\u8010\u5FC3\u662F\u6709\u9650\u7684\u5594\u3002"
+    speakingContent: "\u5FEB\u70B9\u5FEB\u70B9\uFF0C\u6211\u7684\u8010\u5FC3\u662F\u6709\u9650\u7684\u5594\u3002\u3010\u663E\u5316\u8010\u5FC3\u503C\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 18
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u5148\u70B9\u51FB\u914D\u65B9\u67E5\u770B\u83DC\u54C1\u505A\u6CD5\u3002"
+    speakingContent: "\u5148\u70B9\u51FB\u914D\u65B9\u67E5\u770B\u83DC\u54C1\u505A\u6CD5\u3002\u3010\u5F15\u5BFC\u70B9\u51FB\u914D\u65B9Btn\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 19
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u8BB0\u4F4F\u4E86\u5417\uFF1F\u6CA1\u8BB0\u4F4F\u4E5F\u6CA1\u5173\u7CFB\uFF0C\u53EF\u4EE5\u968F\u65F6\u70B9\u5F00\u518D\u67E5\u770B\u3002"
+    speakingContent: "\u8BB0\u4F4F\u4E86\u5417\uFF1F\u6CA1\u8BB0\u4F4F\u4E5F\u6CA1\u5173\u7CFB\uFF0C\u53EF\u4EE5\u968F\u65F6\u70B9\u5F00\u518D\u67E5\u770B\u3002\u3010\u5F15\u5BFC\u70B9\u51FB\u5173\u95ED\u914D\u65B9\u9762\u677F\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 20
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u73B0\u5728\u524D\u5F80\u5907\u83DC\u533A\u3002"
+    speakingContent: "\u73B0\u5728\u524D\u5F80\u5907\u83DC\u533A\u3002\u3010\u5F15\u5BFC\u70B9\u51FB\u5907\u83DC\u533A\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 21
     speakerName: "\u201C\u5929\u624D\u201D"
@@ -103,11 +103,11 @@ MonoBehaviour:
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 23
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u70B9\u51FB\u8FDB\u5165\u70F9\u8C03\u533A\u3002"
+    speakingContent: "\u70B9\u51FB\u8FDB\u5165\u70F9\u8C03\u533A\u3002\u3010\u5F15\u5BFC\u70B9\u51FB\u70F9\u8C03\u533A\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 24
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u70B9\u51FB\u9009\u9505\u6309\u94AE\uFF0C\u4E3A\u8BA2\u5355\u9009\u62E9\u4E00\u4E2A\u5408\u9002\u7684\u9505\u3002"
+    speakingContent: "\u70B9\u51FB\u9009\u9505\u6309\u94AE\uFF0C\u4E3A\u8BA2\u5355\u9009\u62E9\u4E00\u4E2A\u5408\u9002\u7684\u9505\u3002\u3010\u5F15\u5BFC\u70B9\u51FB\u9009\u9505\u6309\u94AE\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 25
     speakerName: "\u201C\u5929\u624D\u201D"
@@ -115,9 +115,9 @@ MonoBehaviour:
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 26
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u6D41\u53E3\u6C34\u4E86\uFF01\u73B0\u5728\u62D6\u51FA\u6210\u54C1\u83DC\uFF0C\u653E\u5728\u8FD9\u91CC\u3002"
+    speakingContent: "\u6D41\u53E3\u6C34\u4E86\uFF01\u73B0\u5728\u62D6\u51FA\u6210\u54C1\u83DC\uFF0C\u653E\u5728\u8FD9\u91CC\u3002\u3010\u663E\u5316\u9910\u57AB\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
   - id: 27
     speakerName: "\u201C\u5929\u624D\u201D"
-    speakingContent: "\u70B9\u51FB\u9001\u9910\u94C3\uFF0C\u83DC\u54C1\u6D88\u5931\u8BA2\u5355\u5C31\u662F\u5B8C\u6210\u4E86\u3002"
+    speakingContent: "\u70B9\u51FB\u9001\u9910\u94C3\uFF0C\u83DC\u54C1\u6D88\u5931\u8BA2\u5355\u5C31\u662F\u5B8C\u6210\u4E86\u3002\u3010\u663E\u5316\u9001\u9910\u94C3\u3011"
     charImage: {fileID: 21300000, guid: c29e35176be6c8e46945f36d250ca7c7, type: 3}
