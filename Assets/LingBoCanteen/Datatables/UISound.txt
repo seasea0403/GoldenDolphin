@@ -1,0 +1,6 @@
+#	UI音效配置表
+#	Id	备注	AssetName
+#	int	string	string
+#	音效编号	备注	资源名称
+	10000	所有按钮通用点击音效	click
+	10001	鼠标悬浮按钮提示音效	hover

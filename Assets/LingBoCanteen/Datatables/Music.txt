@@ -1,0 +1,12 @@
+#	背景音乐配置表
+#	Id	备注	AssetName
+#	int	string	string
+#	音乐编号	备注	资源名称
+	30000	主菜单封面循环BGM	bgm_main_menu
+	30001	人间区域白天经营BGM	bgm_human_day
+	30002	天堂区域经营BGM	bgm_heaven
+	30003	地狱区域经营BGM	bgm_hell
+	30004	傍晚超市采购BGM	bgm_supermarke
+	30005	夜晚结算剧情BGM	bgm_night_settle
+	30006	紧张倒计时危急BGM	bgm_tension
+	30007	普通结局片尾曲	bgm_end_normal

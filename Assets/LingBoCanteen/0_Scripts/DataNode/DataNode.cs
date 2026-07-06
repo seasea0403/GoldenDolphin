@@ -1,0 +1,91 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using GameFramework;
+using UnityGameFramework.Runtime;
+
+namespace LingBoCanteen
+{
+    /// <summary>
+    /// 定义数据节点
+    /// </summary>
+    public class DataNode : MonoBehaviour
+    {
+        private void Start()
+        {
+            //设置节点上的数据（字符串路径 + VarX 变量类型）
+            // 1. 玩家永久属性（存档项）
+            GameEntry.DataNode.SetData("Player.San", (VarInt32)Constant.GameConstant.INITIAL_SAN);
+            GameEntry.DataNode.SetData("Player.Gold", (VarInt32)Constant.GameConstant.INITIAL_GOLD);
+            GameEntry.DataNode.SetData("Player.HasRecruitHelper", (VarBoolean)false);
+
+            // 2. 当前天数与时段状态
+            GameEntry.DataNode.SetData("DayCurrent.Value", (VarInt32)1);
+            GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)false);
+            GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)(int)TimeSection.Day);
+            // 注：Phase 对应 TimeSection 枚举：0=白天 1=傍晚 2=深夜
+
+            // 3. 区域与电梯状态（存档项）
+            GameEntry.DataNode.SetData("Area.CurrentType", (VarInt32)(int)GameRegion.Mortal);
+            // 注：CurrentType 对应 GameRegion 枚举：1=人间 2=天堂 3=地狱 4=人间?
+            GameEntry.DataNode.SetData("Area.HasMovedBeforeDay15", (VarBoolean)false);
+            GameEntry.DataNode.SetData("Area.ElevatorUsedOnce", (VarBoolean)false);
+            GameEntry.DataNode.SetData("Area.IsSuspicionMode", (VarBoolean)false);
+
+            // 4. 当日营业临时数据（每日凌晨重置，不存档）
+            GameEntry.DataNode.SetData("Business.TodayServeCustomerCount", (VarInt32)0);
+            GameEntry.DataNode.SetData("Business.TodayFailedCount", (VarInt32)0);
+            GameEntry.DataNode.SetData("Business.TodayTotalGuestCount", (VarInt32)0);
+            GameEntry.DataNode.SetData("Business.WaitingCustomerNum", (VarInt32)2);
+            GameEntry.DataNode.SetData("Business.HasUnservedOrder", (VarBoolean)false);
+            GameEntry.DataNode.SetData("Business.TodayEarnGold", (VarInt32)0);
+            GameEntry.DataNode.SetData("Business.TodaySanDelta", (VarInt32)0);
+
+            // 5. 库存数据（存档项）
+            // 5.1 食材库存 <食材ID, 持有数量>
+            Dictionary<int, int> ingredientStock = new Dictionary<int, int>();
+            VarObject ingredientStockVar = ReferencePool.Acquire<VarObject>();
+            ingredientStockVar.Value = ingredientStock;
+            GameEntry.DataNode.SetData("Storage.IngredientStockDict", ingredientStockVar);
+
+            // 5.2 调料库存 <调料ID, 持有数量>
+            Dictionary<int, int> seasoningStock = new Dictionary<int, int>();
+            VarObject seasoningStockVar = ReferencePool.Acquire<VarObject>();
+            seasoningStockVar.Value = seasoningStock;
+            GameEntry.DataNode.SetData("Storage.SeasoningStockDict", seasoningStockVar);
+
+            // 6. 剧情与NPC进度（存档项）
+            // 6.1 NPC好感对话次数
+            GameEntry.DataNode.SetData("Story.NPC.GeniusTalkCount", (VarInt32)0);
+            GameEntry.DataNode.SetData("Story.NPC.VIPTalkCount", (VarInt32)0);
+            GameEntry.DataNode.SetData("Story.NPC.DeserterTalkCount", (VarInt32)0);
+
+            // 6.2 怀疑线进度
+            GameEntry.DataNode.SetData("Story.Suspect.CardNum", (VarInt32)0);
+            GameEntry.DataNode.SetData("Story.Suspect.TriggerHiddenPlot", (VarBoolean)false);
+            GameEntry.DataNode.SetData("Story.Suspect.PlotInterrupt", (VarBoolean)false);
+
+            // 6.3 全局剧情进度
+            GameEntry.DataNode.SetData("Story.PlotStage", (VarInt32)0);
+            GameEntry.DataNode.SetData("Story.IsAllStoryFinish", (VarBoolean)false);
+            
+            // 已完成剧情ID列表
+            List<int> finishedPlotIds = new List<int>();
+            VarObject finishedPlotVar = ReferencePool.Acquire<VarObject>();
+            finishedPlotVar.Value = finishedPlotIds;
+            GameEntry.DataNode.SetData("Story.FinishedPlotIdList", finishedPlotVar);
+
+            // 7. 游戏设置（存档项）
+            GameEntry.DataNode.SetData("Settings.BGMVolume", (VarSingle)1f);
+            GameEntry.DataNode.SetData("Settings.SFXVolume", (VarSingle)1f);
+            GameEntry.DataNode.SetData("Settings.IsFullScreen", (VarBoolean)true);
+        }
+    }
+}
+// Root
+// ├── Player        // 玩家永久属性（存档）
+// ├── DayCurrent    // 当前天数
+// ├── Area          // 区域/电梯状态
+// ├── Business      // 当日营业临时数据（每日清空）
+// ├── Storage       // 食材调料库存
+// └── Story         // NPC好感、怀疑卡、剧情进度

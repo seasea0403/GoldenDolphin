@@ -1,0 +1,27 @@
+#	食材配置表
+#	Id	Name	EnName	InitialAssetName	CanCut	CanSqueeze	MoveAssetName	MidAssetName	CutKnobName	FinalAssetName	OutputId	OutputName	ConsumeMoney
+#	int	string	string	string	bool	bool	string	string	string	string	int	string	int
+#	食材编号	食材名	食材英文名	初始资源名称	能否被切	能否被榨汁	移动产物资源名称	中间产物资源名称	二次处理产物资源	产出物资源名称	产出物编号	产出物名	购买食材所需金币
+	1001	南瓜	Pumpkin	Ing_Pumpkin	TRUE	TRUE		Pumpkin_Mid	Pumpkin_CutKnob	Pumpkin_Output	3001	南瓜糊	10
+	1002	蘑菇	Mushroom	Ing_Mushroom	TRUE	FALSE		Mushroom_Mid		Mushroom_Output	3002	蘑菇片	8
+	1003	柠檬	Lemon	Ing_Lemon	TRUE	TRUE	Lemon_Moveable	Lemon_Mid	Lemon_CutKnob	Lemon_Output	3003	柠檬汁	5
+	1004	蒜	Garlic	Ing_Garlic	TRUE	FALSE		Garlic_Mid		Garlic_Output	3004	蒜糜	5
+	1005	芦笋	Asparagus	Ing_Asparagus	TRUE	FALSE		Asparagus_Mid		Asparagus_Output	3005	芦笋碎	5
+	1006	魔鬼椒	Chili	Ing_Chili	TRUE	FALSE		Chili_Mid		Chili_Output	3006	辣椒碎	6
+	1007	葱	GreenOnion	Ing_GreenOnion	TRUE	FALSE		GreenOnion_Mid		GreenOnion_Output	3007	葱花	7
+	1008	奶酪	Cheese	Ing_Cheese	TRUE	FALSE		Cheese_Mid		Cheese_Output	3008	奶酪片	10
+	1009	青苹果	Apple	Ing_Apple	TRUE	TRUE	Apple_Moveable	Apple_Mid	Apple_CutKnob	Apple_Output	3009	苹果汁	5
+	1010	酸奶	Yogurt	Ing_Yogurt	FALSE	FALSE				Yogurt_Output	3010	酸奶杯	8
+	1011	凝胶	Gelatin	Ing_Gelatin	FALSE	FALSE				Gelatin_Output	3011	凝胶	10
+	1012	番茄	Tomato	Ing_Tamato	TRUE	FALSE	Tamoto_Moveable	Tamato_Mid		Tamato_Output	3012	番茄块	7
+	1013	米饭	Rice	Ing_Rice	FALSE	FALSE				Rice_Output	3013	米饭	15
+	1014	山楂	Hawthorn	Ing_Hawthorn	TRUE	TRUE		Hawthorn_Mid	Hawthorn_CutKnob	Hawthorn_Output	3014	山楂汁	10
+	1015	土豆	Potato	Ing_Potato	TRUE	FALSE	Patato_Moveable	Potato_Mid		Potato_Output	3015	土豆块	9
+	1016	生菜	Lettuce	Ing_Lettuce	TRUE	FALSE		Lettuce_Mid		Lettuce_Output	3016	生菜叶	8
+	1017	牛肉	Beef	Ing_Beef	TRUE	FALSE		Beef_Mid		Beef_Output	3017	牛肉块	
+	1018	鸡腿	ChickenLeg	Ing_Chickenleg	TRUE	FALSE		Chickenleg_Mid		Chickenleg_Output	3018	鸡腿肉	
+	1019	鱼	Fish	Ing_Fish	TRUE	FALSE		Fish_Mid		Fish_Output	3019	鱼肉	
+	1020	乳猪肉	Pork	Ing_Pork	TRUE	FALSE		Pork_Mid		Pork_Output	3020	猪肉块	
+	1021	虾	Shrimp	Ing_Shrimp	TRUE	TRUE		Shrimp_Mid	Shrimp_CutKnob	Shrimp_Output	3021	虾肉糜	
+	1022	面粉	Flour	Ing_Flour	FALSE	FALSE				Flour_Output	3022	面团	
+	1023	鸡蛋	Egg	Ing_Egg	FALSE	FALSE				Egg_Output	3023	鸡蛋液	

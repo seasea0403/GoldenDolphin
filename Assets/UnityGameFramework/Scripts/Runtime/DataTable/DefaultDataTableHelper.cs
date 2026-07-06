@@ -87,6 +87,11 @@ namespace UnityGameFramework.Runtime
                 string dataRowString = null;
                 while ((dataRowString = dataTableString.ReadLine(ref position)) != null)
                 {
+                    if (string.IsNullOrEmpty(dataRowString))
+                    {
+                        continue;
+                    }
+
                     if (dataRowString[0] == '#')
                     {
                         continue;

@@ -1,0 +1,6 @@
+#	场景配置表			
+#	Id		SceneAssetName		
+#	int		string		
+#	场景编号	策划备注	资源名称		
+	1	主菜单	Menu		
+	2	主游戏	Main		
