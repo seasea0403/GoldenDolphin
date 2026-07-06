@@ -32,10 +32,16 @@ namespace LingBoCanteen
             // 2001 -> PlotCustomer_Celebrity
             // 2002 -> PlotCustomer_Deserter
             // 2003 -> PlotCustomer_Genius
-            { 1, new PlotInfo("Day1", "2003") }, // Day1 使用 Genius (2003)
-            { 2, new PlotInfo("Day4", "2001") }, // Day4 使用 Celebrity (2001)
-            { 3, new PlotInfo("Day5", "2003") }, // Day5 使用 Genius (2003)
-            // 如需其他剧情，请按格式添加：{ PlotId, new PlotInfo(DialogueAssetName, "<DRGuestId>") }
+            { 1, new PlotInfo("Day1", "2003") },
+            { 2, new PlotInfo("Day4", "2001") },
+            { 3, new PlotInfo("Day5", "2003") },
+            { 4, new PlotInfo("Day9", "2002") },
+            { 5, new PlotInfo("Day12", "2001") },
+            { 6, new PlotInfo("Day15", "2002") },
+            { 7, new PlotInfo("Day16", "") }, // 无专属NPC，首日顾客不替换立绘
+            { 8, new PlotInfo("Day17", "2001") },
+            { 9, new PlotInfo("Day18", "2002") },
+            { 10, new PlotInfo("Day19", "2003") },
         };
 
         public static PlotTriggerManager Instance { get; private set; }
@@ -97,7 +103,7 @@ namespace LingBoCanteen
             string dialogueAssetName = plotInfo.dialogueAssetName;
             string portraitSpecifier = plotInfo.portraitAssetName;
 
-            // 仅支持通过 DRGuest 的数字 Id 来解析立绘资源名（例如在映射中写成 "5"）。
+            // 仅支持通过 DRGuest 的数字 Id 来解析立绘资源名。
             // 非数字的 portraitSpecifier 将被忽略以避免使用硬编码资源名。
             m_TodayPlotCharacterId = string.Empty;
             if (!string.IsNullOrEmpty(portraitSpecifier))
@@ -135,6 +141,15 @@ namespace LingBoCanteen
             if (m_TodayDialogueAsset == null)
             {
                 Log.Error($"Failed to load DialogueAsset: DialogueAssets/{dialogueAssetName}");
+                m_IsPlayingPlot = false;
+                OnPlotDialogueComplete?.Invoke();
+                return;
+            }
+
+            // ★ 【新增】检查对话是否为空（没有有效的对话行）
+            if (m_TodayDialogueAsset.lines == null || m_TodayDialogueAsset.lines.Count == 0)
+            {
+                Log.Warning($"DialogueAsset '{dialogueAssetName}' is empty (no dialogue lines). Skip dialogue and proceed normally.");
                 m_IsPlayingPlot = false;
                 OnPlotDialogueComplete?.Invoke();
                 return;

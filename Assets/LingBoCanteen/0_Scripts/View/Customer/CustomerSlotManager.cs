@@ -50,6 +50,8 @@ namespace LingBoCanteen
 
         // ★ 【新增】剧情系统相关
         private bool m_CanSpawnCustomers = false;  // 是否允许生成顾客
+        private bool m_DebugSpawningBlockedLogged = false;  // 防止日志重复打印
+        private bool m_DialogueInProgress = false;  // 对话进行中标志
         private bool m_PlotAssignedToFirstCustomer = false; // 是否已将剧情立绘分配给首位顾客
 
         private void Awake()
@@ -85,21 +87,35 @@ namespace LingBoCanteen
 
             // ★ 【新增】先禁止客人生成，等待剧情系统允许
             m_CanSpawnCustomers = false;
+            Log.Info($"CustomerSlotManager.Start(): 初始化，m_CanSpawnCustomers = {m_CanSpawnCustomers}");
 
-            // 确保 PlotTriggerManager 已存在并为当天准备剧情（若不存在则创建）
-            if (PlotTriggerManager.Instance == null)
+            // 立即检查：如果PlotTriggerManager已存在且未在播放，直接允许生成
+            if (PlotTriggerManager.Instance != null)
             {
-                GameObject plotManagerObj = new GameObject("PlotTriggerManager");
-                plotManagerObj.transform.SetParent(transform);
-                plotManagerObj.AddComponent<PlotTriggerManager>();
+                Log.Info($"CustomerSlotManager.Start(): PlotTriggerManager 已存在");
+                
+                if (PlotTriggerManager.Instance.IsPlayingPlot())
+                {
+                    Log.Info($"CustomerSlotManager.Start(): 正在播放剧情，订阅完成事件");
+                    // ★ 【修复】先取消再订阅，避免重复订阅
+                    PlotTriggerManager.Instance.OnPlotDialogueComplete -= EnableCustomerSpawning;
+                    PlotTriggerManager.Instance.OnPlotDialogueComplete += EnableCustomerSpawning;
+                }
+                else
+                {
+                    Log.Info($"CustomerSlotManager.Start(): 没有正在播放的剧情，直接允许顾客生成");
+                    // 没有正在播放的剧情，直接允许客人生成
+                    m_CanSpawnCustomers = true;
+                }
             }
-
-            // 请求播放当天剧情；如果有剧情，会在回调中允许顾客生成
-            int currentDayForPlot = currentDay;
-            PlotTriggerManager.Instance.CheckAndPlayPlotForDay(currentDayForPlot);
-
-            // 订阅剧情完成事件，在剧情完成后允许顾客生成
-            PlotTriggerManager.Instance.OnPlotDialogueComplete += EnableCustomerSpawning;
+            else
+            {
+                Log.Info($"CustomerSlotManager.Start(): PlotTriggerManager 不存在，直接允许顾客生成");
+                // 没有PlotTriggerManager，直接允许客人生成
+                m_CanSpawnCustomers = true;
+            }
+            
+            Log.Info($"CustomerSlotManager.Start(): 初始化完成，m_CanSpawnCustomers = {m_CanSpawnCustomers}");
 
             // 初始顾客数量在 [2, 3]，但不能超过本日顾客总数
             int initialCount = UnityEngine.Random.Range(2, 4); // 返回 2 或 3
@@ -147,11 +163,43 @@ namespace LingBoCanteen
             }
         }
 
+        /// <summary>
+        /// 对话开始时暂停客人生成
+        /// </summary>
+        public void PauseCustomerSpawning()
+        {
+            m_DialogueInProgress = true;
+            Log.Info("⏸️  对话暂停：禁止新客人生成");
+        }
+
+        /// <summary>
+        /// 对话结束时恢复客人生成
+        /// </summary>
+        public void ResumeCustomerSpawning()
+        {
+            m_DialogueInProgress = false;
+            Log.Info("▶️  对话恢复：允许客人生成");
+        }
+
+        /// <summary>
+        /// 检查对话是否进行中（用于暂停客人耐心计时）
+        /// </summary>
+        public bool IsDialogueInProgress()
+        {
+            return m_DialogueInProgress;
+        }
+
         private void Update()
         {
-            // ★ 【新增】如果还未允许生成客人（剧情未完成），则不执行任何逻辑
-            if (!m_CanSpawnCustomers)
+            // ★ 【新增】如果还未允许生成客人（剧情未完成）或对话进行中，则不执行任何逻辑
+            if (!m_CanSpawnCustomers || m_DialogueInProgress)
             {
+                // 仅在第一帧打印，避免日志刷屏
+                if (!m_DebugSpawningBlockedLogged && !m_CanSpawnCustomers)
+                {
+                    Log.Warning("⚠️  客人生成仍被阻止（m_CanSpawnCustomers = false），等待剧情完成");
+                    m_DebugSpawningBlockedLogged = true;
+                }
                 return;
             }
 
@@ -184,6 +232,8 @@ namespace LingBoCanteen
 
         private void SpawnCustomer(int slotIndex)
         {
+            Log.Info($"✅ SpawnCustomer 被调用，槽位索引: {slotIndex}");
+            
             // 先占用槽位，避免同一帧重复生成；若 ShowEntity 因资源缺失失败，槽位会卡住，
             // 后续接入真实 Customer 预制体后即可正常触发 OnShow。
             m_SlotStates[slotIndex] = SlotState.Occupied;
@@ -553,6 +603,8 @@ namespace LingBoCanteen
         /// </summary>
         public void ReinitializeDaily()
         {
+            Log.Info($"CustomerSlotManager.ReinitializeDaily(): 开始重新初始化");
+            
             // 清除所有现有顾客
             for (int i = 0; i < m_SlotOccupants.Length; i++)
             {
@@ -564,6 +616,20 @@ namespace LingBoCanteen
                 m_SlotStates[i] = SlotState.Empty;
                 m_SlotCooldownTimer[i] = 0f;
                 m_PendingPortraitNames[i] = null;
+            }
+
+            // ★ 【新增】重置剧情相关状态，准备迎接新一天的剧情
+            m_CanSpawnCustomers = false;
+            m_DebugSpawningBlockedLogged = false;  // 重置日志标志
+            m_DialogueInProgress = false;  // 重置对话标志
+            Log.Info($"CustomerSlotManager.ReinitializeDaily(): 重置 m_CanSpawnCustomers = false");
+            
+            // ★ 【修复】取消之前的订阅，然后立即重新订阅，确保即使 CheckAndPlayPlotForDay 立即触发回调也能被正确处理
+            if (PlotTriggerManager.Instance != null)
+            {
+                PlotTriggerManager.Instance.OnPlotDialogueComplete -= EnableCustomerSpawning;
+                PlotTriggerManager.Instance.OnPlotDialogueComplete += EnableCustomerSpawning;
+                Log.Info($"CustomerSlotManager.ReinitializeDaily(): 重新订阅 OnPlotDialogueComplete");
             }
 
             // 重新执行 Start() 中的初始化逻辑
@@ -612,6 +678,8 @@ namespace LingBoCanteen
                 int firstIndex = 0;
                 m_SlotCooldownTimer[firstIndex] = 0f;
             }
+            
+            Log.Info($"CustomerSlotManager.ReinitializeDaily(): 完成重新初始化");
         }
     }
 }

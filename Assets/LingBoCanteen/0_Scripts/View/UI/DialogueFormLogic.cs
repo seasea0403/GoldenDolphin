@@ -67,6 +67,14 @@ namespace LingBoCanteen
         /// </summary>
         public void PlayDialogue(DialogueAsset dialogueAsset, System.Action onComplete)
         {
+            // ★ 【新增】仅当有剧情时，对话开始才暂停客人生成
+            bool isPlotDialogue = PlotTriggerManager.Instance != null && PlotTriggerManager.Instance.IsPlayingPlot();
+            if (isPlotDialogue && CustomerSlotManager.Instance != null)
+            {
+                CustomerSlotManager.Instance.PauseCustomerSpawning();
+                Log.Info("⏸️  【剧情对话】开始，暂停顾客生成");
+            }
+
             m_CurrentDialogueAsset = dialogueAsset;
             m_CurrentLineIndex = 0;
             m_OnDialogueComplete = onComplete;
@@ -74,6 +82,12 @@ namespace LingBoCanteen
             if (m_CurrentDialogueAsset == null || m_CurrentDialogueAsset.lines.Count == 0)
             {
                 Log.Warning("DialogueAsset is null or empty!");
+                // 对话为空，若是剧情对话则恢复客人生成并触发回调
+                if (isPlotDialogue && CustomerSlotManager.Instance != null)
+                {
+                    CustomerSlotManager.Instance.ResumeCustomerSpawning();
+                    Log.Info("⏱️  【剧情对话】为空，恢复顾客生成");
+                }
                 m_OnDialogueComplete?.Invoke();
                 return;
             }
@@ -186,6 +200,14 @@ namespace LingBoCanteen
             }
 
             m_ContentCanvasGroup.alpha = 0f;
+
+            // ★ 【新增】仅当有剧情时，对话完成时恢复客人生成
+            bool isPlotDialogue = PlotTriggerManager.Instance != null && PlotTriggerManager.Instance.IsPlayingPlot();
+            if (isPlotDialogue && CustomerSlotManager.Instance != null)
+            {
+                CustomerSlotManager.Instance.ResumeCustomerSpawning();
+                Log.Info("✅ 【剧情对话】完成，恢复顾客生成");
+            }
 
             // 触发完成回调
             m_OnDialogueComplete?.Invoke();

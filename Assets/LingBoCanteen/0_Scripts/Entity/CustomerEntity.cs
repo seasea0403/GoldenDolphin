@@ -169,7 +169,12 @@ namespace LingBoCanteen
                     break;
 
                 case CustomerState.Waiting:
-                    m_PatienceRemaining -= elapseSeconds;
+                    // ★ 【新增】对话进行中时暂停耐心计时
+                    if (CustomerSlotManager.Instance != null && !CustomerSlotManager.Instance.IsDialogueInProgress())
+                    {
+                        m_PatienceRemaining -= elapseSeconds;
+                    }
+                    
                     if (m_PatienceRemaining <= 0f)
                     {
                         m_PatienceRemaining = 0f;

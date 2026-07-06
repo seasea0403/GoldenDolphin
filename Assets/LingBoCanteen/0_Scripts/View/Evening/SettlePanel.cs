@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
+using System.Reflection;
 
 namespace LingBoCanteen
 {
@@ -94,9 +95,11 @@ namespace LingBoCanteen
             if (san <= Constant.GameConstant.SAN_BOUNDARY_MIN)
             {
                 // 地狱结局：直接触发游戏结束
-                if (GameEndingManager.Instance != null)
+                // 尝试通过反射调用 GameEndingManager.TriggerHellEnding()
+                if (!TryInvokeManagerMethod("LingBoCanteen.GameEndingManager", "TriggerHellEnding"))
                 {
-                    GameEndingManager.Instance.TriggerHellEnding();
+                    Debug.LogError("[SettlePanel] GameEndingManager instance not found via reflection!");
+                    StartCoroutine(DelayThenNextDay());
                 }
                 else
                 {
@@ -107,9 +110,11 @@ namespace LingBoCanteen
             else if (san >= Constant.GameConstant.SAN_BOUNDARY_MAX)
             {
                 // 天堂结局：直接触发游戏结束
-                if (GameEndingManager.Instance != null)
+                // 尝试通过反射调用 GameEndingManager.TriggerHeavenEnding()
+                if (!TryInvokeManagerMethod("LingBoCanteen.GameEndingManager", "TriggerHeavenEnding"))
                 {
-                    GameEndingManager.Instance.TriggerHeavenEnding();
+                    Debug.LogError("[SettlePanel] GameEndingManager instance not found via reflection!");
+                    StartCoroutine(DelayThenNextDay());
                 }
                 else
                 {
@@ -142,10 +147,8 @@ namespace LingBoCanteen
             SoundManager.Instance.PlayAreaSwitchSound();
 
             // 触发BGM切换（根据新的Region自动播放对应的BGM）
-            if (GameBGMManager.Instance != null)
-            {
-                GameBGMManager.Instance.OnRegionChanged();
-            }
+            // 通过反射调用 GameBGMManager.OnRegionChanged()
+            TryInvokeManagerMethod("LingBoCanteen.GameBGMManager", "OnRegionChanged");
 
             if (AreaSwitchManager.Instance != null)
             {
@@ -172,6 +175,39 @@ namespace LingBoCanteen
         private static string FormatDelta(int value)
         {
             return value >= 0 ? $"+{value}" : value.ToString();
+        }
+
+        /// <summary>
+        /// 通过反射尝试调用指定类型的实例方法（类型名使用命名空间限定名）。
+        /// 返回 true 表示成功调用。
+        /// </summary>
+        private bool TryInvokeManagerMethod(string typeFullName, string methodName)
+        {
+            try
+            {
+                foreach (var asm in System.AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    var type = asm.GetType(typeFullName);
+                    if (type == null) continue;
+
+                    // 获取静态 Instance 属性
+                    var instProp = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                    var instance = instProp?.GetValue(null);
+                    if (instance == null) return false;
+
+                    var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
+                    if (method == null) return false;
+
+                    method.Invoke(instance, null);
+                    return true;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[SettlePanel] Reflection invoke failed: {e}");
+            }
+
+            return false;
         }
     }
 }

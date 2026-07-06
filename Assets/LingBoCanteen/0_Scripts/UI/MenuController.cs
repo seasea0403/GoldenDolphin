@@ -28,6 +28,19 @@ public class MenuController : MonoBehaviour
 
     private int currentPageIndex = 0;
     private int totalPages = 2;
+    private CanvasGroup m_MenuCanvasGroup;
+
+    void Awake()
+    {
+        if (uiRoot != null)
+        {
+            m_MenuCanvasGroup = uiRoot.GetComponent<CanvasGroup>();
+            if (m_MenuCanvasGroup == null)
+                m_MenuCanvasGroup = uiRoot.gameObject.AddComponent<CanvasGroup>();
+            // 默认关闭射线拦截
+            m_MenuCanvasGroup.blocksRaycasts = false;
+        }
+    }
 
     void Start()
     {
@@ -108,43 +121,63 @@ public class MenuController : MonoBehaviour
     }
 
     /// <summary>
-    /// 打开菜谱面板，重置到第一页、关闭详情弹窗
-    /// 控制外部传入的uiRoot显隐，不再控制脚本自身物体
+    /// 打开菜谱面板，暂停游戏 + 阻断底层点击
     /// </summary>
     public void OpenMenu()
     {
         if (uiRoot == null) return;
 
         uiRoot.gameObject.SetActive(true);
+        // 阻断下层点击
+        m_MenuCanvasGroup.blocksRaycasts = true;
+        m_MenuCanvasGroup.interactable = true;
+        // 全局暂停游戏计时
+        Time.timeScale = 0;
+
         if (recipePanel != null) recipePanel.SetActive(false);
         if (backButton != null) backButton.gameObject.SetActive(false);
         ShowPage(0);
     }
 
     /// <summary>
-    /// 关闭菜谱面板
+    /// 关闭菜谱面板，恢复游戏、放行点击
     /// </summary>
     public void CloseMenu()
     {
         if (uiRoot == null) return;
         uiRoot.gameObject.SetActive(false);
+        // 放行底层点击
+        m_MenuCanvasGroup.blocksRaycasts = false;
+        // 恢复游戏运行
+        Time.timeScale = 1;
     }
 
     /// <summary>
-    /// 切换菜谱面板显示/隐藏状态，打开自动重置首页
+    /// 切换菜谱面板显示/隐藏状态
     /// </summary>
     public void ToggleMenu()
     {
         if (uiRoot == null) return;
 
-        bool isActive = !uiRoot.gameObject.activeSelf;
-        uiRoot.gameObject.SetActive(isActive);
+        bool isOpen = !uiRoot.gameObject.activeSelf;
+        uiRoot.gameObject.SetActive(isOpen);
 
-        if (isActive)
+        if (isOpen)
         {
+            // 打开：暂停+拦截点击
+            m_MenuCanvasGroup.blocksRaycasts = true;
+            m_MenuCanvasGroup.interactable = true;
+            Time.timeScale = 0;
+
             if (recipePanel != null) recipePanel.SetActive(false);
             if (backButton != null) backButton.gameObject.SetActive(false);
             ShowPage(0);
+        }
+        else
+        {
+            // 关闭：恢复+放行点击
+            m_MenuCanvasGroup.blocksRaycasts = false;
+            Time.timeScale = 1;
         }
     }
 }
