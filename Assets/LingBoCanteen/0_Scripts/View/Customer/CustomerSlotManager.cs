@@ -48,6 +48,9 @@ namespace LingBoCanteen
         private string[] m_PendingPortraitNames;
         private string m_LastGeneratedPortraitName = null;  // 记录上一次生成的顾客立绘名，用于去重
 
+        // ★ 【新增】剧情系统相关
+        private bool m_CanSpawnCustomers = false;  // 是否允许生成顾客
+
         private void Awake()
         {
             Instance = this;
@@ -78,6 +81,28 @@ namespace LingBoCanteen
 
             m_CustomersSpawnedToday = 0;
             m_CustomersLeftToday = 0;
+
+            // ★ 【新增】先禁止客人生成，等待剧情系统允许
+            m_CanSpawnCustomers = false;
+
+            // 如果PlotTriggerManager存在且正在播放剧情，订阅其完成事件
+            if (PlotTriggerManager.Instance != null)
+            {
+                if (PlotTriggerManager.Instance.IsPlayingPlot())
+                {
+                    PlotTriggerManager.Instance.OnPlotDialogueComplete += EnableCustomerSpawning;
+                }
+                else
+                {
+                    // 没有剧情，直接允许客人生成
+                    m_CanSpawnCustomers = true;
+                }
+            }
+            else
+            {
+                // 没有PlotTriggerManager，直接允许客人生成
+                m_CanSpawnCustomers = true;
+            }
 
             // 初始顾客数量在 [2, 3]，但不能超过本日顾客总数
             int initialCount = UnityEngine.Random.Range(2, 4); // 返回 2 或 3
@@ -110,8 +135,29 @@ namespace LingBoCanteen
             }
         }
 
+        /// <summary>
+        /// 剧情播放完成后的回调，允许客人生成
+        /// </summary>
+        private void EnableCustomerSpawning()
+        {
+            m_CanSpawnCustomers = true;
+            Log.Info("✅ 剧情完成，客人开始生成");
+
+            // 取消订阅事件
+            if (PlotTriggerManager.Instance != null)
+            {
+                PlotTriggerManager.Instance.OnPlotDialogueComplete -= EnableCustomerSpawning;
+            }
+        }
+
         private void Update()
         {
+            // ★ 【新增】如果还未允许生成客人（剧情未完成），则不执行任何逻辑
+            if (!m_CanSpawnCustomers)
+            {
+                return;
+            }
+
             for (int i = 0; i < m_SlotStates.Length; i++)
             {
                 if (m_SlotStates[i] == SlotState.Cooldown)
@@ -168,6 +214,18 @@ namespace LingBoCanteen
                 m_PendingPortraitNames[slotIndex] = null;
             }
 
+            // ★ 【新增】第一个客人使用剧情人物的立绘
+            if (m_CustomersSpawnedToday == 1 && PlotTriggerManager.Instance != null)
+            {
+                string plotCharacterId = PlotTriggerManager.Instance.GetTodayPlotCharacterId();
+                if (!string.IsNullOrEmpty(plotCharacterId))
+                {
+                    // 从DRGuest表查找对应的立绘资源名
+                    selectedGuestAssetName = GetGuestAssetNameByCharacterId(plotCharacterId);
+                    Log.Info($"✅ 第一个客人使用剧情人物 {plotCharacterId} 的立绘: {selectedGuestAssetName}");
+                }
+            }
+
             // 兜底默认立绘
             if (string.IsNullOrEmpty(selectedGuestAssetName))
             {
@@ -206,6 +264,15 @@ namespace LingBoCanteen
 
             // 播放顾客进店音效
             SoundManager.Instance.PlayCustomerEnterSound();
+        }
+
+        /// <summary>
+        /// 根据剧情人物的立绘资源名直接使用
+        /// </summary>
+        private string GetGuestAssetNameByCharacterId(string characterId)
+        {
+            // characterId已经是立绘资源名，直接返回
+            return characterId;
         }
 
         /// <summary>

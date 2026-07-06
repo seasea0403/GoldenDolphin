@@ -1,15 +1,20 @@
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using GameFramework.Sound;
+using DG.Tweening;
 
 namespace LingBoCanteen
 {
     /// <summary>
     /// 游戏音效管理器
-    /// 负责游戏内音效的播放
+    /// 负责游戏内音效的播放以及背景音乐的切换与渐变
     /// </summary>
     public class SoundManager : MonoSingleton<SoundManager>
     {
+        private int m_CurrentMusicId = -1; // 当前播放的背景音乐ID
+        private int m_CurrentMusicHandle = -1; // 当前音乐的播放句柄
+        private Tweener m_MusicVolumeTweener; // 背景音乐音量渐变的Tweener
+
         public override void Init()
         {
             base.Init();
@@ -224,5 +229,157 @@ namespace LingBoCanteen
         {
             PlaySound(20017); // Sound ID: 20017 = 顾客耐心倒计时警告音
         }
+
+        #region 背景音乐管理（支持渐变效果）
+
+        /// <summary>
+        /// 播放背景音乐，支持音量渐入效果
+        /// </summary>
+        /// <param name="musicId">音乐ID</param>
+        /// <param name="fadeDuration">渐入时长（秒），默认0.5秒</param>
+        public void PlayBackgroundMusic(int musicId, float fadeDuration = 0.5f)
+        {
+            DRMusic drMusic = GameEntry.DataTable.GetDataTable<DRMusic>().GetDataRow(musicId);
+            if (drMusic == null)
+            {
+                Debug.LogError($"找不到ID为 {musicId} 的音乐配置");
+                return;
+            }
+
+            // 如果正在播放相同的音乐，则不重复播放
+            if (m_CurrentMusicId == musicId)
+            {
+                return;
+            }
+
+            // 停止当前音乐（如果有）
+            if (m_CurrentMusicHandle >= 0)
+            {
+                GameEntry.Sound.StopSound(m_CurrentMusicHandle);
+            }
+
+            // 中断之前的音量渐变
+            if (m_MusicVolumeTweener != null && m_MusicVolumeTweener.IsActive())
+            {
+                m_MusicVolumeTweener.Kill();
+            }
+
+            m_CurrentMusicId = musicId;
+
+            // 播放新的背景音乐
+            PlaySoundParams musicParams = new PlaySoundParams
+            {
+                Loop = true,
+                VolumeInSoundGroup = 0f // 先设置为0，然后渐入
+            };
+
+            string assetName = AssetUtility.GetMusicAsset(drMusic.AssetName);
+            m_CurrentMusicHandle = GameEntry.Sound.PlaySound(
+                assetName,
+                "Music",
+                Constant.AssetPriority.MusicAsset,
+                musicParams
+            );
+
+            // 音量渐入
+            if (fadeDuration > 0)
+            {
+                m_MusicVolumeTweener = DOTween.To(
+                    () => GameEntry.Sound.GetSoundGroup("Music").Volume,
+                    x => GameEntry.Sound.GetSoundGroup("Music").Volume = x,
+                    1f,
+                    fadeDuration
+                );
+            }
+            else
+            {
+                GameEntry.Sound.GetSoundGroup("Music").Volume = 1f;
+            }
+        }
+
+        /// <summary>
+        /// 停止背景音乐，支持音量渐出效果
+        /// </summary>
+        /// <param name="fadeDuration">渐出时长（秒），默认0.5秒</param>
+        public void StopBackgroundMusic(float fadeDuration = 0.5f)
+        {
+            if (m_CurrentMusicHandle < 0)
+            {
+                return;
+            }
+
+            // 中断之前的音量渐变
+            if (m_MusicVolumeTweener != null && m_MusicVolumeTweener.IsActive())
+            {
+                m_MusicVolumeTweener.Kill();
+            }
+
+            if (fadeDuration > 0)
+            {
+                // 音量渐出后停止
+                m_MusicVolumeTweener = DOTween.To(
+                    () => GameEntry.Sound.GetSoundGroup("Music").Volume,
+                    x => GameEntry.Sound.GetSoundGroup("Music").Volume = x,
+                    0f,
+                    fadeDuration
+                ).OnComplete(() =>
+                {
+                    GameEntry.Sound.StopSound(m_CurrentMusicHandle);
+                    m_CurrentMusicHandle = -1;
+                    m_CurrentMusicId = -1;
+                });
+            }
+            else
+            {
+                GameEntry.Sound.StopSound(m_CurrentMusicHandle);
+                m_CurrentMusicHandle = -1;
+                m_CurrentMusicId = -1;
+            }
+        }
+
+        /// <summary>
+        /// 平滑切换背景音乐（淡出当前，淡入新的）
+        /// </summary>
+        /// <param name="newMusicId">新音乐ID</param>
+        /// <param name="fadeDuration">单程渐变时长（秒），默认0.5秒</param>
+        public void CrossfadeBackgroundMusic(int newMusicId, float fadeDuration = 0.5f)
+        {
+            // 如果正在播放相同的音乐，则不重复切换
+            if (m_CurrentMusicId == newMusicId)
+            {
+                return;
+            }
+
+            if (m_CurrentMusicHandle < 0)
+            {
+                // 当前没有播放任何音乐，直接播放新的
+                PlayBackgroundMusic(newMusicId, fadeDuration);
+                return;
+            }
+
+            // 中断之前的音量渐变
+            if (m_MusicVolumeTweener != null && m_MusicVolumeTweener.IsActive())
+            {
+                m_MusicVolumeTweener.Kill();
+            }
+
+            // 记录旧音乐的句柄
+            int oldMusicHandle = m_CurrentMusicHandle;
+
+            // 渐出当前音乐
+            m_MusicVolumeTweener = DOTween.To(
+                () => GameEntry.Sound.GetSoundGroup("Music").Volume,
+                x => GameEntry.Sound.GetSoundGroup("Music").Volume = x,
+                0f,
+                fadeDuration
+            ).OnComplete(() =>
+            {
+                GameEntry.Sound.StopSound(oldMusicHandle);
+                // 播放新的背景音乐（带渐入效果）
+                PlayBackgroundMusic(newMusicId, fadeDuration);
+            });
+        }
+
+        #endregion
     }
 }

@@ -24,7 +24,15 @@ namespace LingBoCanteen
 
         protected override bool CanAccept(KitchenDragPayload payload)
         {
-            return payload != null && (payload.Kind == KitchenDragItemKind.Food || payload.Kind == KitchenDragItemKind.Ingredient);
+            if (payload == null)
+            {
+                return false;
+            }
+
+            // 接收：烧焦的食物、产出物食材、整锅
+            return payload.Kind == KitchenDragItemKind.Food || 
+                   payload.Kind == KitchenDragItemKind.Ingredient ||
+                   payload.Kind == KitchenDragItemKind.Pot;
         }
 
         protected override void Accept(KitchenDragPayload payload)

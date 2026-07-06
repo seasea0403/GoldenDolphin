@@ -74,6 +74,12 @@ namespace LingBoCanteen
         [SerializeField] private Color m_FillWarningColor = Color.red;
         private Color m_FillNormalColor = Color.white;
 
+        [Header("拖拽配置")]
+        [Tooltip("拖拽时使用的统一图片（可选，若为空则使用原锅图片）")]
+        [SerializeField] private Sprite m_DragSprite;
+        [Tooltip("移动态图片：当锅/烤箱有食材时可拖拽时的显示图片")]
+        [SerializeField] private Sprite m_MovableSprite;
+
         [Header("动画（一）：倒水/撒料播放在“锅/食物”自身精灵的 Animator 上（Pour 与 Sprinkle 共用同一个 Animator）")]
         [Tooltip("Controller 需要的参数契约：int PotType、int SeasoningId、trigger Pour、trigger Sprinkle")]
         [SerializeField] private Animator m_PotAnimator;
@@ -94,6 +100,7 @@ namespace LingBoCanteen
 
         private PotStationState m_State = PotStationState.Empty;
         private int m_PotType;
+        private Sprite m_OriginalPotSprite; // 保存选锅时的原始锅图片，用于恢复
         private readonly List<int> m_PlacedItemIds = new List<int>();
         private List<int> m_CandidateDishIds = new List<int>();
         private List<int> m_PendingCandidates;
@@ -233,9 +240,15 @@ namespace LingBoCanteen
                     break;
 
                 case PotStationState.Idle:
-                    // 整锅不可拖拽；锅里还没放入任何食材/调料时，点击视为“重新选锅”。
-                    if (!m_IsOven && m_PlacedItemIds.Count == 0)
+                    // 非烹饪状态：锅里有食材时可拖拽整锅到垃圾桶重置；无食材时点击为"重新选锅"
+                    if (!m_IsOven && m_PlacedItemIds.Count > 0)
                     {
+                        // 有食材，允许拖拽整锅到垃圾桶
+                        BeginDragPot();
+                    }
+                    else if (!m_IsOven && m_PlacedItemIds.Count == 0)
+                    {
+                        // 无食材，重新选锅
                         ResetToEmpty();
                         m_SelectionPanel?.Open(this);
                     }
@@ -264,6 +277,7 @@ namespace LingBoCanteen
             }
 
             m_PotType = potType;
+            m_OriginalPotSprite = potSprite; // 保存原始锅图片，用于后续恢复
 
             if (m_PotRenderer != null)
             {
@@ -333,9 +347,17 @@ namespace LingBoCanteen
             // 占位不跳位：这一件在气泡区的下标就是加入前已有的项数。即便是调料（视觉显示会延迟到
             // 撒料动画播完），这个槽位也从现在起就被预定，不会被后续投放的下一件挤占。
             int slotIndex = m_PlacedItemIds.Count;
+            bool isFirstItem = slotIndex == 0; // 检查是否是第一个食材
+            
             m_PlacedItemIds.Add(payload.ItemId);
             m_CandidateDishIds = m_PendingCandidates;
             m_PendingCandidates = null;
+
+            // 第一个食材放入时，显示移动态图片（表示锅现在可以被拖拽）
+            if (isFirstItem && m_MovableSprite != null && m_PotRenderer != null)
+            {
+                m_PotRenderer.sprite = m_MovableSprite;
+            }
 
             // 播放食材放置音效
             SoundManager.Instance?.PlayIngredientPlaceSound();
@@ -794,6 +816,41 @@ namespace LingBoCanteen
         }
 
         /// <summary>
+        /// 拖拽整锅到垃圾桶：仅在非烹饪阶段（Idle状态）允许，用于重置已放入食材的锅。
+        /// 普通锅和烤箱都可以拖拽。
+        /// </summary>
+        private void BeginDragPot()
+        {
+            if (KitchenDragController.Instance == null || m_PotRenderer == null)
+            {
+                return;
+            }
+
+            // 使用配置的拖拽图片，如果没配置则用锅的原始图片
+            Sprite icon = m_DragSprite != null ? m_DragSprite : m_PotRenderer.sprite;
+            if (icon == null)
+            {
+                return;
+            }
+
+            // 拖拽期间隐藏原位的锅，避免视觉混乱
+            m_PotRenderer.gameObject.SetActive(false);
+
+            KitchenDragPayload payload = new KitchenDragPayload(KitchenDragItemKind.Pot, m_PotType, icon)
+            {
+                OnAccepted = ResetToEmpty,
+                OnReturnToOrigin = () =>
+                {
+                    if (m_PotRenderer != null && m_State == PotStationState.Idle)
+                    {
+                        m_PotRenderer.gameObject.SetActive(true);
+                    }
+                },
+            };
+            KitchenDragController.Instance.BeginDrag(payload, icon, transform.position);
+        }
+
+        /// <summary>
         /// 糊锅食物被拖去垃圾桶、或空锅（Idle 且未投料）被重新点击选锅后调用：重置为空位
         /// （烤箱没有"空位"概念，重置后直接回到 Idle 继续持有 Oven 这口锅）。
         /// </summary>
@@ -807,6 +864,12 @@ namespace LingBoCanteen
             m_CookElapsed = 0f;
             m_FinishedElapsed = 0f;
             m_PrepareElapsed = 0f;
+
+            // 恢复原始的锅图片（还原移动态图片）
+            if (m_OriginalPotSprite != null && m_PotRenderer != null)
+            {
+                m_PotRenderer.sprite = m_OriginalPotSprite;
+            }
 
             if (m_StoveAnimator != null)
             {

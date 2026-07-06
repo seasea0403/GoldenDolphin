@@ -15,6 +15,7 @@ namespace LingBoCanteen
         [SerializeField] private Transform[] m_SlotPositions;
         [SerializeField] private MarketIngredientSlot m_SlotPrefab;
         [SerializeField] private TextMeshProUGUI m_GoldDisplay;
+        public GameObject uiRoot;
 
         private MarketIngredientSlot[] m_SlotInstances;
         private List<int> m_UnlockedIngredientIds = new List<int>();
@@ -194,6 +195,13 @@ namespace LingBoCanteen
 
             Log.Warning("DayCurrent.Value 尚未初始化，默认使用 Day 1。");
             return 1;
+        }
+        public void close()
+        {
+            if (uiRoot != null)
+            {
+                uiRoot.SetActive(false);
+            }
         }
     }
 }

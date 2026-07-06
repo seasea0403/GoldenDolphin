@@ -130,8 +130,39 @@ namespace LingBoCanteen
             // 绑定按钮回调
             RegisterButtonCallbacks();
 
+            // ★ 【新增】初始化剧情系统
+            InitializePlotTriggerManager();
+
             // 首帧初始化：白天开始默认激活订单区，备菜区、烹调区自动进入逻辑运行、视觉静音状态
             SwitchToArea(m_DefaultArea);
+        }
+
+        /// <summary>
+        /// 初始化剧情系统并播放当天剧情（如果有的话）
+        /// </summary>
+        private void InitializePlotTriggerManager()
+        {
+            // 创建或获取PlotTriggerManager
+            GameObject plotManagerObj = new GameObject("PlotTriggerManager");
+            plotManagerObj.transform.SetParent(transform);
+            PlotTriggerManager plotManager = plotManagerObj.AddComponent<PlotTriggerManager>();
+
+            // 获取当前天数
+            int currentDay = 1;
+            if (GameEntry.DataNode != null && GameEntry.DataNode.GetNode("DayCurrent.Value") != null)
+            {
+                currentDay = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Value").Value;
+            }
+
+            // 检查并播放当天剧情
+            plotManager.CheckAndPlayPlotForDay(currentDay);
+
+            // 订阅剧情完成事件，在剧情完成后允许顾客出现
+            plotManager.OnPlotDialogueComplete += () =>
+            {
+                Log.Info("✅ 剧情播放完成，进入正常游戏流程");
+                // 顾客会在CustomerSlotManager.Start中自动生成
+            };
         }
 
         private void OnDestroy()

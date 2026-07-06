@@ -100,8 +100,8 @@ namespace LingBoCanteen
 
             Log.Info("Load menu scene OK.");
 
-            // 播放主菜单BGM
-            BGMManager.Instance?.PlayBGM(30000, false);
+            // 播放主菜单BGM，使用渐入效果（0.5秒）
+            SoundManager.Instance?.PlayBackgroundMusic(30000, 0.5f);
 
             // 打开主菜单UI
             GameEntry.UI.OpenUIForm(UIFormId.MenuForm, this);
