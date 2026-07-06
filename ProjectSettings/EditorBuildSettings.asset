@@ -5,7 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/LingBoCanteen/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/LingBoCanteen Launcher.unity
+    guid: 175412a9de2da88498fca3a01a2bb293
+  - enabled: 1
+    path: Assets/LingBoCanteen/Scenes/Menu.unity
+    guid: b20b456ab95ad134db53e82aab079ff6
+  - enabled: 1
+    path: Assets/LingBoCanteen/Scenes/Main.unity
+    guid: 838ced71da51fec47acd0f8d795edcdc
   m_configObjects: {}

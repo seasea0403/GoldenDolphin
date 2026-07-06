@@ -50,8 +50,8 @@ namespace LingBoCanteen
 
             Log.Info("Load main scene OK.");
 
-            // 初始化游戏背景音乐管理器（根据区域和剧情阶段自动切换BGM）
-            GameBGMManager.Instance.Init();
+            // 初始化游戏BGM管理器（根据当前Region和TimePhase自动播放BGM）
+            SoundManager.Instance?.PlayMusicForCurrentGameState();
 
             // 执行淡入效果
             if (SceneTransitionManager.Instance != null)

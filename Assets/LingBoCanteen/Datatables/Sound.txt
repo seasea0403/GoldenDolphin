@@ -20,3 +20,4 @@
 	20015	超市金币不足购买失败	buy_fail
 	20016	配方/食材解锁提示音	unlock
 	20017	顾客耐心倒计时警告音	patience_warn
+	20018	垃圾桶打开的声音	trash_open

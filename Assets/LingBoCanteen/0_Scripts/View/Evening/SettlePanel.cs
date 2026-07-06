@@ -93,13 +93,29 @@ namespace LingBoCanteen
 
             if (san <= Constant.GameConstant.SAN_BOUNDARY_MIN)
             {
-                ApplyElevatorEffect(GameRegion.Hell, Constant.GameConstant.HELL_INIT_SAN);
-                StartCoroutine(DelayThenNextDay());
+                // 地狱结局：直接触发游戏结束
+                if (GameEndingManager.Instance != null)
+                {
+                    GameEndingManager.Instance.TriggerHellEnding();
+                }
+                else
+                {
+                    Debug.LogError("[SettlePanel] GameEndingManager instance not found!");
+                    StartCoroutine(DelayThenNextDay());
+                }
             }
             else if (san >= Constant.GameConstant.SAN_BOUNDARY_MAX)
             {
-                ApplyElevatorEffect(GameRegion.Heaven, Constant.GameConstant.HEAVEN_INIT_SAN);
-                StartCoroutine(DelayThenNextDay());
+                // 天堂结局：直接触发游戏结束
+                if (GameEndingManager.Instance != null)
+                {
+                    GameEndingManager.Instance.TriggerHeavenEnding();
+                }
+                else
+                {
+                    Debug.LogError("[SettlePanel] GameEndingManager instance not found!");
+                    StartCoroutine(DelayThenNextDay());
+                }
             }
             else
             {
@@ -125,18 +141,10 @@ namespace LingBoCanteen
             // 播放区域切换音效
             SoundManager.Instance.PlayAreaSwitchSound();
 
-            // 根据目标区域切换BGM
-            if (region == GameRegion.Heaven)
+            // 触发BGM切换（根据新的Region自动播放对应的BGM）
+            if (GameBGMManager.Instance != null)
             {
-                BGMManager.Instance.PlayBGM(30002, true); // bgm_heaven
-            }
-            else if (region == GameRegion.Hell)
-            {
-                BGMManager.Instance.PlayBGM(30003, true); // bgm_hell
-            }
-            else
-            {
-                BGMManager.Instance.PlayBGM(30001, true); // bgm_human_day
+                GameBGMManager.Instance.OnRegionChanged();
             }
 
             if (AreaSwitchManager.Instance != null)

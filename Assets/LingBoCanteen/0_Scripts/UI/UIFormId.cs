@@ -41,5 +41,10 @@
         /// 食材超市采购界面
         /// </summary>
         MarketForm = 400,
+
+        /// <summary>
+        /// 游戏结局界面
+        /// </summary>
+        EndingForm = 500,
     }
 }

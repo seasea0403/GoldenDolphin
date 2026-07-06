@@ -24,6 +24,19 @@ public class TextManager : MonoBehaviour
     #region 对外接口
     public void PlayDay(int day) => LoadAndPlay("Day" + day);
     public void PlayEnding(int index) => LoadAndPlay("Ending" + index);
+    
+    /// <summary>
+    /// 直接加载指定文件名的对话资源（用于Day20_1、Day20_2等特殊对话）。
+    /// </summary>
+    public void PlayDialogueAsset(string assetName) => LoadAndPlay(assetName);
+    
+    /// <summary>
+    /// 检查对话是否已完成播放。
+    /// </summary>
+    public bool IsFinishedPlaying()
+    {
+        return currentAsset == null || (currentIndex >= currentAsset.lines.Count && !isTyping && !isWaitingForGuide);
+    }
     #endregion
 
     void LoadAndPlay(string fileName)

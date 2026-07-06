@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityGameFramework.Runtime;
 
 namespace LingBoCanteen
@@ -20,6 +21,14 @@ namespace LingBoCanteen
                 ? GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Value").Value
                 : 1;
             int nextDay = currentDay + 1;
+
+            // 检查是否达到第20天（游戏结束）
+            if (currentDay >= Constant.GameConstant.MAX_DAY)
+            {
+                // 触发游戏结局
+                TriggerGameEnding();
+                return;
+            }
 
             GameEntry.DataNode.SetData("DayCurrent.Value", (VarInt32)nextDay);
             GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)false);
@@ -58,6 +67,39 @@ namespace LingBoCanteen
             if (AreaSwitchManager.Instance != null)
             {
                 AreaSwitchManager.Instance.SwitchToArea(AreaSwitchManager.AreaType.Order);
+            }
+        }
+
+        /// <summary>
+        /// 触发游戏结局（第20天结束）。
+        /// </summary>
+        private static void TriggerGameEnding()
+        {
+            if (GameEntry.DataNode == null)
+            {
+                return;
+            }
+
+            // 检查是否曾改变过Region（使用过电梯）
+            bool hasChangedRegion = GameEntry.DataNode.GetNode("Area.ElevatorUsedOnce") != null
+                && GameEntry.DataNode.GetData<VarBoolean>("Area.ElevatorUsedOnce").Value;
+
+            if (GameEndingManager.Instance != null)
+            {
+                if (hasChangedRegion)
+                {
+                    // 曾改变过Region，触发普通结局（Day20_1 + NormalEnding）
+                    GameEndingManager.Instance.TriggerNormalEnding();
+                }
+                else
+                {
+                    // 全程未改变Region，触发真实结局（Day20_2 + TrueEnding）
+                    GameEndingManager.Instance.TriggerTrueEnding();
+                }
+            }
+            else
+            {
+                Debug.LogError("[EveningDayFlow] GameEndingManager instance not found!");
             }
         }
     }

@@ -13,14 +13,26 @@ namespace LingBoCanteen
     /// </summary>
     public class PlotTriggerManager : MonoBehaviour
     {
-        // PlotId映射表：PlotId -> (对话资源名, 剧情人物立绘资源名)
-        private static readonly Dictionary<int, (string dialogueAssetName, string portraitAssetName)> PlotIdMapping = new Dictionary<int, (string, string)>()
+        private struct PlotInfo
         {
-            { 1, ("Day1", "Genius") },           // Day1 剧情，使用"Genius"立绘
-            { 2, ("Day4", "Genius") },           // Day4 剧情，使用"Genius"立绘
-            { 3, ("Day5", "Genius") },           // Day5 剧情，使用"Genius"立绘
+            public string dialogueAssetName;
+            public string portraitAssetName;
+
+            public PlotInfo(string dialogue, string portrait)
+            {
+                dialogueAssetName = dialogue;
+                portraitAssetName = portrait;
+            }
+        }
+
+        // PlotId映射表：PlotId -> (对话资源名, 剧情人物立绘资源名)
+        private static readonly Dictionary<int, PlotInfo> PlotIdMapping = new Dictionary<int, PlotInfo>()
+        {
+            { 1, new PlotInfo("Day1", "PlotCustomer_Genius") },
+            { 2, new PlotInfo("Day4", "PlotCustomer_celebrity") },
+            { 3, new PlotInfo("Day5", "PlotCustomer_Genius") },
             // 在这里继续添加其他剧情映射
-            // 格式：{ PlotId, (DialogueAssetName, PortraitAssetName) }
+            // 格式：{ PlotId, new PlotInfo(DialogueAssetName, PortraitAssetName) }
         };
 
         public static PlotTriggerManager Instance { get; private set; }
@@ -88,7 +100,37 @@ namespace LingBoCanteen
             }
 
             string dialogueAssetName = plotInfo.dialogueAssetName;
-            m_TodayPlotCharacterId = plotInfo.portraitAssetName;
+            string portraitSpecifier = plotInfo.portraitAssetName;
+
+            // 支持两种写法：
+            // 1) 直接写立绘资源名（例如 "PlotCustomer_Genius"）——保持原有行为；
+            // 2) 写成数字字符串（例如 "5"），表示 DRGuest 表中的 Id，那么从 DRGuest 表取对应的 AssetName。
+            m_TodayPlotCharacterId = portraitSpecifier; // 默认值
+            if (!string.IsNullOrEmpty(portraitSpecifier))
+            {
+                if (int.TryParse(portraitSpecifier, out int guestId) && guestId > 0)
+                {
+                    // 从 DRGuest 表中查找对应 Id 的 AssetName
+                    IDataTable<DRGuest> guestTable = GameEntry.DataTable.GetDataTable<DRGuest>();
+                    if (guestTable != null)
+                    {
+                        DRGuest guestRow = guestTable.GetDataRow(guestId);
+                        if (guestRow != null && !string.IsNullOrEmpty(guestRow.AssetName))
+                        {
+                            m_TodayPlotCharacterId = guestRow.AssetName;
+                            Log.Info($"PlotTriggerManager: resolved portrait from DRGuest id {guestId} -> {m_TodayPlotCharacterId}");
+                        }
+                        else
+                        {
+                            Log.Warning($"PlotTriggerManager: DRGuest id {guestId} not found or has empty AssetName. Using specifier '{portraitSpecifier}' as-is.");
+                        }
+                    }
+                    else
+                    {
+                        Log.Warning("PlotTriggerManager: DRGuest data table not loaded. Cannot resolve guest id to AssetName.");
+                    }
+                }
+            }
 
             // 加载对话资源
             m_TodayDialogueAsset = Resources.Load<DialogueAsset>($"DialogueAssets/{dialogueAssetName}");
@@ -165,6 +207,42 @@ namespace LingBoCanteen
         public string GetTodayPlotCharacterId()
         {
             return m_TodayPlotCharacterId;
+        }
+
+        /// <summary>
+        /// 外部调用：使用 DRGuest 的 Id 设置当天剧情立绘（解析为 AssetName）。
+        /// 传入 guestId <= 0 会被忽略。
+        /// </summary>
+        public void SetTodayPlotGuestById(int guestId)
+        {
+            if (guestId <= 0)
+            {
+                Log.Warning($"SetTodayPlotGuestById called with invalid id: {guestId}");
+                return;
+            }
+
+            IDataTable<DRGuest> guestTable = GameEntry.DataTable.GetDataTable<DRGuest>();
+            if (guestTable == null)
+            {
+                Log.Warning("SetTodayPlotGuestById: DRGuest table not loaded; cannot resolve id to AssetName.");
+                return;
+            }
+
+            DRGuest guestRow = guestTable.GetDataRow(guestId);
+            if (guestRow == null)
+            {
+                Log.Warning($"SetTodayPlotGuestById: DRGuest id {guestId} not found.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(guestRow.AssetName))
+            {
+                Log.Warning($"SetTodayPlotGuestById: DRGuest id {guestId} has empty AssetName.");
+                return;
+            }
+
+            m_TodayPlotCharacterId = guestRow.AssetName;
+            Log.Info($"SetTodayPlotGuestById: Set today's plot character to DRGuest id {guestId} -> {m_TodayPlotCharacterId}");
         }
 
         /// <summary>

@@ -426,12 +426,16 @@ namespace LingBoCanteen
                 GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)true);
                 GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)(int)TimeSection.Evening);
 
+                // 触发BGM切换（从Day切换到Evening，应播放傍晚超市采购BGM）
+                SoundManager.Instance?.PlayMusicForCurrentGameState();
+
                 // 白天营业结束：关闭点单区/备菜区/烹调区的世界物体与 UI，切换显示傍晚(打烊结算)区域
                 if (AreaSwitchManager.Instance != null)
                 {
                     AreaSwitchManager.Instance.SwitchToEvening();
                 }
             }
+            
         }
 
         /// <summary>
@@ -480,10 +484,13 @@ namespace LingBoCanteen
 
             // 播放金币获得音效
             SoundManager.Instance.PlayGoldGetSound();
-
             int sanDelta = Constant.GameConstant.ORDER_SUCCESS_BASE_SAN;
             int san = GameEntry.DataNode.GetData<VarInt32>("Player.San");
-            GameEntry.DataNode.SetData("Player.San", (VarInt32)(san + sanDelta));
+            int newSan = san + sanDelta;
+            GameEntry.DataNode.SetData("Player.San", (VarInt32)newSan);
+
+            // 诊断日志：记录SAN变化
+            Debug.Log($"[SAN Update] 完成订单: {dishId} | 原SAN: {san} | 变化值: {sanDelta} | 新SAN: {newSan}");
 
             // 播放SAN变化音效
             if (sanDelta > 0)
@@ -497,6 +504,7 @@ namespace LingBoCanteen
 
             AccumulateTodayDelta(earnMoney, sanDelta);
         }
+        
 
         /// <summary>
         /// 累加当日金币/San变化量到 "Business.TodayEarnGold" / "Business.TodaySanDelta"，

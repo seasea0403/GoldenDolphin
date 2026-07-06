@@ -135,26 +135,20 @@ public class ElevatorController : MonoBehaviour
             return;
         }
 
+        int previousSan = LingBoCanteen.GameEntry.DataNode.GetData<VarInt32>("Player.San").Value;
+        
         LingBoCanteen.GameEntry.DataNode.SetData("Area.CurrentType", (VarInt32)(int)targetRegion);
         LingBoCanteen.GameEntry.DataNode.SetData("Player.San", (VarInt32)forcedSan);
         LingBoCanteen.GameEntry.DataNode.SetData("Area.ElevatorUsedOnce", (VarBoolean)true);
 
+        // 诊断日志：记录电梯使用时的SAN变化
+        Debug.Log($"[Elevator] 区域切换到: {targetRegion} | 原SAN: {previousSan} | 新SAN: {forcedSan} | 电梯已标记为使用过");
+
         // 播放区域切换音效
         SoundManager.Instance.PlayAreaSwitchSound();
 
-        // 根据目标区域切换BGM
-        if (targetRegion == GameRegion.Heaven)
-        {
-            BGMManager.Instance.PlayBGM(30002, true); // bgm_heaven
-        }
-        else if (targetRegion == GameRegion.Hell)
-        {
-            BGMManager.Instance.PlayBGM(30003, true); // bgm_hell
-        }
-        else
-        {
-            BGMManager.Instance.PlayBGM(30001, true); // bgm_human_day
-        }
+        // 触发BGM切换（根据新的Region自动播放对应的BGM）
+        SoundManager.Instance?.PlayMusicForCurrentGameState();
 
         if (AreaSwitchManager.Instance != null)
         {

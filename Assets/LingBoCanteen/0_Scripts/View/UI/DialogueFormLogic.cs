@@ -85,6 +85,7 @@ namespace LingBoCanteen
         private IEnumerator FadeInContent()
         {
             m_ContentCanvasGroup.alpha = 0f;
+            m_ContentCanvasGroup.blocksRaycasts = false;
             float elapsed = 0f;
             float fadeDuration = 0.2f;
 
@@ -96,7 +97,7 @@ namespace LingBoCanteen
             }
 
             m_ContentCanvasGroup.alpha = 1f;
-
+            m_ContentCanvasGroup.blocksRaycasts = true;
             // 显示第一行
             ShowNextLine();
         }
@@ -173,6 +174,7 @@ namespace LingBoCanteen
         private IEnumerator FadeOutContent()
         {
             m_ContentCanvasGroup.alpha = 1f;
+            m_ContentCanvasGroup.blocksRaycasts = false;
             float elapsed = 0f;
             float fadeDuration = 0.2f;
 

@@ -399,8 +399,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4280971423
+  m_fontColor: {r: 0.62352943, g: 0.4392157, b: 0.16470589, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3040,7 +3040,7 @@ MonoBehaviour:
   - Type: 5002
     CoverSprite: {fileID: 21300000, guid: 1f9d2685daeb00d4f85d0e16493facf4, type: 3}
   - Type: 5003
-    CoverSprite: {fileID: 21300000, guid: 016f0b955ff901d4aa9ea2a30a5c9d6b, type: 3}
+    CoverSprite: {fileID: 21300000, guid: bfa2cb3ac2dfd1c44b9e934661436a06, type: 3}
   - Type: 5004
     CoverSprite: {fileID: 21300000, guid: 8069d9e0a798a8349a5b2a59a98bc34e, type: 3}
   m_BubbleSlots:
@@ -3060,8 +3060,8 @@ MonoBehaviour:
   m_HandleFinishedSprite: {fileID: 21300000, guid: 9c1ea73d5ad678f43ae601d011d1aaa3, type: 3}
   m_SliderFillImage: {fileID: 1375128299}
   m_FillWarningColor: {r: 1, g: 0, b: 0, a: 1}
-  m_DragSprite: {fileID: 0}
-  m_MovableSprite: {fileID: 0}
+  m_DragSprite: {fileID: 21300000, guid: dabbce3a4e9560942b7c13b282e9b76e, type: 3}
+  m_MovableSprite: {fileID: 21300000, guid: dabbce3a4e9560942b7c13b282e9b76e, type: 3}
   m_PotAnimator: {fileID: 2028380054}
   m_PotTypeParam: PotType
   m_SeasoningIdParam: SeasoningId
@@ -3169,7 +3169,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1235071543
   m_SortingLayer: 5
-  m_SortingOrder: 2
+  m_SortingOrder: 5
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -11507,7 +11507,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1235071543
   m_SortingLayer: 5
-  m_SortingOrder: 2
+  m_SortingOrder: 5
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -11537,7 +11537,7 @@ MonoBehaviour:
   m_FoodRenderer: {fileID: 165303618}
   m_OvenDefaultSprite: {fileID: 21300000, guid: 34fde66bff9855941abf94693e53da56, type: 3}
   m_OvenCookingSprite: {fileID: 21300000, guid: 6fba0babfc19be24fb01244fcd716031, type: 3}
-  m_BurntFoodSprite: {fileID: 21300000, guid: dabbce3a4e9560942b7c13b282e9b76e, type: 3}
+  m_BurntFoodSprite: {fileID: 21300000, guid: c859cbc3b25d80f4db6e0ee991840aed, type: 3}
   m_CoverRenderer: {fileID: 1034346666}
   m_PotCovers:
   - Type: 5001
@@ -11545,7 +11545,7 @@ MonoBehaviour:
   - Type: 5002
     CoverSprite: {fileID: 21300000, guid: 1f9d2685daeb00d4f85d0e16493facf4, type: 3}
   - Type: 5003
-    CoverSprite: {fileID: 21300000, guid: 016f0b955ff901d4aa9ea2a30a5c9d6b, type: 3}
+    CoverSprite: {fileID: 21300000, guid: bfa2cb3ac2dfd1c44b9e934661436a06, type: 3}
   - Type: 5004
     CoverSprite: {fileID: 21300000, guid: 8069d9e0a798a8349a5b2a59a98bc34e, type: 3}
   m_BubbleSlots:
@@ -11565,8 +11565,8 @@ MonoBehaviour:
   m_HandleFinishedSprite: {fileID: 21300000, guid: 9c1ea73d5ad678f43ae601d011d1aaa3, type: 3}
   m_SliderFillImage: {fileID: 760841512}
   m_FillWarningColor: {r: 1, g: 0, b: 0, a: 1}
-  m_DragSprite: {fileID: 0}
-  m_MovableSprite: {fileID: 0}
+  m_DragSprite: {fileID: 21300000, guid: dabbce3a4e9560942b7c13b282e9b76e, type: 3}
+  m_MovableSprite: {fileID: 21300000, guid: dabbce3a4e9560942b7c13b282e9b76e, type: 3}
   m_PotAnimator: {fileID: 446982585}
   m_PotTypeParam: PotType
   m_SeasoningIdParam: SeasoningId
@@ -11981,6 +11981,14 @@ PrefabInstance:
     - target: {fileID: 6175016188483624282, guid: 851aefdb332708a469511c2e853b3743, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064531953937853158, guid: 851aefdb332708a469511c2e853b3743, type: 3}
+      propertyPath: m_fontSize
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8064531953937853158, guid: 851aefdb332708a469511c2e853b3743, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

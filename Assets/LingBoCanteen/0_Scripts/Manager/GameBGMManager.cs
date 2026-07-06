@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using GameFramework.DataNode;
-using System;
+using GameFramework;
+using GameFramework.Event;
 
 namespace LingBoCanteen
 {
     /// <summary>
     /// 游戏背景音乐管理器
     /// 根据当前区域（Region）和时间阶段（TimeSection）智能选择和切换背景音乐
+    /// 仅在游戏场景中运作（不管理菜单BGM）
     /// </summary>
     public class GameBGMManager : MonoSingleton<GameBGMManager>
     {
@@ -22,44 +23,59 @@ namespace LingBoCanteen
         private int m_LastMusicId = -1; // 记录上一次播放的音乐ID，避免重复切换
         private GameRegion m_LastRegion = GameRegion.Mortal;
         private TimeSection m_LastTimeSection = TimeSection.Day;
+        private bool m_IsInitialized = false;
 
         public override void Init()
         {
             base.Init();
-
-            // 订阅数据节点变化事件
-            GameEntry.DataNode.AddDataNodeChangeListener(this, OnDataNodeChanged);
-
-            // 初始化播放正确的背景音乐
-            UpdateBackgroundMusic();
+            
+            if (!m_IsInitialized)
+            {
+                m_IsInitialized = true;
+                
+                // 仅在游戏场景中初始化BGM管理
+                // 初始化时立即播放当前状态对应的BGM
+                PlayMusicForCurrentState();
+            }
         }
 
         private void OnDestroy()
         {
-            // 取消订阅
-            GameEntry.DataNode.RemoveDataNodeChangeListener(this, OnDataNodeChanged);
-        }
-
-        /// <summary>
-        /// 数据节点变化监听回调
-        /// </summary>
-        private void OnDataNodeChanged(DataNodeChangedEventArgs e)
-        {
-            // 监听区域变化或时间阶段变化
-            if (e.Name.StartsWith("Area.CurrentType") || e.Name.StartsWith("DayCurrent.Phase"))
+            if (m_IsInitialized)
             {
-                UpdateBackgroundMusic();
+                m_IsInitialized = false;
             }
         }
 
         /// <summary>
-        /// 更新背景音乐：根据当前区域和时间阶段选择合适的音乐
+        /// 根据当前Region实时切换BGM（由其他系统调用）
         /// </summary>
-        private void UpdateBackgroundMusic()
+        public void OnRegionChanged()
         {
+            PlayMusicForCurrentState();
+        }
+
+        /// <summary>
+        /// 根据时间阶段变化切换BGM（由其他系统调用）
+        /// </summary>
+        public void OnTimePhaseChanged()
+        {
+            PlayMusicForCurrentState();
+        }
+
+        /// <summary>
+        /// 根据当前的Region和TimePhase播放对应的BGM
+        /// </summary>
+        private void PlayMusicForCurrentState()
+        {
+            if (!m_IsInitialized)
+            {
+                return;
+            }
+
             // 获取当前区域
             GameRegion currentRegion = GameRegion.Mortal;
-            VarInt32 regionData = GameEntry.DataNode.GetData<VarInt32>("Area.CurrentType");
+            var regionData = GameEntry.DataNode.GetData<VarInt32>("Area.CurrentType");
             if (regionData != null)
             {
                 currentRegion = (GameRegion)regionData.Value;
@@ -67,22 +83,13 @@ namespace LingBoCanteen
 
             // 获取当前时间阶段
             TimeSection currentTimeSection = TimeSection.Day;
-            VarInt32 phaseData = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase");
+            var phaseData = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase");
             if (phaseData != null)
             {
                 currentTimeSection = (TimeSection)phaseData.Value;
             }
 
-            // 如果没有变化，则不切换
-            if (currentRegion == m_LastRegion && currentTimeSection == m_LastTimeSection)
-            {
-                return;
-            }
-
-            m_LastRegion = currentRegion;
-            m_LastTimeSection = currentTimeSection;
-
-            // 根据区域和时间阶段决定播放的音乐
+            // 获取对应的音乐ID
             int newMusicId = GetMusicIdForState(currentRegion, currentTimeSection);
 
             // 如果是相同的音乐ID，则不切换
@@ -92,6 +99,8 @@ namespace LingBoCanteen
             }
 
             m_LastMusicId = newMusicId;
+            m_LastRegion = currentRegion;
+            m_LastTimeSection = currentTimeSection;
 
             // 播放新的背景音乐，使用平滑切换效果（0.5秒渐变）
             if (SoundManager.Instance != null)
@@ -123,16 +132,6 @@ namespace LingBoCanteen
                 default:
                     return MUSIC_ID_MORTAL_DAY;
             }
-        }
-
-        /// <summary>
-        /// 手动切换背景音乐（如需特殊处理时调用）
-        /// </summary>
-        public void PlayMusicForRegion(GameRegion region, TimeSection timeSection)
-        {
-            m_LastRegion = region;
-            m_LastTimeSection = timeSection;
-            UpdateBackgroundMusic();
         }
     }
 }

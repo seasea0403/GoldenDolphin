@@ -106,26 +106,8 @@ namespace LingBoCanteen
                 m_MorningRoot.SetActive(true);
             }
 
-            // 读取当前区域并播放对应的BGM
-            GameRegion currentRegion = GameRegion.Mortal;
-            if (GameEntry.DataNode != null && GameEntry.DataNode.GetNode("Area.CurrentType") != null)
-            {
-                currentRegion = (GameRegion)GameEntry.DataNode.GetData<VarInt32>("Area.CurrentType").Value;
-            }
-
-            // 根据当前区域播放对应的BGM
-            if (currentRegion == GameRegion.Heaven)
-            {
-                BGMManager.Instance.PlayBGM(30002, false); // bgm_heaven (无淡入)
-            }
-            else if (currentRegion == GameRegion.Hell)
-            {
-                BGMManager.Instance.PlayBGM(30003, false); // bgm_hell (无淡入)
-            }
-            else
-            {
-                BGMManager.Instance.PlayBGM(30001, false); // bgm_human_day (无淡入)
-            }
+            // 触发BGM切换（根据当前Region自动播放对应的BGM）
+            SoundManager.Instance?.PlayMusicForCurrentGameState();
 
             // 绑定按钮回调
             RegisterButtonCallbacks();

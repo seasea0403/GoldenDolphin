@@ -230,6 +230,14 @@ namespace LingBoCanteen
             PlaySound(20017); // Sound ID: 20017 = 顾客耐心倒计时警告音
         }
 
+        /// <summary>
+        /// 播放垃圾桶打开音效
+        /// </summary>
+        public void PlayTrashOpenSound()
+        {
+            PlaySound(20018); // Sound ID: 20018 = 垃圾桶打开的声音
+        }
+
         #region 背景音乐管理（支持渐变效果）
 
         /// <summary>
@@ -380,6 +388,69 @@ namespace LingBoCanteen
             });
         }
 
+        /// <summary>
+        /// 根据当前区域和时间阶段自动选择并播放对应的BGM
+        /// 由AreaSwitchManager、ElevatorController等系统调用
+        /// </summary>
+        public void PlayMusicForCurrentGameState()
+        {
+            // 获取当前区域
+            GameRegion currentRegion = GameRegion.Mortal;
+            var regionData = GameEntry.DataNode.GetData<VarInt32>("Area.CurrentType");
+            if (regionData != null)
+            {
+                currentRegion = (GameRegion)regionData.Value;
+            }
+
+            // 获取当前时间阶段
+            TimeSection currentTimeSection = TimeSection.Day;
+            var phaseData = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase");
+            if (phaseData != null)
+            {
+                currentTimeSection = (TimeSection)phaseData.Value;
+            }
+
+            // 获取对应的音乐ID
+            int musicId = GetMusicIdForGameState(currentRegion, currentTimeSection);
+
+            // 诊断日志：记录BGM选择
+            Debug.Log($"[BGM Selection] 区域: {currentRegion} | 时间: {currentTimeSection} | 选择音乐ID: {musicId}");
+
+            // 使用平滑切换播放新的背景音乐
+            CrossfadeBackgroundMusic(musicId, 0.5f);
+        }
+
+        /// <summary>
+        /// 根据区域和时间阶段获取对应的音乐ID
+        /// </summary>
+        private int GetMusicIdForGameState(GameRegion region, TimeSection timeSection)
+        {
+            const int MUSIC_ID_MORTAL_DAY = 30001;      // 人间区域白天经营BGM
+            const int MUSIC_ID_HEAVEN_DAY = 30002;      // 天堂区域经营BGM
+            const int MUSIC_ID_HELL_DAY = 30003;        // 地狱区域经营BGM
+            const int MUSIC_ID_EVENING_SHOPPING = 30004; // 傍晚超市采购BGM
+
+            // 如果是傍晚阶段，播放傍晚超市采购BGM（无论在哪个区域）
+            if (timeSection == TimeSection.Evening)
+            {
+                return MUSIC_ID_EVENING_SHOPPING;
+            }
+
+            // 白天阶段，根据区域选择
+            switch (region)
+            {
+                case GameRegion.Mortal:
+                    return MUSIC_ID_MORTAL_DAY;
+                case GameRegion.Heaven:
+                    return MUSIC_ID_HEAVEN_DAY;
+                case GameRegion.Hell:
+                    return MUSIC_ID_HELL_DAY;
+                default:
+                    return MUSIC_ID_MORTAL_DAY;
+            }
+        }
+
         #endregion
     }
 }
+
