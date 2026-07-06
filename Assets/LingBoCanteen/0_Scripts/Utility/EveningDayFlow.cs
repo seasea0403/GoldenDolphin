@@ -63,6 +63,16 @@ namespace LingBoCanteen
                 PrepAreaManager.Instance.RefreshAllShelfIngredients();
             }
 
+            // 在切回白天前，确保剧情系统为新的一天准备并播放（如果有的话）
+            if (PlotTriggerManager.Instance == null)
+            {
+                GameObject plotManagerObj = new GameObject("PlotTriggerManager");
+                plotManagerObj.transform.SetParent(null);
+                plotManagerObj.AddComponent<PlotTriggerManager>();
+            }
+
+            PlotTriggerManager.Instance?.CheckAndPlayPlotForDay(nextDay);
+
             // 切回白天订单区域（会自动关闭傍晚区域的 UI 与世界物体）
             if (AreaSwitchManager.Instance != null)
             {

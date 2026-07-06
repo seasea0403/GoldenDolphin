@@ -113,6 +113,17 @@ namespace LingBoCanteen
 
         private void RefreshBuffDisplay()
         {
+            // 如果没有 Buff（例如人间），隐藏 Buff 展示
+            if (m_BoundCustomer.Buff == LingBoCanteen.Definition.Enum.CustomerBuff.None)
+            {
+                if (m_BuffBackground != null) m_BuffBackground.gameObject.SetActive(false);
+                if (m_BuffText != null) m_BuffText.gameObject.SetActive(false);
+                return;
+            }
+
+            if (m_BuffBackground != null) m_BuffBackground.gameObject.SetActive(true);
+            if (m_BuffText != null) m_BuffText.gameObject.SetActive(true);
+
             bool isVirtue = CustomerBuffUtility.IsVirtue(m_BoundCustomer.Buff);
             m_BuffBackground.color = isVirtue ? m_VirtueColor : m_SinColor;
             m_BuffText.text = CustomerBuffUtility.GetDescription(m_BoundCustomer.Buff);
