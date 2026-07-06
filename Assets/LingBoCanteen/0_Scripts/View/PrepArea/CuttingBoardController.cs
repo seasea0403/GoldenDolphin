@@ -73,6 +73,11 @@ namespace LingBoCanteen
                 m_BoardAnimator.enabled = true;
                 m_BoardAnimator.SetTrigger(m_PlayAnimTrigger);
             }
+
+            // 播放食材放置音效
+            SoundManager.Instance?.PlayIngredientPlaceSound();
+            // 播放切菜音效
+            SoundManager.Instance?.PlayCutKnifeSound();
         }
 
         private void Update()

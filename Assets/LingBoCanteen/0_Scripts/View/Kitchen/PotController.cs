@@ -102,6 +102,8 @@ namespace LingBoCanteen
         private float m_FinishedElapsed;
         private float m_PrepareElapsed;
         private Quaternion m_CookButtonInitialRotation;
+        private float m_CookButtonInitialAlpha; // 保存按钮初始透明度，置灰时不改变透明度
+        private Color m_CookButtonInitialColor; // 保存按钮初始颜色，用于恢复
         private static readonly DishUnlockService s_DishService = new DishUnlockService();
 
         public bool IsReadyToServe => m_State == PotStationState.ReadyToServe;
@@ -133,6 +135,22 @@ namespace LingBoCanteen
                 m_CookButton.onClick.AddListener(OnCookButtonClicked);
                 m_CookButton.interactable = false;
                 m_CookButtonInitialRotation = m_CookButton.transform.localRotation;
+                
+                // 保存按钮的初始颜色和透明度
+                Image buttonImage = m_CookButton.GetComponent<Image>();
+                if (buttonImage != null)
+                {
+                    m_CookButtonInitialColor = buttonImage.color;
+                    m_CookButtonInitialAlpha = buttonImage.color.a;
+                }
+                else
+                {
+                    m_CookButtonInitialColor = Color.white;
+                    m_CookButtonInitialAlpha = 1f;
+                }
+                
+                // 绑定音效
+                UIButtonSoundHelper.BindButtonSound(m_CookButton);
             }
 
             if (m_ProgressSlider != null)
@@ -229,6 +247,12 @@ namespace LingBoCanteen
             }
         }
 
+        private void OnMouseExit()
+        {
+            // 离开烹调区时隐藏tooltip
+            IngredientTooltipView.Instance?.Hide();
+        }
+
         /// <summary>
         /// 供 <see cref="PotSelectionPanel"/> 在玩家选定锅具类型后调用。
         /// </summary>
@@ -312,6 +336,9 @@ namespace LingBoCanteen
             m_PlacedItemIds.Add(payload.ItemId);
             m_CandidateDishIds = m_PendingCandidates;
             m_PendingCandidates = null;
+
+            // 播放食材放置音效
+            SoundManager.Instance?.PlayIngredientPlaceSound();
 
             if (payload.Kind == KitchenDragItemKind.Seasoning)
             {
@@ -475,7 +502,7 @@ namespace LingBoCanteen
 
             if (m_CookButton != null)
             {
-                m_CookButton.interactable = false;
+                SetButtonGrayedOut(true);
                 if (!m_IsOven)
                 {
                     m_CookButton.transform.localRotation = m_CookButtonInitialRotation * Quaternion.Euler(0f, 0f, m_CookButtonFiredAngle);
@@ -498,7 +525,8 @@ namespace LingBoCanteen
                 m_SliderFillImage.color = m_FillNormalColor;
             }
 
-            HideCover();
+            // 烧火时显示锅盖而不是隐藏
+            ShowCover();
 
             if (m_StoveAnimator != null)
             {
@@ -509,6 +537,9 @@ namespace LingBoCanteen
             {
                 m_PotRenderer.sprite = m_OvenCookingSprite;
             }
+
+            // 播放开火音效
+            SoundManager.Instance?.PlayStoveOnSound();
         }
 
         private void UpdateCooking()
@@ -577,7 +608,7 @@ namespace LingBoCanteen
                         m_CookButton.transform.localRotation = m_CookButtonInitialRotation;
                     }
 
-                    m_CookButton.interactable = m_MatchedDishId >= 0;
+                    SetButtonGrayedOut(m_MatchedDishId < 0);
                 }
 
                 if (m_ProgressSlider != null)
@@ -614,7 +645,7 @@ namespace LingBoCanteen
             if (m_CookButton != null)
             {
                 // 旋转角度保持开火时的状态不变，仅恢复可点击，供玩家点击执行关火。
-                m_CookButton.interactable = true;
+                SetButtonGrayedOut(false);
             }
         }
 
@@ -663,7 +694,7 @@ namespace LingBoCanteen
                     m_CookButton.transform.localRotation = m_CookButtonInitialRotation;
                 }
 
-                m_CookButton.interactable = false;
+                SetButtonGrayedOut(true);
             }
 
             if (m_ProgressSlider != null)
@@ -689,7 +720,7 @@ namespace LingBoCanteen
             if (m_CookButton != null)
             {
                 // 糊锅：按钮永久置灰，旋转角度保持开火时的状态，直到炉灶被重置。
-                m_CookButton.interactable = false;
+                SetButtonGrayedOut(true);
             }
 
             if (m_ProgressSlider != null)
@@ -703,6 +734,38 @@ namespace LingBoCanteen
             }
 
             HideCover();
+        }
+
+        /// <summary>
+        /// 设置按钮置灰状态，保持透明度不变（只改变颜色，不改变alpha）
+        /// </summary>
+        private void SetButtonGrayedOut(bool grayed)
+        {
+            if (m_CookButton == null)
+            {
+                return;
+            }
+
+            m_CookButton.interactable = !grayed;
+            
+            // 手动调整颜色但保持透明度
+            Image buttonImage = m_CookButton.GetComponent<Image>();
+            if (buttonImage != null)
+            {
+                Color targetColor;
+                if (grayed)
+                {
+                    // 置灰：降低色彩饱和度
+                    targetColor = Color.Lerp(m_CookButtonInitialColor, Color.gray, 0.5f);
+                }
+                else
+                {
+                    // 恢复初始颜色
+                    targetColor = m_CookButtonInitialColor;
+                }
+                targetColor.a = m_CookButtonInitialAlpha;
+                buttonImage.color = targetColor;
+            }
         }
 
         private void BeginDragFoodOnly()
@@ -801,6 +864,14 @@ namespace LingBoCanteen
             {
                 m_PotAnimator.enabled = false;
             }
+        }
+
+        /// <summary>
+        /// 进入下一天时调用：重置锅具状态为空。
+        /// </summary>
+        public void ResetForNewDay()
+        {
+            ResetToEmpty();
         }
 
         /// <summary>

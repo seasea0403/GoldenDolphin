@@ -55,10 +55,10 @@ namespace LingBoCanteen
             }
 
             PlaySoundParams playSoundParams = PlaySoundParams.Create();
-            playSoundParams.Priority = drSound.Priority;
-            playSoundParams.Loop = drSound.Loop;
-            playSoundParams.VolumeInSoundGroup = drSound.Volume;
-            playSoundParams.SpatialBlend = drSound.SpatialBlend;
+            playSoundParams.Priority = 0;
+            playSoundParams.Loop = false;
+            playSoundParams.VolumeInSoundGroup = 1f;
+            playSoundParams.SpatialBlend = 0f;
             return soundComponent.PlaySound(AssetUtility.GetSoundAsset(drSound.AssetName), "Sound", Constant.AssetPriority.SoundAsset, playSoundParams, bindingEntity != null ? bindingEntity : null, userData);
         }
 
@@ -73,9 +73,9 @@ namespace LingBoCanteen
             }
 
             PlaySoundParams playSoundParams = PlaySoundParams.Create();
-            playSoundParams.Priority = drUISound.Priority;
+            playSoundParams.Priority = 0;
             playSoundParams.Loop = false;
-            playSoundParams.VolumeInSoundGroup = drUISound.Volume;
+            playSoundParams.VolumeInSoundGroup = 1f;
             playSoundParams.SpatialBlend = 0f;
             return soundComponent.PlaySound(AssetUtility.GetUISoundAsset(drUISound.AssetName), "UISound", Constant.AssetPriority.UISoundAsset, playSoundParams, userData);
         }

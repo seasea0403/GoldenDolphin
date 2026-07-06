@@ -18,6 +18,7 @@ namespace LingBoCanteen
         public CustomerBuff Buff;
         public float PatienceSeconds;
         public GameRegion Region;
+        public string AssetName;
     }
 
     /// <summary>
@@ -78,6 +79,11 @@ namespace LingBoCanteen
         public IReadOnlyList<Sprite> RemainingDishIcons => m_Data != null ? m_Data.RequiredDishIcons : null;
 
         /// <summary>
+        /// 该顾客使用的立绘资源名（供邻位去重判断使用）。
+        /// </summary>
+        public string PortraitAssetName { get; private set; }
+
+        /// <summary>
         /// 该顾客是否仍需要指定菜品。
         /// </summary>
         public bool NeedsDish(int dishId)
@@ -105,7 +111,46 @@ namespace LingBoCanteen
             m_MoveElapsed = 0f;
             CachedTransform.position = m_Data.SpawnPosition;
 
+            PortraitAssetName = m_Data.AssetName;
+            ApplyCustomerPortrait(m_Data.AssetName);
+
             CustomerSlotManager.Instance.RegisterOccupant(m_Data.SlotIndex, this);
+
+            // 顾客可能恰好在切换区域的瞬间生成（Prefab 默认 Renderer/Collider 均为启用状态），
+            // 主动向 AreaSwitchManager 查询当前应有的显隐状态并立即同步，避免短暂显示在错误区域，
+            // 或者玩家切回订单区后依然看不到该顾客。
+            if (AreaSwitchManager.Instance != null)
+            {
+                AreaSwitchManager.Instance.SyncCustomerVisibility(gameObject);
+            }
+        }
+
+        private void ApplyCustomerPortrait(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName))
+            {
+                return;
+            }
+
+            SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if (spriteRenderer == null)
+            {
+                Log.Warning("CustomerEntity '{0}' has no SpriteRenderer to apply portrait '{1}'.", Name, assetName);
+                return;
+            }
+
+            Sprite portrait = CustomerPortraitUtility.GetPortrait(assetName, sprite =>
+            {
+                if (sprite != null && spriteRenderer != null)
+                {
+                    spriteRenderer.sprite = sprite;
+                }
+            });
+
+            if (portrait != null)
+            {
+                spriteRenderer.sprite = portrait;
+            }
         }
 
         protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)

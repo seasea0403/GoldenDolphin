@@ -22,13 +22,14 @@ namespace LingBoCanteen
         {
             // "Entity",
             "Ingredient",
-            // "Music",
-             "Scene",
-            // "Sound",
-             "UIForm",
-            // "UISound",
+            "Music",
+            "Scene",
+            "Sound",
+            "UIForm",
+            "UISound",
             "Day",
             "Dish",
+            "Guest",
         };
 
         private readonly Dictionary<string, bool> m_LoadedFlag = new Dictionary<string, bool>();

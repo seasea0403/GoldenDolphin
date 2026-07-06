@@ -1,7 +1,7 @@
-#	 ˿    ñ 			
+#	顾客配置表				
 #	GuestId	GuestType	Region	AssetName
 #	int	int	int	string
-#	 ˿ ID	 ˿     	        	  Դ    
+#	顾客ID	顾客类型（是否为剧情顾客）	顾客所属区域	资源名称
 	1001	0	0	HumanCust_01
 	1002	0	0	HumanCust_02
 	1003	0	0	HumanCust_03

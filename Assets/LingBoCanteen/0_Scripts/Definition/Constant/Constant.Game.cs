@@ -28,6 +28,10 @@ namespace LingBoCanteen
             // 区域跳转初始San
             public const int HEAVEN_INIT_SAN = 70;
             public const int HELL_INIT_SAN = 30;
+
+            // San值边界（触碰边界视为自动被电梯送往天堂/地狱）
+            public const int SAN_BOUNDARY_MIN = 0;
+            public const int SAN_BOUNDARY_MAX = 100;
             
             // 顾客配置
             public const int MAX_WAITING_GUEST = 3;      // 等待区最大顾客数

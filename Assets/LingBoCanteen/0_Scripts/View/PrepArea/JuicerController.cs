@@ -62,6 +62,11 @@ namespace LingBoCanteen
                 m_JuicerAnimator.enabled = true;
                 m_JuicerAnimator.SetTrigger(m_PlayAnimTrigger);
             }
+
+            // 播放食材放置音效
+            SoundManager.Instance?.PlayIngredientPlaceSound();
+            // 播放榨汁机循环音
+            SoundManager.Instance?.PlayJuicerLoopSound();
         }
 
         private void Update()

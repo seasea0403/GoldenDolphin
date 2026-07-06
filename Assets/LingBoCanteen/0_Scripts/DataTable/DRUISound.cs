@@ -45,24 +45,6 @@ namespace LingBoCanteen
             private set;
         }
 
-        /// <summary>
-        /// 获取优先级（默认0，128最高，-128最低）。
-        /// </summary>
-        public int Priority
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 获取音量（0~1）。
-        /// </summary>
-        public float Volume
-        {
-            get;
-            private set;
-        }
-
         public override bool ParseDataRow(string dataRowString, object userData)
         {
             string[] columnStrings = dataRowString.Split(DataTableExtension.DataSplitSeparators);
@@ -76,8 +58,6 @@ namespace LingBoCanteen
             m_Id = int.Parse(columnStrings[index++]);
             index++;
             AssetName = columnStrings[index++];
-            Priority = int.Parse(columnStrings[index++]);
-            Volume = float.Parse(columnStrings[index++]);
 
             GeneratePropertyArray();
             return true;
@@ -91,8 +71,6 @@ namespace LingBoCanteen
                 {
                     m_Id = binaryReader.Read7BitEncodedInt32();
                     AssetName = binaryReader.ReadString();
-                    Priority = binaryReader.Read7BitEncodedInt32();
-                    Volume = binaryReader.ReadSingle();
                 }
             }
 

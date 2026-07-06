@@ -39,6 +39,7 @@ namespace LingBoCanteen
             GameEntry.DataNode.SetData("Business.WaitingCustomerNum", (VarInt32)2);
             GameEntry.DataNode.SetData("Business.HasUnservedOrder", (VarBoolean)false);
             GameEntry.DataNode.SetData("Business.TodayEarnGold", (VarInt32)0);
+            GameEntry.DataNode.SetData("Business.TodaySanDelta", (VarInt32)0);
 
             // 5. 库存数据（存档项）
             // 5.1 食材库存 <食材ID, 持有数量>

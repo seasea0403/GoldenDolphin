@@ -47,6 +47,14 @@ namespace LingBoCanteen
             return true;
         }
 
+        /// <summary>
+        /// 进入下一天时调用：重置工位状态。子类可覆盖以实现自定义的重置逻辑。
+        /// </summary>
+        public virtual void ResetForNewDay()
+        {
+            State = ProcessStationState.Empty;
+        }
+
         protected abstract bool CanAccept(IngredientDragPayload payload);
 
         protected abstract void Accept(IngredientDragPayload payload);

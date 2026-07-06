@@ -10,8 +10,16 @@ namespace LingBoCanteen
     {
         [SerializeField] private ServingCounterController m_ServingCounter;
 
+        private void OnEnable()
+        {
+            Collider2D col = GetComponent<Collider2D>();
+            Debug.Log($"[ServiceBellController] OnEnable - Collider2D.enabled={col.enabled}, GameObject.activeSelf={gameObject.activeSelf}");
+        }
+
         private void OnMouseDown()
         {
+            Collider2D col = GetComponent<Collider2D>();
+            Debug.Log($"[ServiceBellController] OnMouseDown - Collider2D.enabled={col.enabled}, ServingCounter={m_ServingCounter != null}");
             m_ServingCounter?.TryServeAll();
         }
     }

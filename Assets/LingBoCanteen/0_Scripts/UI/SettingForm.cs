@@ -5,7 +5,6 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
@@ -14,131 +13,57 @@ namespace LingBoCanteen
 {
     public class SettingForm : UGuiForm
     {
+        [Header("BGM音量滑块")]
         [SerializeField]
-        private Toggle m_MusicMuteToggle = null;
+        private Slider m_BGMSlider = null;
 
+        [Header("音效SFX音量滑块")]
         [SerializeField]
-        private Slider m_MusicVolumeSlider = null;
+        private Slider m_SFXSlider = null;
 
+        [Header("全屏开关Toggle")]
         [SerializeField]
-        private Toggle m_SoundMuteToggle = null;
+        private Toggle m_FullScreenToggle = null;
 
+        [Header("关闭设置界面按钮")]
         [SerializeField]
-        private Slider m_SoundVolumeSlider = null;
+        private Button m_CloseBtn = null;
 
-        [SerializeField]
-        private Toggle m_UISoundMuteToggle = null;
-
-        [SerializeField]
-        private Slider m_UISoundVolumeSlider = null;
-
-        [SerializeField]
-        private CanvasGroup m_LanguageTipsCanvasGroup = null;
-
-        [SerializeField]
-        private Toggle m_EnglishToggle = null;
-
-        [SerializeField]
-        private Toggle m_ChineseSimplifiedToggle = null;
-
-        [SerializeField]
-        private Toggle m_ChineseTraditionalToggle = null;
-
-        [SerializeField]
-        private Toggle m_KoreanToggle = null;
-
-        private Language m_SelectedLanguage = Language.Unspecified;
-
-        public void OnMusicMuteChanged(bool isOn)
+        /// <summary>
+        /// BGM音量变化回调
+        /// </summary>
+        public void OnBGMVolumeChanged(float volume)
         {
-            GameEntry.Sound.Mute("Music", !isOn);
-            m_MusicVolumeSlider.gameObject.SetActive(isOn);
-        }
-
-        public void OnMusicVolumeChanged(float volume)
-        {
+            // 更新音效组件音量
             GameEntry.Sound.SetVolume("Music", volume);
+            // 存入DataNode持久化
+            GameEntry.DataNode.SetData("Settings.BGMVolume", (VarSingle)volume);
         }
 
-        public void OnSoundMuteChanged(bool isOn)
-        {
-            GameEntry.Sound.Mute("Sound", !isOn);
-            m_SoundVolumeSlider.gameObject.SetActive(isOn);
-        }
-
-        public void OnSoundVolumeChanged(float volume)
+        /// <summary>
+        /// SFX音效音量变化回调
+        /// </summary>
+        public void OnSFXVolumeChanged(float volume)
         {
             GameEntry.Sound.SetVolume("Sound", volume);
+            GameEntry.DataNode.SetData("Settings.SFXVolume", (VarSingle)volume);
         }
 
-        public void OnUISoundMuteChanged(bool isOn)
+        /// <summary>
+        /// 全屏切换回调
+        /// </summary>
+        public void OnFullScreenToggleChanged(bool isOn)
         {
-            GameEntry.Sound.Mute("UISound", !isOn);
-            m_UISoundVolumeSlider.gameObject.SetActive(isOn);
+            Screen.fullScreen = isOn;
+            GameEntry.DataNode.SetData("Settings.IsFullScreen", (VarBoolean)isOn);
         }
 
-        public void OnUISoundVolumeChanged(float volume)
+        /// <summary>
+        /// 关闭设置面板
+        /// </summary>
+        public void OnCloseButtonClick()
         {
-            GameEntry.Sound.SetVolume("UISound", volume);
-        }
-
-        public void OnEnglishSelected(bool isOn)
-        {
-            if (!isOn)
-            {
-                return;
-            }
-
-            m_SelectedLanguage = Language.English;
-            RefreshLanguageTips();
-        }
-
-        public void OnChineseSimplifiedSelected(bool isOn)
-        {
-            if (!isOn)
-            {
-                return;
-            }
-
-            m_SelectedLanguage = Language.ChineseSimplified;
-            RefreshLanguageTips();
-        }
-
-        public void OnChineseTraditionalSelected(bool isOn)
-        {
-            if (!isOn)
-            {
-                return;
-            }
-
-            m_SelectedLanguage = Language.ChineseTraditional;
-            RefreshLanguageTips();
-        }
-
-        public void OnKoreanSelected(bool isOn)
-        {
-            if (!isOn)
-            {
-                return;
-            }
-
-            m_SelectedLanguage = Language.Korean;
-            RefreshLanguageTips();
-        }
-
-        public void OnSubmitButtonClick()
-        {
-            if (m_SelectedLanguage == GameEntry.Localization.Language)
-            {
-                Close();
-                return;
-            }
-
-            GameEntry.Setting.SetString(Constant.Setting.Language, m_SelectedLanguage.ToString());
-            GameEntry.Setting.Save();
-
-            GameEntry.Sound.StopMusic();
-            UnityGameFramework.Runtime.GameEntry.Shutdown(ShutdownType.Restart);
+            Close();
         }
 
 #if UNITY_2017_3_OR_NEWER
@@ -149,56 +74,31 @@ namespace LingBoCanteen
         {
             base.OnOpen(userData);
 
-            m_MusicMuteToggle.isOn = !GameEntry.Sound.IsMuted("Music");
-            m_MusicVolumeSlider.value = GameEntry.Sound.GetVolume("Music");
+            // 读取DataNode保存的音量、全屏状态，同步到UI控件
+            float bgmVol = GameEntry.DataNode.GetData<VarSingle>("Settings.BGMVolume");
+            float sfxVol = GameEntry.DataNode.GetData<VarSingle>("Settings.SFXVolume");
+            bool isFullScreen = GameEntry.DataNode.GetData<VarBoolean>("Settings.IsFullScreen");
 
-            m_SoundMuteToggle.isOn = !GameEntry.Sound.IsMuted("Sound");
-            m_SoundVolumeSlider.value = GameEntry.Sound.GetVolume("Sound");
+            m_BGMSlider.value = bgmVol;
+            m_SFXSlider.value = sfxVol;
+            m_FullScreenToggle.isOn = isFullScreen;
 
-            m_UISoundMuteToggle.isOn = !GameEntry.Sound.IsMuted("UISound");
-            m_UISoundVolumeSlider.value = GameEntry.Sound.GetVolume("UISound");
+            // 绑定关闭按钮事件
+            m_CloseBtn.onClick.RemoveAllListeners();
+            m_CloseBtn.onClick.AddListener(OnCloseButtonClick);
+            
+            // 为关闭按钮绑定音效
+            UIButtonSoundHelper.BindButtonSound(m_CloseBtn);
 
-            m_SelectedLanguage = GameEntry.Localization.Language;
-            switch (m_SelectedLanguage)
-            {
-                case Language.English:
-                    m_EnglishToggle.isOn = true;
-                    break;
+            // 绑定滑块、Toggle监听（可在Inspector绑定，这里做兜底）
+            m_BGMSlider.onValueChanged.RemoveAllListeners();
+            m_BGMSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
 
-                case Language.ChineseSimplified:
-                    m_ChineseSimplifiedToggle.isOn = true;
-                    break;
+            m_SFXSlider.onValueChanged.RemoveAllListeners();
+            m_SFXSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
 
-                case Language.ChineseTraditional:
-                    m_ChineseTraditionalToggle.isOn = true;
-                    break;
-
-                case Language.Korean:
-                    m_KoreanToggle.isOn = true;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-#if UNITY_2017_3_OR_NEWER
-        protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
-#else
-        protected internal override void OnUpdate(float elapseSeconds, float realElapseSeconds)
-#endif
-        {
-            base.OnUpdate(elapseSeconds, realElapseSeconds);
-
-            if (m_LanguageTipsCanvasGroup.gameObject.activeSelf)
-            {
-                m_LanguageTipsCanvasGroup.alpha = 0.5f + 0.5f * Mathf.Sin(Mathf.PI * Time.time);
-            }
-        }
-
-        private void RefreshLanguageTips()
-        {
-            m_LanguageTipsCanvasGroup.gameObject.SetActive(m_SelectedLanguage != GameEntry.Localization.Language);
+            m_FullScreenToggle.onValueChanged.RemoveAllListeners();
+            m_FullScreenToggle.onValueChanged.AddListener(OnFullScreenToggleChanged);
         }
     }
 }

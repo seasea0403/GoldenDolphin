@@ -68,5 +68,19 @@ namespace LingBoCanteen
                 }
             }
         }
+
+        /// <summary>
+        /// 进入下一天时调用：重置所有锅具的状态为空。
+        /// </summary>
+        public void ResetAllPots()
+        {
+            foreach (PotController pot in m_Pots)
+            {
+                if (pot != null)
+                {
+                    pot.ResetForNewDay();
+                }
+            }
+        }
     }
 }

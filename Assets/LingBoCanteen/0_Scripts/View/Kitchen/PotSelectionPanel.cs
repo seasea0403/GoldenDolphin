@@ -18,7 +18,7 @@ namespace LingBoCanteen
             public Sprite Icon;
             public Button Button;
         }
-
+        
         [SerializeField] private GameObject m_Root;
         [SerializeField] private PotOption[] m_Options;
 
@@ -44,6 +44,8 @@ namespace LingBoCanteen
 
                 PotOption captured = option;
                 option.Button.onClick.AddListener(() => OnOptionClicked(captured));
+                // 绑定音效
+                UIButtonSoundHelper.BindButtonSound(option.Button);
             }
 
             m_Root?.SetActive(false);
@@ -77,6 +79,10 @@ namespace LingBoCanteen
             m_Root?.SetActive(false);
             m_TargetPot?.SelectPot((int)option.Type, option.Icon);
             m_TargetPot = null;
+        }
+
+        public void Close(){
+            m_Root?.SetActive(false);            
         }
     }
 }

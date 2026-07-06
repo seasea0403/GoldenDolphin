@@ -1,6 +1,7 @@
 using GameFramework.Event;
 using GameFramework.Procedure;
 using UnityGameFramework.Runtime;
+using System.Collections;
 using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
 namespace LingBoCanteen
@@ -48,6 +49,12 @@ namespace LingBoCanteen
             }
 
             Log.Info("Load main scene OK.");
+
+            // 执行淡入效果
+            if (SceneTransitionManager.Instance != null)
+            {
+                CoroutineExecutor.Instance?.ExecuteCoroutine(SceneTransitionManager.Instance.FadeInScene());
+            }
         }
 
         private void OnLoadSceneFailure(object sender, GameEventArgs e)

@@ -38,6 +38,11 @@ namespace LingBoCanteen
             m_StartGameBtn.onClick.AddListener(OnStartGameClick);
             m_SettingBtn.onClick.AddListener(OnSettingClick);
             m_ExitBtn.onClick.AddListener(OnExitClick);
+
+            // 为所有菜单按钮绑定音效
+            UIButtonSoundHelper.BindButtonSound(m_StartGameBtn);
+            UIButtonSoundHelper.BindButtonSound(m_SettingBtn);
+            UIButtonSoundHelper.BindButtonSound(m_ExitBtn);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using GameFramework.Event;
 using GameFramework.Procedure;
 using UnityGameFramework.Runtime;
+using System.Collections;
 using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
 namespace LingBoCanteen
@@ -12,17 +13,25 @@ namespace LingBoCanteen
     public class ProcedureMenu : ProcedureBase
     {
         private bool m_StartGame = false;
+        private ProcedureOwner m_ProcedureOwner = null;
 
         protected override void OnEnter(ProcedureOwner procedureOwner)
         {
             base.OnEnter(procedureOwner);
 
             m_StartGame = false;
+            m_ProcedureOwner = procedureOwner;
 
             GameEntry.Event.Subscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
             GameEntry.Event.Subscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
 
             Log.Info("进入主菜单流程。");
+
+            // 初始化过渡管理器并隐藏黑屏
+            if (SceneTransitionManager.Instance != null)
+            {
+                SceneTransitionManager.Instance.HideBlackScreenImmediate();
+            }
 
             // 加载菜单场景
             GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset("Menu"), Constant.AssetPriority.SceneAsset, this);
@@ -35,9 +44,21 @@ namespace LingBoCanteen
             if (m_StartGame)
             {
                 m_StartGame = false;
-                // 跳转到主游戏流程
-                ChangeState<ProcedureGame>(procedureOwner);
+                // 使用协程执行器执行黑屏过渡然后切换流程
+                CoroutineExecutor.Instance?.ExecuteCoroutine(TransitionToGameProcedure(procedureOwner));
             }
+        }
+
+        private IEnumerator TransitionToGameProcedure(ProcedureOwner procedureOwner)
+        {
+            // 执行黑屏过渡
+            if (SceneTransitionManager.Instance != null)
+            {
+                yield return SceneTransitionManager.Instance.TransitionScene(0.3f);
+            }
+
+            // 切换到主游戏流程
+            ChangeState<ProcedureGame>(procedureOwner);
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -78,6 +99,9 @@ namespace LingBoCanteen
             }
 
             Log.Info("Load menu scene OK.");
+
+            // 播放主菜单BGM
+            BGMManager.Instance?.PlayBGM(30000, false);
 
             // 打开主菜单UI
             GameEntry.UI.OpenUIForm(UIFormId.MenuForm, this);

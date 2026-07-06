@@ -72,6 +72,9 @@ namespace LingBoCanteen
                 m_GhostRenderer.gameObject.SetActive(true);
                 m_GhostRenderer.transform.position = startWorldPosition;
             }
+
+            // 隐藏食材tooltip
+            IngredientTooltipView.Instance?.Hide();
         }
 
         /// <summary>
@@ -161,6 +164,20 @@ namespace LingBoCanteen
             Vector3 screenPoint = Input.mousePosition;
             screenPoint.z = Mathf.Abs(cam.transform.position.z);
             return cam.ScreenToWorldPoint(screenPoint);
+        }
+
+        /// <summary>
+        /// 进入下一天时调用：重置所有备菜工具的状态为空。
+        /// </summary>
+        public static void ResetAllStations()
+        {
+            foreach (ProcessStationBase station in s_Stations)
+            {
+                if (station != null)
+                {
+                    station.ResetForNewDay();
+                }
+            }
         }
     }
 }

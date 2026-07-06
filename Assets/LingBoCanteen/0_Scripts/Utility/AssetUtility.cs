@@ -26,7 +26,7 @@ namespace LingBoCanteen
 
         public static string GetMusicAsset(string assetName)
         {
-            return Utility.Text.Format("Assets/LingBoCanteen/Music/{0}.mp3", assetName);
+            return Utility.Text.Format("Assets/LingBoCanteen/Music/{0}.wav", assetName);
         }
 
         public static string GetSoundAsset(string assetName)
@@ -42,6 +42,11 @@ namespace LingBoCanteen
         public static string GetDishIconAsset(string assetName)
         {
             return Utility.Text.Format("Assets/LingBoCanteen/4_Arts/Foods/Dishes/{0}.png", assetName);
+        }
+
+        public static string GetCustomerPortraitAsset(string assetName)
+        {
+            return Utility.Text.Format("Assets/LingBoCanteen/4_Arts/Customers/{0}.png", assetName);
         }
 
         /// <summary>
@@ -60,7 +65,7 @@ namespace LingBoCanteen
 
         public static string GetUISoundAsset(string assetName)
         {
-            return Utility.Text.Format("Assets/LingBoCanteen/UI/UISounds/{0}.wav", assetName);
+            return Utility.Text.Format("Assets/LingBoCanteen/Sounds/{0}.wav", assetName);
         }
     }
 }
