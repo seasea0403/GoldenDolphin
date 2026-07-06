@@ -7160,8 +7160,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 15.509644, y: 44.645874}
-  m_SizeDelta: {x: -221.53864, y: 74.4156}
+  m_AnchoredPosition: {x: -41.386524, y: 53.917816}
+  m_SizeDelta: {x: -335.331, y: 65.1436}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &823895594
 MonoBehaviour:
@@ -7183,7 +7183,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u6211\u662F\u4E00\u53E5\u8BDD"
+  m_text: "\u6211\u662F\u4E00\u53E5\u8BDD,,,,,,,."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ac920b7367438ad4a8b182e8f2fa4f21, type: 2}
   m_sharedMaterial: {fileID: 7165091909512859464, guid: ac920b7367438ad4a8b182e8f2fa4f21, type: 2}
@@ -11325,7 +11325,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
