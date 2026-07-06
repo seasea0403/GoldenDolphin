@@ -15,7 +15,7 @@
 	2011	青苹果柠檬果冻杯	Dishes_AppleJellyCup	"3003,3009,3010,3011"	"4003,4005"	5004	Recipe_AppleJellyCup	4	42	
 	2012	烤鱼	Dishes_ToastedFish	"3003,3006,3007,3019"	"4001,4004,4006"	5005	Recipe_ToastedFish	4	34	
 	2013	番茄肉酱面	Dishes_TomatoMeatNoodles	"2014,3022"		5001	Recipe_TomatoMeatNoodles	4	30	
-	2014	番茄肉酱		"3004,3012,3020"	"4002,4004,4005"	5001				
+	2014	番茄肉酱	Dishes_TamotoMeatSauce	"3004,3012,3020"	"4002,4004,4005"	5001				
 	2015	蛋炒饭	Dishes_EggFriedRice	"3007,3013,3018,3023"	4004	5001	Recipe_EggFriedRice	5	30	
 	2016	水晶山楂糕	Dishes_HawthornJelly	"3011,3014"	4005	5002	Recipe_HawthornJelly	5	50	
 	2017	牛肉滑蛋饭	Dishes_RiceWithSlicedBeefEggs	"3013,3017,3023"	"4004,4006"	5001	Recipe_RiceWithSlicedBeefEggs	5	50	

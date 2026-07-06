@@ -37,6 +37,12 @@ namespace LingBoCanteen
             // ★【新增】检查SAN值是否超出Mortal区间，自动切换region
             CheckAndUpdateRegionBySAN();
 
+            // ★【新增】进入第16天时，检查HasMovedBeforeDay15标志
+            if (nextDay == 16)
+            {
+                CheckDay15Transition();
+            }
+
             // 重置当日营业临时数据（不涉及存档项：Player/Area/Storage/Story/Settings）
             GameEntry.DataNode.SetData("Business.TodayServeCustomerCount", (VarInt32)0);
             GameEntry.DataNode.SetData("Business.TodayFailedCount", (VarInt32)0);
@@ -151,12 +157,43 @@ namespace LingBoCanteen
             // 标记游戏已结束
             GameEntry.DataNode.SetData("Game.IsEnding", (VarBoolean)true);
             
-            // 记录是否曾改变过Region，用于GameEndingManager判断结局类型
-            bool hasChangedRegion = GameEntry.DataNode.GetNode("Area.ElevatorUsedOnce") != null
-                && GameEntry.DataNode.GetData<VarBoolean>("Area.ElevatorUsedOnce").Value;
-            GameEntry.DataNode.SetData("Game.HasChangedRegion", (VarBoolean)hasChangedRegion);
+            // 记录是否曾在第15天之前改变过Region，用于GameEndingManager判断是TrueEnding还是NormalEnding
+            bool hasMovedBeforeDay15 = GameEntry.DataNode.GetNode("Area.HasMovedBeforeDay15") != null
+                && GameEntry.DataNode.GetData<VarBoolean>("Area.HasMovedBeforeDay15").Value;
+            GameEntry.DataNode.SetData("Game.HasChangedRegion", (VarBoolean)hasMovedBeforeDay15);
 
-            Debug.Log($"[EveningDayFlow] 游戏结束触发，已改变Region: {hasChangedRegion}");
+            Debug.Log($"[EveningDayFlow] 游戏结束触发，第15天前曾改变Region: {hasMovedBeforeDay15}");
+        }
+
+        /// <summary>
+        /// 进入第16天时的检查：如果HasMovedBeforeDay15为false，则激活怀疑线。
+        /// 对话内容将在第17天由PlotTriggerManager根据路线选择Day16_1或Day16_2显示。
+        /// </summary>
+        private static void CheckDay15Transition()
+        {
+            if (GameEntry.DataNode == null)
+            {
+                return;
+            }
+
+            bool hasMovedBeforeDay15 = GameEntry.DataNode.GetNode("Area.HasMovedBeforeDay15") != null
+                && GameEntry.DataNode.GetData<VarBoolean>("Area.HasMovedBeforeDay15").Value;
+
+            if (!hasMovedBeforeDay15)
+            {
+                Debug.Log("[Day15 Transition] 检测到玩家第15天前未改变过区域，进入隐藏路线...");
+                
+                // 显示怀疑线（settlement面板的Suspect Root）
+                if (GameEntry.DataNode.GetNode("Story.Suspect.PlotInterrupt") != null)
+                {
+                    GameEntry.DataNode.SetData("Story.Suspect.PlotInterrupt", (VarBoolean)true);
+                    Debug.Log("[Day15 Transition] 怀疑线已激活，HUD区域将显示'人间？'");
+                }
+            }
+            else
+            {
+                Debug.Log("[Day15 Transition] 检测到玩家曾在第15天前改变过区域，正常进行");
+            }
         }
     }
 }

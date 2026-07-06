@@ -60,6 +60,15 @@ namespace LingBoCanteen
 
             GameRegion currentRegion = (GameRegion)regionInt;
 
+            // ★【新增】检查是否进入怀疑模式，如果是则强制显示"人间？"
+            bool isInSuspicionMode = GameEntry.DataNode.GetNode("Story.Suspect.PlotInterrupt") != null
+                && GameEntry.DataNode.GetData<VarBoolean>("Story.Suspect.PlotInterrupt").Value;
+            
+            if (isInSuspicionMode)
+            {
+                currentRegion = GameRegion.MortalSus;
+            }
+
             // 赋值文本
             m_DayText.text = $"第{currentDay}天";
             m_RegionText.text = GetRegionDisplayText(currentRegion);

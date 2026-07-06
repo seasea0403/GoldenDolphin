@@ -150,6 +150,51 @@ namespace LingBoCanteen
                 return;
             }
 
+            // 检查是否需要加工（可切或可榨汁）
+            bool needsProcessing = m_Row.CanCut || m_Row.CanSqueeze;
+            
+            if (!needsProcessing)
+            {
+                // 不需要加工，直接把 output 添加到相应槽位（碗或杯）
+                Log.Info($"食材 {m_IngredientId} 不需要加工，直接添加 output ({m_Row.OutputId})");
+                if (PrepAreaManager.Instance != null)
+                {
+                    Sprite outputSprite = IngredientUtility.GetSprite(m_Row, m_Row.FinalAssetName ?? m_Row.InitialAssetName);
+                    
+                    // 判断应该添加到哪个槽位
+                    OutputSlotGroup targetGroup = null;
+                    if (m_IngredientId == 1010)  // 1010 是酸奶，添加到杯槽
+                    {
+                        targetGroup = PrepAreaManager.Instance.GlassGroup;
+                        Log.Info($"食材 1010（酸奶）添加到 GlassGroup");
+                    }
+                    else
+                    {
+                        targetGroup = PrepAreaManager.Instance.BowlGroup;
+                        Log.Info($"食材 {m_IngredientId} 添加到 BowlGroup");
+                    }
+                    
+                    if (targetGroup != null)
+                    {
+                        bool success = targetGroup.TryAddItem(m_Row.OutputId, m_Row.OutputName, outputSprite);
+                        if (success && m_AreaType == IngredientAreaType.Shelf)
+                        {
+                            IngredientUtility.TryConsumeStock(m_IngredientId);
+                            Refresh();
+                        }
+                    }
+                    else
+                    {
+                        Log.Warning("无法访问对应的槽位组");
+                    }
+                }
+                else
+                {
+                    Log.Warning("无法访问 PrepAreaManager");
+                }
+                return;
+            }
+
             BeginDrag();
         }
 

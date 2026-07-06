@@ -37,7 +37,7 @@ namespace LingBoCanteen
             public const int MAX_WAITING_GUEST = 3;      // 等待区最大顾客数
             public const float NEXT_CUSTOMER_INTERVAL = 10f; // 一个顾客离场后，同一槽位下一位顾客的进入间隔（秒）
             public const float BUFF_PATIENCE_DELTA = 10f;    // 温和/暴怒等 Buff 对耐心时间的修正幅度（秒）
-            public const float DUAL_ORDER_CHANCE = 0.5f;     // 顾客点 2 道菜的概率，其余为 1 道菜
+            public const float DUAL_ORDER_CHANCE = 0.1f;     // 顾客点 2 道菜的概率(10%)，其余为 1 道菜(90%)
 
             // 备菜区配置
             public const float CUTTING_MID_TIME = 0.6f;      // 放入菜板后，切到中间态的时间点（秒）

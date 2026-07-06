@@ -663,6 +663,7 @@ GameObject:
   - component: {fileID: 5422213853064937596}
   - component: {fileID: 7827735662453413670}
   - component: {fileID: 1418441330545508982}
+  - component: {fileID: 1282423704433112709}
   m_Layer: 5
   m_Name: SettingForm
   m_TagString: Untagged
@@ -769,6 +770,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1282423704433112709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048579970885004754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a4b63ee119289b47884f110ee48850b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BGMSlider: {fileID: 0}
+  m_SFXSlider: {fileID: 2829302860867357860}
+  m_FullScreenToggle: {fileID: 3998345572330220747}
+  m_CloseBtn: {fileID: 4306193366001100776}
 --- !u!1 &4103581000520108586
 GameObject:
   m_ObjectHideFlags: 0

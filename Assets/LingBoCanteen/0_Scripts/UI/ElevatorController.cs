@@ -141,6 +141,16 @@ public class ElevatorController : MonoBehaviour
         LingBoCanteen.GameEntry.DataNode.SetData("Player.San", (VarInt32)forcedSan);
         LingBoCanteen.GameEntry.DataNode.SetData("Area.ElevatorUsedOnce", (VarBoolean)true);
 
+        // ★【新增】检查当前日期，如果 <= 15，则标记HasMovedBeforeDay15
+        int currentDay = LingBoCanteen.GameEntry.DataNode.GetNode("DayCurrent.Value") != null
+            ? LingBoCanteen.GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Value").Value
+            : 1;
+        if (currentDay <= 15)
+        {
+            LingBoCanteen.GameEntry.DataNode.SetData("Area.HasMovedBeforeDay15", (VarBoolean)true);
+            Debug.Log($"[Elevator] 在第{currentDay}天使用电梯，HasMovedBeforeDay15已标记为true");
+        }
+
         // 诊断日志：记录电梯使用时的SAN变化
         Debug.Log($"[Elevator] 区域切换到: {targetRegion} | 原SAN: {previousSan} | 新SAN: {forcedSan} | 电梯已标记为使用过");
 

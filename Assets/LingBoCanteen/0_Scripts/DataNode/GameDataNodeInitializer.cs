@@ -22,7 +22,7 @@ namespace LingBoCanteen
         public static void Initialize()
         {
             // 1. 玩家永久属性（存档项）
-            GameEntry.DataNode.SetData("Player.San", (VarInt32)Constant.GameConstant.INITIAL_SAN);
+            GameEntry.DataNode.SetData("Player.San", (VarInt32)50);
             GameEntry.DataNode.SetData("Player.Gold", (VarInt32)Constant.GameConstant.INITIAL_GOLD);
             GameEntry.DataNode.SetData("Player.HasRecruitHelper", (VarBoolean)false);
 

@@ -103,6 +103,26 @@ namespace LingBoCanteen
             string dialogueAssetName = plotInfo.dialogueAssetName;
             string portraitSpecifier = plotInfo.portraitAssetName;
 
+            // ★【新增】第17天时，根据HasMovedBeforeDay15标志选择不同的对话
+            if (dayNumber == 17)
+            {
+                bool hasMovedBeforeDay15 = GameEntry.DataNode.GetNode("Area.HasMovedBeforeDay15") != null
+                    && GameEntry.DataNode.GetData<VarBoolean>("Area.HasMovedBeforeDay15").Value;
+                
+                if (!hasMovedBeforeDay15)
+                {
+                    // 隐藏路线：加载Day16_2
+                    dialogueAssetName = "Day16_2";
+                    Log.Info($"[Day17 Plot] 进入隐藏路线，加载对话: {dialogueAssetName}");
+                }
+                else
+                {
+                    // 正常路线：加载Day16_1
+                    dialogueAssetName = "Day16_1";
+                    Log.Info($"[Day17 Plot] 正常路线，加载对话: {dialogueAssetName}");
+                }
+            }
+
             // 仅支持通过 DRGuest 的数字 Id 来解析立绘资源名。
             // 非数字的 portraitSpecifier 将被忽略以避免使用硬编码资源名。
             m_TodayPlotCharacterId = string.Empty;

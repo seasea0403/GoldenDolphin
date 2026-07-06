@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using System.Reflection;
+using Image = UnityEngine.UI.Image;
 
 namespace LingBoCanteen
 {
@@ -20,6 +21,10 @@ namespace LingBoCanteen
     {
         [Header("面板根节点（SetActive 控制显隐）")]
         [SerializeField] private GameObject m_Root;
+
+        [Header("怀疑线相关")]
+        public GameObject susroot;
+        [SerializeField] private Image m_BackgroundImage;  // 结算面板背景图
 
         [Header("文本显示")]
         [SerializeField] private TMP_Text m_DayText;
@@ -45,6 +50,43 @@ namespace LingBoCanteen
             }
         }
 
+        /// <summary>
+        /// 显示怀疑线Root和切换背景（当进入第17天且在隐藏路线时）
+        /// </summary>
+        public void susopen()
+        {
+            // 读取当前日期
+            int day = ReadInt("DayCurrent.Value", 1);
+            
+            // 读取是否进入隐藏路线（HasMovedBeforeDay15 == false）
+            bool hasMovedBeforeDay15 = GameEntry.DataNode.GetNode("Area.HasMovedBeforeDay15") != null
+                && GameEntry.DataNode.GetData<VarBoolean>("Area.HasMovedBeforeDay15").Value;
+            
+            // 第17天且未在第15天前改变区域（进入隐藏路线）
+            if (day >= 17 && !hasMovedBeforeDay15)
+            {
+                if (susroot != null)
+                {
+                    susroot.SetActive(true);
+                    Debug.Log("[SettlePanel] 怀疑线Root已显示");
+                }
+                
+                // 切换背景图片为怀疑线主题背景
+                if (m_BackgroundImage != null)
+                {
+                    Sprite suspicionBg = Resources.Load<Sprite>("Assets/LingBoCanteen/4_Arts/UI/UI_Panel/Settle_Suspicion.png");
+                    if (suspicionBg != null)
+                    {
+                        m_BackgroundImage.sprite = suspicionBg;
+                        Debug.Log("[SettlePanel] 背景图已切换为怀疑线主题");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[SettlePanel] 无法加载怀疑线背景图：Assets/LingBoCanteen/4_Arts/UI/UI_Panel/Settle_Suspicion.png");
+                    }
+                }
+            }
+        }
         /// <summary>
         /// 打开结算面板并刷新展示数据，供 <see cref="EveningUIController"/> 调用。
         /// </summary>
@@ -83,6 +125,9 @@ namespace LingBoCanteen
             {
                 m_SanChangeText.text = FormatDelta(sanDelta);
             }
+
+            // ★【新增】检查是否需要显示怀疑线UI
+            susopen();
         }
 
         private void OnConfirmClicked()
@@ -90,6 +135,12 @@ namespace LingBoCanteen
             if (m_Root != null)
             {
                 m_Root.SetActive(false);
+            }
+
+            // 隐藏怀疑线Root
+            if (susroot != null)
+            {
+                susroot.SetActive(false);
             }
 
             int san = ReadInt("Player.San", Constant.GameConstant.INITIAL_SAN);

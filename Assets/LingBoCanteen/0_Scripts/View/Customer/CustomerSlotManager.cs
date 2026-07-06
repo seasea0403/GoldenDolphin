@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using GameFramework;
 using GameFramework.DataTable;
 using LingBoCanteen.Definition.Enum;
@@ -220,7 +222,7 @@ namespace LingBoCanteen
                     if (m_CustomersSpawnedToday < m_TotalCustomerToday)
                     {
                         m_SlotStates[i] = SlotState.Cooldown;
-                        m_SlotCooldownTimer[i] = UnityEngine.Random.Range(5f, 10f);
+                        m_SlotCooldownTimer[i] = UnityEngine.Random.Range(7f, 12f);
                         // 预先选择立绘，避免与上一个重复
                         m_PendingPortraitNames[i] = ChooseGuestAssetForSlot(i);
                         m_LastGeneratedPortraitName = m_PendingPortraitNames[i];
@@ -241,7 +243,7 @@ namespace LingBoCanteen
             int currentDay = GetCurrentDaySafely();
             List<int> unlockedDishIds = m_DishService.GetUnlockedDishIds(currentDay);
 
-            int dishCount = Random.value < Constant.GameConstant.DUAL_ORDER_CHANCE ? 2 : 1;
+            int dishCount = UnityEngine.Random.value < Constant.GameConstant.DUAL_ORDER_CHANCE ? 2 : 1;
             List<int> requiredDishes = WeightedDishSelector.PickDishes(unlockedDishIds, m_DishService.GetDishWeight, dishCount);
 
             List<Sprite> icons = new List<Sprite>(requiredDishes.Count);
@@ -486,6 +488,9 @@ namespace LingBoCanteen
                     SoundManager.Instance.PlaySanDownSound();
                 }
 
+                // 检查SAN边界值（100或0）
+                CheckSANBoundary(newSan);
+
                 // 只累加 San 变化，金币为 0
                 AccumulateTodayDelta(0, sanDelta);
             }
@@ -577,6 +582,9 @@ namespace LingBoCanteen
                 SoundManager.Instance.PlaySanDownSound();
             }
 
+            // 检查SAN边界值（100或0）
+            CheckSANBoundary(newSan);
+
             AccumulateTodayDelta(earnMoney, sanDelta);
         }
         
@@ -596,6 +604,63 @@ namespace LingBoCanteen
                 ? GameEntry.DataNode.GetData<VarInt32>("Business.TodaySanDelta").Value
                 : 0;
             GameEntry.DataNode.SetData("Business.TodaySanDelta", (VarInt32)(todaySan + sanDelta));
+        }
+
+        /// <summary>
+        /// 检查SAN值是否达到边界（100或0），如果达到则直接触发对应的ending。
+        /// </summary>
+        private void CheckSANBoundary(int sanValue)
+        {
+            if (sanValue >= 100)
+            {
+                Debug.Log($"[SAN Boundary] SAN 达到 100 或以上 ({sanValue})，触发天堂结局！");
+                TryInvokeGameEndingMethod("TriggerHeavenEnding");
+            }
+            else if (sanValue <= 0)
+            {
+                Debug.Log($"[SAN Boundary] SAN 达到 0 或以下 ({sanValue})，触发地狱结局！");
+                TryInvokeGameEndingMethod("TriggerHellEnding");
+            }
+        }
+
+        /// <summary>
+        /// 通过反射调用GameEndingManager中的方法。
+        /// </summary>
+        private void TryInvokeGameEndingMethod(string methodName)
+        {
+            try
+            {
+                foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    var type = asm.GetType("LingBoCanteen.GameEndingManager");
+                    if (type == null) continue;
+
+                    // 获取静态 Instance 属性
+                    var instProp = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                    var instance = instProp?.GetValue(null);
+                    if (instance == null)
+                    {
+                        Debug.LogWarning("[CheckSANBoundary] GameEndingManager instance is null");
+                        return;
+                    }
+
+                    var method = type.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance);
+                    if (method == null)
+                    {
+                        Debug.LogError($"[CheckSANBoundary] Method {methodName} not found in GameEndingManager");
+                        return;
+                    }
+
+                    method.Invoke(instance, null);
+                    Debug.Log($"[CheckSANBoundary] Successfully invoked GameEndingManager.{methodName}()");
+                    return;
+                }
+                Debug.LogError("[CheckSANBoundary] GameEndingManager type not found in any assembly");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[CheckSANBoundary] Reflection invoke failed: {e}");
+            }
         }
 
         /// <summary>

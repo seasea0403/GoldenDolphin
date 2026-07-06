@@ -24,9 +24,6 @@ namespace LingBoCanteen
 
         private PotController m_TargetPot;
 
-        // 打开面板的点击和后续选锅点击如果落在同一次鼠标按下/抬起里，容易被误判成同一次点击生效两次；
-        // 面板打开后必须先等鼠标左键松开一次，才认为“可以接受新的点击”。
-        private bool m_ReadyForInput;
 
         private void Awake()
         {
@@ -51,13 +48,6 @@ namespace LingBoCanteen
             m_Root?.SetActive(false);
         }
 
-        private void Update()
-        {
-            if (!m_ReadyForInput && m_Root != null && m_Root.activeSelf && !Input.GetMouseButton(0))
-            {
-                m_ReadyForInput = true;
-            }
-        }
 
         /// <summary>
         /// 供 <see cref="PotController"/> 在空炉灶被点击时调用。
@@ -65,17 +55,11 @@ namespace LingBoCanteen
         public void Open(PotController targetPot)
         {
             m_TargetPot = targetPot;
-            m_ReadyForInput = false;
             m_Root?.SetActive(true);
         }
 
         private void OnOptionClicked(PotOption option)
         {
-            if (!m_ReadyForInput)
-            {
-                return;
-            }
-
             m_Root?.SetActive(false);
             m_TargetPot?.SelectPot((int)option.Type, option.Icon);
             m_TargetPot = null;

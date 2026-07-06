@@ -231,12 +231,16 @@ namespace LingBoCanteen
             }
         }
 
+        private bool m_ShouldOpenSelectionOnMouseUp;
+
         private void OnMouseDown()
         {
+            m_ShouldOpenSelectionOnMouseUp = false;
             switch (m_State)
             {
                 case PotStationState.Empty:
-                    m_SelectionPanel?.Open(this);
+                    // 标记在鼠标释放时打开选锅面板
+                    m_ShouldOpenSelectionOnMouseUp = true;
                     break;
 
                 case PotStationState.Idle:
@@ -248,15 +252,25 @@ namespace LingBoCanteen
                     }
                     else if (!m_IsOven && m_PlacedItemIds.Count == 0)
                     {
-                        // 无食材，重新选锅
+                        // 无食材，重新选锅（标记在鼠标释放时打开）
                         ResetToEmpty();
-                        m_SelectionPanel?.Open(this);
+                        m_ShouldOpenSelectionOnMouseUp = true;
                     }
                     break;
 
                 case PotStationState.Burnt:
                     BeginDragFoodOnly();
                     break;
+            }
+        }
+
+        private void OnMouseUp()
+        {
+            // 鼠标释放时才打开选锅面板
+            if (m_ShouldOpenSelectionOnMouseUp)
+            {
+                m_ShouldOpenSelectionOnMouseUp = false;
+                m_SelectionPanel?.Open(this);
             }
         }
 
