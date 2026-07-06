@@ -50,6 +50,7 @@ namespace LingBoCanteen
 
         // ★ 【新增】剧情系统相关
         private bool m_CanSpawnCustomers = false;  // 是否允许生成顾客
+        private bool m_PlotAssignedToFirstCustomer = false; // 是否已将剧情立绘分配给首位顾客
 
         private void Awake()
         {
@@ -85,24 +86,20 @@ namespace LingBoCanteen
             // ★ 【新增】先禁止客人生成，等待剧情系统允许
             m_CanSpawnCustomers = false;
 
-            // 如果PlotTriggerManager存在且正在播放剧情，订阅其完成事件
-            if (PlotTriggerManager.Instance != null)
+            // 确保 PlotTriggerManager 已存在并为当天准备剧情（若不存在则创建）
+            if (PlotTriggerManager.Instance == null)
             {
-                if (PlotTriggerManager.Instance.IsPlayingPlot())
-                {
-                    PlotTriggerManager.Instance.OnPlotDialogueComplete += EnableCustomerSpawning;
-                }
-                else
-                {
-                    // 没有剧情，直接允许客人生成
-                    m_CanSpawnCustomers = true;
-                }
+                GameObject plotManagerObj = new GameObject("PlotTriggerManager");
+                plotManagerObj.transform.SetParent(transform);
+                plotManagerObj.AddComponent<PlotTriggerManager>();
             }
-            else
-            {
-                // 没有PlotTriggerManager，直接允许客人生成
-                m_CanSpawnCustomers = true;
-            }
+
+            // 请求播放当天剧情；如果有剧情，会在回调中允许顾客生成
+            int currentDayForPlot = currentDay;
+            PlotTriggerManager.Instance.CheckAndPlayPlotForDay(currentDayForPlot);
+
+            // 订阅剧情完成事件，在剧情完成后允许顾客生成
+            PlotTriggerManager.Instance.OnPlotDialogueComplete += EnableCustomerSpawning;
 
             // 初始顾客数量在 [2, 3]，但不能超过本日顾客总数
             int initialCount = UnityEngine.Random.Range(2, 4); // 返回 2 或 3
@@ -203,7 +200,10 @@ namespace LingBoCanteen
                 icons.Add(m_DishService.GetDishIcon(dishId));
             }
 
-            CustomerBuff buff = CustomerBuffUtility.PickBuff(m_CurrentRegion);
+            // 人间（Mortal）与怀疑模式（MortalSus）不抽取 Buff，直接使用 None 并不显示；其他区域按规则抽取
+            CustomerBuff buff = (m_CurrentRegion == GameRegion.Mortal || m_CurrentRegion == GameRegion.MortalSus)
+                ? CustomerBuff.None
+                : CustomerBuffUtility.PickBuff(m_CurrentRegion);
             float patience = Constant.GameConstant.DEFAULT_GUEST_WAIT_TIME + CustomerBuffUtility.GetPatienceModifier(buff);
 
             // 取已预选立绘（由 Start/Update 在进入 Cooldown 阶段时提前选好），若为空则即时选取
@@ -214,15 +214,15 @@ namespace LingBoCanteen
                 m_PendingPortraitNames[slotIndex] = null;
             }
 
-            // ★ 【新增】第一个客人使用剧情人物的立绘
-            if (m_CustomersSpawnedToday == 1 && PlotTriggerManager.Instance != null)
+            // ★ 【新增】将剧情立绘应用到首位实际生成的顾客（仅一次）
+            if (!m_PlotAssignedToFirstCustomer && PlotTriggerManager.Instance != null)
             {
                 string plotCharacterId = PlotTriggerManager.Instance.GetTodayPlotCharacterId();
                 if (!string.IsNullOrEmpty(plotCharacterId))
                 {
-                    // 从DRGuest表查找对应的立绘资源名
                     selectedGuestAssetName = GetGuestAssetNameByCharacterId(plotCharacterId);
-                    Log.Info($"✅ 第一个客人使用剧情人物 {plotCharacterId} 的立绘: {selectedGuestAssetName}");
+                    m_PlotAssignedToFirstCustomer = true;
+                    Log.Info($"✅ 第一个实际生成的顾客使用剧情人物 {plotCharacterId} 的立绘: {selectedGuestAssetName}");
                 }
             }
 
@@ -413,6 +413,31 @@ namespace LingBoCanteen
                     served = GameEntry.DataNode.GetData<VarInt32>("Business.TodayServeCustomerCount").Value;
                 }
                 GameEntry.DataNode.SetData("Business.TodayServeCustomerCount", (VarInt32)(served + 1));
+            }
+
+            // 若顾客未成功上菜（超时/离开），扣除 SAN（不更改金币）并记录当日 San 变化
+            if (!success)
+            {
+                int sanDelta = Constant.GameConstant.ORDER_FAIL_SAN;
+                int san = GameEntry.DataNode.GetData<VarInt32>("Player.San");
+                int newSan = san + sanDelta;
+                GameEntry.DataNode.SetData("Player.San", (VarInt32)newSan);
+
+                // 诊断日志：记录SAN变化
+                Debug.Log($"[SAN Update] 顾客超时: slot={slotIndex} | 原SAN: {san} | 变化值: {sanDelta} | 新SAN: {newSan}");
+
+                // 播放SAN变化音效
+                if (sanDelta > 0)
+                {
+                    SoundManager.Instance.PlaySanUpSound();
+                }
+                else if (sanDelta < 0)
+                {
+                    SoundManager.Instance.PlaySanDownSound();
+                }
+
+                // 只累加 San 变化，金币为 0
+                AccumulateTodayDelta(0, sanDelta);
             }
 
             if (m_Bubbles != null && slotIndex < m_Bubbles.Length && m_Bubbles[slotIndex] != null)

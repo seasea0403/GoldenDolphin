@@ -28,11 +28,14 @@ namespace LingBoCanteen
         // PlotId映射表：PlotId -> (对话资源名, 剧情人物立绘资源名)
         private static readonly Dictionary<int, PlotInfo> PlotIdMapping = new Dictionary<int, PlotInfo>()
         {
-            { 1, new PlotInfo("Day1", "PlotCustomer_Genius") },
-            { 2, new PlotInfo("Day4", "PlotCustomer_celebrity") },
-            { 3, new PlotInfo("Day5", "PlotCustomer_Genius") },
-            // 在这里继续添加其他剧情映射
-            // 格式：{ PlotId, new PlotInfo(DialogueAssetName, PortraitAssetName) }
+            // 现在只使用 DRGuest 的 Id 来解析剧情顾客立绘（字符串形式），对应 DataTables/Guest.txt 中的条目：
+            // 2001 -> PlotCustomer_Celebrity
+            // 2002 -> PlotCustomer_Deserter
+            // 2003 -> PlotCustomer_Genius
+            { 1, new PlotInfo("Day1", "2003") }, // Day1 使用 Genius (2003)
+            { 2, new PlotInfo("Day4", "2001") }, // Day4 使用 Celebrity (2001)
+            { 3, new PlotInfo("Day5", "2003") }, // Day5 使用 Genius (2003)
+            // 如需其他剧情，请按格式添加：{ PlotId, new PlotInfo(DialogueAssetName, "<DRGuestId>") }
         };
 
         public static PlotTriggerManager Instance { get; private set; }
@@ -80,15 +83,7 @@ namespace LingBoCanteen
 
             m_TodayPlotId = plotId;
 
-            // 检查是否已经完成过该剧情
-            string plotKey = $"Plot_{plotId}";
-            if (HasFinishedPlot(plotKey))
-            {
-                Log.Info($"Day {dayNumber} 的剧情（PlotId={plotId}）已完成过，不再显示");
-                m_IsPlayingPlot = false;
-                OnPlotDialogueComplete?.Invoke();
-                return;
-            }
+            // 不再检查剧情是否已完成，始终播放对应剧情
 
             // 从映射表查找对话资源名和人物ID
             if (!PlotIdMapping.TryGetValue(plotId, out var plotInfo))
@@ -102,10 +97,9 @@ namespace LingBoCanteen
             string dialogueAssetName = plotInfo.dialogueAssetName;
             string portraitSpecifier = plotInfo.portraitAssetName;
 
-            // 支持两种写法：
-            // 1) 直接写立绘资源名（例如 "PlotCustomer_Genius"）——保持原有行为；
-            // 2) 写成数字字符串（例如 "5"），表示 DRGuest 表中的 Id，那么从 DRGuest 表取对应的 AssetName。
-            m_TodayPlotCharacterId = portraitSpecifier; // 默认值
+            // 仅支持通过 DRGuest 的数字 Id 来解析立绘资源名（例如在映射中写成 "5"）。
+            // 非数字的 portraitSpecifier 将被忽略以避免使用硬编码资源名。
+            m_TodayPlotCharacterId = string.Empty;
             if (!string.IsNullOrEmpty(portraitSpecifier))
             {
                 if (int.TryParse(portraitSpecifier, out int guestId) && guestId > 0)
@@ -122,13 +116,17 @@ namespace LingBoCanteen
                         }
                         else
                         {
-                            Log.Warning($"PlotTriggerManager: DRGuest id {guestId} not found or has empty AssetName. Using specifier '{portraitSpecifier}' as-is.");
+                            Log.Warning($"PlotTriggerManager: DRGuest id {guestId} not found or has empty AssetName. portraitSpecifier ignored.");
                         }
                     }
                     else
                     {
                         Log.Warning("PlotTriggerManager: DRGuest data table not loaded. Cannot resolve guest id to AssetName.");
                     }
+                }
+                else
+                {
+                    Log.Info($"PlotTriggerManager: portrait specifier '{portraitSpecifier}' is not a numeric DRGuest id; ignoring per ID-only policy.");
                 }
             }
 
@@ -188,13 +186,7 @@ namespace LingBoCanteen
         /// </summary>
         private void OnDialoguePlayComplete()
         {
-            if (m_TodayPlotId > 0)
-            {
-                // 标记剧情为已完成
-                string plotKey = $"Plot_{m_TodayPlotId}";
-                MarkPlotAsFinished(plotKey);
-            }
-
+            // 不再标记剧情为已完成，允许同一剧情多次触发（如需其他行为，可在此扩展）
             m_IsPlayingPlot = false;
 
             // 触发回调：进入正常游戏流程
@@ -253,70 +245,6 @@ namespace LingBoCanteen
             return m_IsPlayingPlot;
         }
 
-        /// <summary>
-        /// 检查剧情是否已完成
-        /// </summary>
-        private bool HasFinishedPlot(string plotKey)
-        {
-            // 先检查节点是否存在，避免类型转换异常
-            if (GameEntry.DataNode.GetNode("Story.FinishedPlotIdList") == null)
-            {
-                return false;
-            }
-
-            try
-            {
-                var finishedList = GameEntry.DataNode.GetData<VarString>("Story.FinishedPlotIdList");
-                if (finishedList == null || string.IsNullOrEmpty(finishedList.Value))
-                    return false;
-
-                var plotIds = finishedList.Value.Split(',');
-                foreach (var id in plotIds)
-                {
-                    if (id.Trim() == plotKey)
-                        return true;
-                }
-            }
-            catch (System.Exception e)
-            {
-                Log.Warning($"Error reading finished plots: {e.Message}");
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 标记剧情为已完成
-        /// </summary>
-        private void MarkPlotAsFinished(string plotKey)
-        {
-            string currentValue = "";
-
-            try
-            {
-                // 先检查节点是否存在
-                if (GameEntry.DataNode.GetNode("Story.FinishedPlotIdList") != null)
-                {
-                    var finishedList = GameEntry.DataNode.GetData<VarString>("Story.FinishedPlotIdList");
-                    currentValue = finishedList?.Value ?? "";
-                }
-            }
-            catch (System.Exception e)
-            {
-                Log.Warning($"Error reading finished plots: {e.Message}");
-                currentValue = "";
-            }
-
-            if (string.IsNullOrEmpty(currentValue))
-            {
-                GameEntry.DataNode.SetData("Story.FinishedPlotIdList", (VarString)plotKey);
-            }
-            else
-            {
-                string newValue = currentValue + "," + plotKey;
-                GameEntry.DataNode.SetData("Story.FinishedPlotIdList", (VarString)newValue);
-            }
-
-            Log.Info($"✅ 剧情 {plotKey} 标记为已完成");
-        }
+        // 已移除剧情完成检测与标记逻辑，以便同一剧情可多次触发（如果需要持久化控制，请在外部实现）
     }
 }
