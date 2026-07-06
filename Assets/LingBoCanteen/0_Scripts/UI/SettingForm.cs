@@ -11,7 +11,7 @@ using UnityGameFramework.Runtime;
 
 namespace LingBoCanteen
 {
-    public class SettingForm : UGuiForm
+    public class SettingForm : MonoBehaviour
     {
         [Header("BGM音量滑块")]
         [SerializeField]
@@ -63,42 +63,50 @@ namespace LingBoCanteen
         /// </summary>
         public void OnCloseButtonClick()
         {
-            Close();
+            gameObject.SetActive(false);
         }
 
-#if UNITY_2017_3_OR_NEWER
-        protected override void OnOpen(object userData)
-#else
-        protected internal override void OnOpen(object userData)
-#endif
+        private void OnEnable()
         {
-            base.OnOpen(userData);
-
+            // 每次显示时都重新初始化，确保所有事件都正确绑定
             // 读取DataNode保存的音量、全屏状态，同步到UI控件
             float bgmVol = GameEntry.DataNode.GetData<VarSingle>("Settings.BGMVolume");
             float sfxVol = GameEntry.DataNode.GetData<VarSingle>("Settings.SFXVolume");
             bool isFullScreen = GameEntry.DataNode.GetData<VarBoolean>("Settings.IsFullScreen");
 
-            m_BGMSlider.value = bgmVol;
-            m_SFXSlider.value = sfxVol;
-            m_FullScreenToggle.isOn = isFullScreen;
+            if (m_BGMSlider != null)
+                m_BGMSlider.value = bgmVol;
+            if (m_SFXSlider != null)
+                m_SFXSlider.value = sfxVol;
+            if (m_FullScreenToggle != null)
+                m_FullScreenToggle.isOn = isFullScreen;
 
             // 绑定关闭按钮事件
-            m_CloseBtn.onClick.RemoveAllListeners();
-            m_CloseBtn.onClick.AddListener(OnCloseButtonClick);
-            
-            // 为关闭按钮绑定音效
-            UIButtonSoundHelper.BindButtonSound(m_CloseBtn);
+            if (m_CloseBtn != null)
+            {
+                m_CloseBtn.onClick.RemoveAllListeners();
+                m_CloseBtn.onClick.AddListener(OnCloseButtonClick);
+                UIButtonSoundHelper.BindButtonSound(m_CloseBtn);
+            }
 
-            // 绑定滑块、Toggle监听（可在Inspector绑定，这里做兜底）
-            m_BGMSlider.onValueChanged.RemoveAllListeners();
-            m_BGMSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
+            // 绑定滑块、Toggle监听
+            if (m_BGMSlider != null)
+            {
+                m_BGMSlider.onValueChanged.RemoveAllListeners();
+                m_BGMSlider.onValueChanged.AddListener(OnBGMVolumeChanged);
+            }
 
-            m_SFXSlider.onValueChanged.RemoveAllListeners();
-            m_SFXSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+            if (m_SFXSlider != null)
+            {
+                m_SFXSlider.onValueChanged.RemoveAllListeners();
+                m_SFXSlider.onValueChanged.AddListener(OnSFXVolumeChanged);
+            }
 
-            m_FullScreenToggle.onValueChanged.RemoveAllListeners();
-            m_FullScreenToggle.onValueChanged.AddListener(OnFullScreenToggleChanged);
+            if (m_FullScreenToggle != null)
+            {
+                m_FullScreenToggle.onValueChanged.RemoveAllListeners();
+                m_FullScreenToggle.onValueChanged.AddListener(OnFullScreenToggleChanged);
+            }
         }
     }
 }

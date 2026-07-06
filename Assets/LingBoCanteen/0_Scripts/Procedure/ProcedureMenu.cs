@@ -66,13 +66,7 @@ namespace LingBoCanteen
             GameEntry.Event.Unsubscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
             GameEntry.Event.Unsubscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
 
-            // 关闭主菜单UI
-            if (GameEntry.UI.HasUIForm(UIFormId.MenuForm))
-            {
-                GameEntry.UI.CloseUIForm(GameEntry.UI.GetUIForm(UIFormId.MenuForm));
-            }
-
-            // 卸载菜单场景
+            // 卸载菜单场景（MenuForm 已在场景中，跟随场景卸载）
             string menuSceneAssetName = AssetUtility.GetSceneAsset("Menu");
             if (GameEntry.Scene.SceneIsLoaded(menuSceneAssetName))
             {
@@ -103,8 +97,7 @@ namespace LingBoCanteen
             // 播放主菜单BGM，使用渐入效果（0.5秒）
             SoundManager.Instance?.PlayBackgroundMusic(30000, 0.5f);
 
-            // 打开主菜单UI
-            GameEntry.UI.OpenUIForm(UIFormId.MenuForm, this);
+            // MenuForm 已直接放在场景中，无需动态打开
         }
 
         private void OnLoadSceneFailure(object sender, GameEventArgs e)
