@@ -183,35 +183,33 @@ public class ElevatorController : MonoBehaviour
         if (container == null) return;
 
         isMoving = true;
-        Vector3 targetPos = new Vector3(0, 0, 0);
-
+        Vector3 targetPos = Vector3.zero;
         if (floor == 2) targetPos = new Vector3(0, floorHeight, 0);
         else if (floor == 0) targetPos = new Vector3(0, -floorHeight, 0);
 
-        // 电梯容器向目标楼层方向滑动
-        container.DOLocalMove(targetPos, moveTime)
-            .SetEase(Ease.InOutQuad)
-            .OnComplete(() =>
-            {
-                isMoving = false;
-                Debug.Log("Arrival：" + currentFloorName);
+        Sequence seq = DOTween.Sequence();
 
-                UpdateButtonsVisibility();
+        // 1. 平滑移动到目标楼层
+        seq.Append(container.DOLocalMove(targetPos, moveTime).SetEase(Ease.InOutQuad));
 
-                //楼层到达后广播事件
-                OnFloorChanged?.Invoke(currentFloorName);
-            });
-
-        // 背景过渡层同时进行相反方向的滑动，营造"背景滑入"的效果
+        // 2. 背景同步
         if (backgroundTransition != null)
         {
-            // 背景从相反方向滑入
-            Vector3 bgStartPos = -targetPos;
-            Vector3 bgEndPos = Vector3.zero;
-
-            backgroundTransition.localPosition = bgStartPos;
-            backgroundTransition.DOLocalMove(bgEndPos, moveTime)
-                .SetEase(Ease.InOutQuad);
+            backgroundTransition.localPosition = -targetPos;
+            seq.Insert(0, backgroundTransition.DOLocalMove(Vector3.zero, moveTime).SetEase(Ease.InOutQuad));
         }
+
+        // 3. 电梯效果
+        seq.Append(container.DOLocalMoveY(targetPos.y - shakeIntensity * 1.2f, 0.04f).SetEase(Ease.OutQuad));
+        seq.Append(container.DOLocalMoveY(targetPos.y + shakeIntensity * 0.5f, 0.05f).SetEase(Ease.InOutQuad));
+        seq.Append(container.DOLocalMoveY(targetPos.y, 0.08f).SetEase(Ease.InOutQuad));
+
+        seq.OnComplete(() =>
+        {
+            isMoving = false;
+            Debug.Log("Arrival：" + currentFloorName);
+            UpdateButtonsVisibility();
+            OnFloorChanged?.Invoke(currentFloorName);
+        });
     }
 }
