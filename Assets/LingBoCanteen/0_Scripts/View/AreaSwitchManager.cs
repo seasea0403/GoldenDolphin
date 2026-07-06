@@ -106,17 +106,18 @@ namespace LingBoCanteen
                 m_MorningRoot.SetActive(true);
             }
 
-            // 触发BGM切换（根据当前Region自动播放对应的BGM）
-            SoundManager.Instance?.PlayMusicForCurrentGameState();
-
             // 绑定按钮回调
             RegisterButtonCallbacks();
 
-            // ★ 【新增】初始化剧情系统
+            // ★ 【修改】初始化剧情系统并进行首个区域切换后才播放音乐
             InitializePlotTriggerManager();
 
             // 首帧初始化：白天开始默认激活订单区，备菜区、烹调区自动进入逻辑运行、视觉静音状态
             SwitchToArea(m_DefaultArea);
+
+            // ★ 【修改】在区域确定后才播放背景音乐
+            // 这样可以确保 Area.CurrentType 已经正确设置
+            SoundManager.Instance?.PlayMusicForCurrentGameState();
         }
 
         /// <summary>
@@ -311,6 +312,12 @@ namespace LingBoCanteen
 
             // 3. 傍晚阶段顾客一律不可见
             SetCustomerEntitiesVisibility(false);
+
+            // ★ 【新增】傍晚切换时，设置时间阶段为Evening，触发音乐更新
+            // 注意：SettlePanel.Open() 中已经手动调用了 SoundManager.CrossfadeBackgroundMusic(30005)
+            // 这里再调用 PlayMusicForCurrentGameState() 可能会覆盖
+            // 但由于是Evening阶段，GetMusicIdForGameState会返回30004，这不对
+            // 所以不在这里调用，而是在SettlePanel中直接指定30005
         }
 
         /// <summary>

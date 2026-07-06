@@ -58,6 +58,8 @@ namespace LingBoCanteen
             }
 
             // 播放傍晚结算BGM
+            // ★ 【临时恢复】使用 BGMManager 播放结算音乐，而不是 SoundManager
+            // 因为 SoundManager 修改后导致所有音乐都不播放
             BGMManager.Instance.PlayBGM(30005, true); // bgm_night_settle
         }
 

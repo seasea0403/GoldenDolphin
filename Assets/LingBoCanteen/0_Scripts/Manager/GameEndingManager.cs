@@ -14,6 +14,8 @@ namespace LingBoCanteen
         [SerializeField] private CanvasGroup m_FadeScreen;  // 黑屏过渡层
         [SerializeField] private float m_FadeDuration = 0.5f;  // 过渡时间
 
+        private bool m_HasTriggeredEnding = false;  // 防止重复触发结局
+
         private void Awake()
         {
             if (Instance == null)
@@ -24,6 +26,53 @@ namespace LingBoCanteen
             {
                 Debug.LogWarning("[GameEndingManager] Duplicate instance detected. Destroying...");
                 Destroy(gameObject);
+            }
+        }
+
+        private void Update()
+        {
+            // 检查游戏是否已结束
+            if (m_HasTriggeredEnding || GameEntry.DataNode == null)
+            {
+                return;
+            }
+
+            try
+            {
+                // 先检查节点是否存在
+                if (GameEntry.DataNode.GetNode("Game.IsEnding") == null)
+                {
+                    return;
+                }
+
+                VarBoolean isEnding = GameEntry.DataNode.GetData<VarBoolean>("Game.IsEnding");
+                if (isEnding != null && isEnding.Value)
+                {
+                    m_HasTriggeredEnding = true;
+
+                    // 判断结局类型：是否曾改变过Region
+                    bool hasChangedRegion = false;
+                    if (GameEntry.DataNode.GetNode("Game.HasChangedRegion") != null)
+                    {
+                        VarBoolean hasChangedRegionData = GameEntry.DataNode.GetData<VarBoolean>("Game.HasChangedRegion");
+                        hasChangedRegion = hasChangedRegionData != null && hasChangedRegionData.Value;
+                    }
+
+                    if (hasChangedRegion)
+                    {
+                        Debug.Log("[GameEndingManager] 触发普通结局（曾改变过Region）");
+                        TriggerNormalEnding();
+                    }
+                    else
+                    {
+                        Debug.Log("[GameEndingManager] 触发真实结局（全程未改变Region）");
+                        TriggerTrueEnding();
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[GameEndingManager] Update() 异常: {ex.Message}\n{ex.StackTrace}");
             }
         }
 

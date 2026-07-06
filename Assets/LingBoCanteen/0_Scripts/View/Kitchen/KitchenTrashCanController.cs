@@ -29,14 +29,18 @@ namespace LingBoCanteen
                 return false;
             }
 
-            // 接收：烧焦的食物、产出物食材、整锅
+            // 接收：烧焦的食物、产出物食材、整锅、上菜盘
             return payload.Kind == KitchenDragItemKind.Food || 
                    payload.Kind == KitchenDragItemKind.Ingredient ||
-                   payload.Kind == KitchenDragItemKind.Pot;
+                   payload.Kind == KitchenDragItemKind.Pot ||
+                   payload.Kind == KitchenDragItemKind.Plate;
         }
 
         protected override void Accept(KitchenDragPayload payload)
         {
+            // 播放垃圾桶打开音效
+            SoundManager.Instance?.PlayTrashOpenSound();
+
             if (m_TrashAnimator != null)
             {
                 m_TrashAnimator.enabled = true;

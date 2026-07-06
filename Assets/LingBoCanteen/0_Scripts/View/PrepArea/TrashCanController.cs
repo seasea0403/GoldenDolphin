@@ -34,6 +34,9 @@ namespace LingBoCanteen
 
         protected override void Accept(IngredientDragPayload payload)
         {
+            // 播放垃圾桶打开音效
+            SoundManager.Instance?.PlayTrashOpenSound();
+
             if (m_TrashAnimator != null)
             {
                 m_TrashAnimator.enabled = true;

@@ -257,14 +257,11 @@ namespace LingBoCanteen
             // 如果正在播放相同的音乐，则不重复播放
             if (m_CurrentMusicId == musicId)
             {
+                Debug.Log($"[SoundManager] 音乐 {musicId} 已在播放，跳过重复播放");
                 return;
             }
 
-            // 停止当前音乐（如果有）
-            if (m_CurrentMusicHandle >= 0)
-            {
-                GameEntry.Sound.StopSound(m_CurrentMusicHandle);
-            }
+            Debug.Log($"[SoundManager] 开始播放音乐 ID={musicId}，资源名={drMusic.AssetName}，淡入时长={fadeDuration}秒");
 
             // 中断之前的音量渐变
             if (m_MusicVolumeTweener != null && m_MusicVolumeTweener.IsActive())
@@ -272,16 +269,24 @@ namespace LingBoCanteen
                 m_MusicVolumeTweener.Kill();
             }
 
+            // 停止当前音乐（如果有）
+            if (m_CurrentMusicHandle >= 0)
+            {
+                Debug.Log($"[SoundManager] 停止当前音乐，Handle={m_CurrentMusicHandle}");
+                GameEntry.Sound.StopSound(m_CurrentMusicHandle);
+            }
+
             m_CurrentMusicId = musicId;
 
-            // 播放新的背景音乐
+            // 播放新的背景音乐（使用默认音量）
             PlaySoundParams musicParams = new PlaySoundParams
             {
-                Loop = true,
-                VolumeInSoundGroup = 0f // 先设置为0，然后渐入
+                Loop = true
             };
 
             string assetName = AssetUtility.GetMusicAsset(drMusic.AssetName);
+            Debug.Log($"[SoundManager] 音乐完整资源路径={assetName}");
+            
             m_CurrentMusicHandle = GameEntry.Sound.PlaySound(
                 assetName,
                 "Music",
@@ -289,19 +294,25 @@ namespace LingBoCanteen
                 musicParams
             );
 
+            Debug.Log($"[SoundManager] PlaySound 返回 Handle={m_CurrentMusicHandle}");
+
             // 音量渐入
             if (fadeDuration > 0)
             {
+                // ★ 【修改】改用 SetVolume 而不是 GetSoundGroup，保持与 BGMManager 一致
+                GameEntry.Sound.SetVolume("Music", 0f);
                 m_MusicVolumeTweener = DOTween.To(
                     () => GameEntry.Sound.GetSoundGroup("Music").Volume,
-                    x => GameEntry.Sound.GetSoundGroup("Music").Volume = x,
+                    x => GameEntry.Sound.SetVolume("Music", x),
                     1f,
                     fadeDuration
                 );
+                Debug.Log($"[SoundManager] 启动音量渐入到1.0，时长={fadeDuration}秒");
             }
             else
             {
-                GameEntry.Sound.GetSoundGroup("Music").Volume = 1f;
+                GameEntry.Sound.SetVolume("Music", 1f);
+                Debug.Log($"[SoundManager] 直接设置音量=1.0");
             }
         }
 
@@ -327,7 +338,7 @@ namespace LingBoCanteen
                 // 音量渐出后停止
                 m_MusicVolumeTweener = DOTween.To(
                     () => GameEntry.Sound.GetSoundGroup("Music").Volume,
-                    x => GameEntry.Sound.GetSoundGroup("Music").Volume = x,
+                    x => GameEntry.Sound.SetVolume("Music", x),
                     0f,
                     fadeDuration
                 ).OnComplete(() =>
@@ -352,15 +363,19 @@ namespace LingBoCanteen
         /// <param name="fadeDuration">单程渐变时长（秒），默认0.5秒</param>
         public void CrossfadeBackgroundMusic(int newMusicId, float fadeDuration = 0.5f)
         {
+            Debug.Log($"[CrossfadeBackgroundMusic] 切换到音乐ID={newMusicId}，当前音乐ID={m_CurrentMusicId}，当前Handle={m_CurrentMusicHandle}");
+
             // 如果正在播放相同的音乐，则不重复切换
             if (m_CurrentMusicId == newMusicId)
             {
+                Debug.Log($"[CrossfadeBackgroundMusic] 正在播放相同的音乐ID={newMusicId}，跳过切换");
                 return;
             }
 
             if (m_CurrentMusicHandle < 0)
             {
                 // 当前没有播放任何音乐，直接播放新的
+                Debug.Log($"[CrossfadeBackgroundMusic] 没有正在播放的音乐，直接播放新的ID={newMusicId}");
                 PlayBackgroundMusic(newMusicId, fadeDuration);
                 return;
             }
@@ -374,14 +389,17 @@ namespace LingBoCanteen
             // 记录旧音乐的句柄
             int oldMusicHandle = m_CurrentMusicHandle;
 
-            // 渐出当前音乐
+            Debug.Log($"[CrossfadeBackgroundMusic] 淡出旧音乐Handle={oldMusicHandle}，淡入新音乐ID={newMusicId}");
+
+            // ★ 【修改】改用 SetVolume 方式来渐出
             m_MusicVolumeTweener = DOTween.To(
                 () => GameEntry.Sound.GetSoundGroup("Music").Volume,
-                x => GameEntry.Sound.GetSoundGroup("Music").Volume = x,
+                x => GameEntry.Sound.SetVolume("Music", x),
                 0f,
                 fadeDuration
             ).OnComplete(() =>
             {
+                Debug.Log($"[CrossfadeBackgroundMusic] 旧音乐淡出完成，停止Handle={oldMusicHandle}");
                 GameEntry.Sound.StopSound(oldMusicHandle);
                 // 播放新的背景音乐（带渐入效果）
                 PlayBackgroundMusic(newMusicId, fadeDuration);

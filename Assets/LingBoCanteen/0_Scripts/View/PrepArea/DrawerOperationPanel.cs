@@ -25,6 +25,7 @@ namespace LingBoCanteen
 
         private bool m_HasPendingOutput;
         private DRIngredient m_PendingRow;
+        private bool m_ShouldCloseOnNextFrame;  // 下一帧关闭标志
 
         public void Open(int ingredientId)
         {
@@ -56,7 +57,6 @@ namespace LingBoCanteen
         private void Finish()
         {
             m_IsOpen = false;
-            m_Root?.SetActive(false);
 
             DRIngredient row = GameEntry.DataTable.GetDataTable<DRIngredient>().GetDataRow(m_IngredientId);
             if (row == null)
@@ -68,10 +68,22 @@ namespace LingBoCanteen
             m_PendingRow = row;
             m_HasPendingOutput = true;
             TryFlushPendingOutput();
+
+            // 设置下一帧关闭标志：不管成功与否，下一帧都关闭面板
+            m_ShouldCloseOnNextFrame = true;
         }
 
         private void Update()
         {
+            // 处理下一帧关闭：等待 1 帧后关闭面板
+            if (m_ShouldCloseOnNextFrame)
+            {
+                m_Root?.SetActive(false);
+                m_HasPendingOutput = false;  // 清除待输出状态
+                m_ShouldCloseOnNextFrame = false;
+                return;  // 关闭后不再处理其他逻辑
+            }
+
             if (m_HasPendingOutput)
             {
                 TryFlushPendingOutput();

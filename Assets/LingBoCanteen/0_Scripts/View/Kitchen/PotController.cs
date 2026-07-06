@@ -58,7 +58,7 @@ namespace LingBoCanteen
         [SerializeField] private SpriteRenderer m_CoverRenderer;
         [SerializeField] private PotCoverEntry[] m_PotCovers;
 
-        [Header("投料气泡区：数量需覆盖最大配方项数（目前最多 8 项，如小鸡滑蛋盖浇饭），从左到右依次占位")]
+        [Header("投料气泡区")]
         [SerializeField] private Image[] m_BubbleSlots;
 
         [Header("烹饪 UI（开火/关火复用同一个按钮）")]
@@ -353,11 +353,11 @@ namespace LingBoCanteen
             m_CandidateDishIds = m_PendingCandidates;
             m_PendingCandidates = null;
 
-            // 第一个食材放入时，显示移动态图片（表示锅现在可以被拖拽）
-            if (isFirstItem && m_MovableSprite != null && m_PotRenderer != null)
-            {
-                m_PotRenderer.sprite = m_MovableSprite;
-            }
+            // ★ 【已移除】第一个食材不再换贴图
+            // if (isFirstItem && m_MovableSprite != null && m_PotRenderer != null)
+            // {
+            //     m_PotRenderer.sprite = m_MovableSprite;
+            // }
 
             // 播放食材放置音效
             SoundManager.Instance?.PlayIngredientPlaceSound();
@@ -378,7 +378,7 @@ namespace LingBoCanteen
             }
             else
             {
-                // 加水/加入第一道非调料食材后盖上锅盖（不同锅型盖子不同）。
+                // ★ 【改进】加入第一个非调料食材后盖上锅盖（不需要换贴图）
                 ShowCover();
                 SetBubbleSlot(slotIndex, payload.Icon);
             }
@@ -521,6 +521,12 @@ namespace LingBoCanteen
 
             m_State = PotStationState.Cooking;
             m_CookElapsed = 0f;
+
+            // ★ 【新增】确保锅的贴图在开火时可见
+            if (m_PotRenderer != null)
+            {
+                m_PotRenderer.gameObject.SetActive(true);
+            }
 
             if (m_CookButton != null)
             {

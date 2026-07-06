@@ -128,6 +128,8 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
+            Log.Info($"点击食材，ID:{m_IngredientId}，区域类型:{m_AreaType}，可交互:{m_IsInteractable}");
+            
             if (!m_IsInteractable || m_Row == null)
             {
                 return;
@@ -135,15 +137,16 @@ namespace LingBoCanteen
 
             if (m_AreaType == IngredientAreaType.Drawer)
             {
+                Log.Info("识别为抽屉食材，准备打开面板");
                 if (m_DrawerPanel != null)
                 {
+                    Log.Info("m_DrawerPanel引用有效，执行Open");
                     m_DrawerPanel.Open(m_IngredientId);
                 }
                 else
                 {
                     Log.Warning("抽屉食材 {0} 未配置 DrawerPanel，无法打开操作界面。", m_IngredientId);
                 }
-
                 return;
             }
 

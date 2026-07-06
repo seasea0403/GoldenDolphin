@@ -19,6 +19,9 @@ namespace LingBoCanteen
 
         /// <summary>糊锅后的锅内食物，只能拖去垃圾桶。</summary>
         Food = 3,
+
+        /// <summary>上菜盘（摆盘台），可拖到垃圾桶清空菜品。</summary>
+        Plate = 4,
     }
 
     /// <summary>
