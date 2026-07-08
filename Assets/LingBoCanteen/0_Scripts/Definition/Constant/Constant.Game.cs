@@ -6,12 +6,12 @@ namespace LingBoCanteen
         public static class GameConstant
         {
             // 初始数值
-            public const int INITIAL_SAN = 55;
+            public const int INITIAL_SAN = 50;
             public const int INITIAL_GOLD = 30;
             public const int MAX_DAY = 20;
             
             // 时间与数值规则
-            public const float DEFAULT_GUEST_WAIT_TIME = 55f;    // 顾客默认等待时间（秒）
+            public const float DEFAULT_GUEST_WAIT_TIME = 60f;    // 顾客默认等待时间（秒）
             public const float DEFAULT_COOK_TIME = 6f;           // 默认烹饪时长（秒）
             public const float COOK_BUFFER_TIME = 6f;            // 成熟后缓冲时间（秒）
             public const float CUT_ANIM_TIME = 1f;               // 切菜动画时长

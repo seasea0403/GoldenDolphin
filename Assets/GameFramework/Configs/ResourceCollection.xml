@@ -442,6 +442,7 @@
       <Asset Guid="0806e13aadc8ae94ab263adbf15839ce" ResourceName="4_Arts/Foods/Ing/Common/1016_Lettuce/Ing_Lettuce" />
       <Asset Guid="081931742426c314d95a6d41970f5af2" ResourceName="4_Arts/Foods/Ing/Common/1002_Mushroom/Ing_Mushroom" />
       <Asset Guid="086b6472e16a06d4fafab3ce040edba0" ResourceName="4_Arts/VisualTarget/SettingForm" />
+      <Asset Guid="08a84dcaa96d50241b27db29837247e0" ResourceName="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_Output" />
       <Asset Guid="09118e47547644044a7163bf175f6528" ResourceName="4_Arts/Foods/Ing/Common/1012_Tomato/Ing_Tamato" />
       <Asset Guid="0b1bc7d6c51df9b469e938eb9f8f6ddb" ResourceName="4_Arts/Foods/Ing/Common/1004_Garlic/Ing_Garlic" />
       <Asset Guid="0b8efcb614c3e4b478b6f88683ad1ed0" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_Buff" />
@@ -629,7 +630,6 @@
       <Asset Guid="7f5d19e7dec55d0488f5e420eea72143" ResourceName="4_Arts/UI/UI_Button/UI_Btn_TurnTheHearth" />
       <Asset Guid="80590e9553909624d89baf1b37f20681" ResourceName="4_Arts/Foods/Ing/Common/1013_Rice/Rice_Depleted" />
       <Asset Guid="8069d9e0a798a8349a5b2a59a98bc34e" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_SoupPot" />
-      <Asset Guid="80d290cb38f7c4345bb2826aac4df7d1" ResourceName="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_Output" />
       <Asset Guid="810d2cc1dc03798458d8e3d03594033d" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL4_1" />
       <Asset Guid="81f3f60c330e6d941981198b47342807" ResourceName="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Depleted" />
       <Asset Guid="821199fe0db58fe458118e49434fdfba" ResourceName="Sounds/juicer_loop" />

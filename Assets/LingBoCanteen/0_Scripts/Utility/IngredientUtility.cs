@@ -57,23 +57,30 @@ namespace LingBoCanteen
             IDataTable<DRDay> dayTable = GameEntry.DataTable.GetDataTable<DRDay>();
             if (dayTable == null)
             {
+                Log.Warning("[IngredientUtility] DRDay 表未加载");
                 return unlockedIds;
             }
 
             DRDay[] unlockedDayRows = dayTable.GetDataRows(row => row.Id <= currentDay);
+            Log.Info($"[IngredientUtility] GetUnlockedShelfIds(currentDay={currentDay}): 查询到 {unlockedDayRows.Length} 行数据");
+            
             foreach (DRDay dayRow in unlockedDayRows)
             {
                 if (dayRow.UnlockIngIds == null)
                 {
+                    Log.Info($"[IngredientUtility] Day {dayRow.Id}: UnlockIngIds = null");
                     continue;
                 }
 
+                Log.Info($"[IngredientUtility] Day {dayRow.Id}: UnlockIngIds 数量 = {dayRow.UnlockIngIds.Length}, 内容 = [{string.Join(",", dayRow.UnlockIngIds)}]");
+                
                 foreach (int id in dayRow.UnlockIngIds)
                 {
                     unlockedIds.Add(id);
                 }
             }
 
+            Log.Info($"[IngredientUtility] GetUnlockedShelfIds(currentDay={currentDay}): 最终解锁食材 = {{{string.Join(",", unlockedIds)}}}");
             return unlockedIds;
         }
 

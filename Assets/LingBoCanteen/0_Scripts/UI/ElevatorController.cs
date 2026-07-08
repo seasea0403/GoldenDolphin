@@ -39,12 +39,32 @@ public class ElevatorController : MonoBehaviour
 
     void Start()
     {
+        // ★【修复】延迟检查container，避免Start()执行时还未初始化
+        // container应该通过Inspector绑定，如果为null说明Inspector配置有问题
+        if (container == null)
+        {
+            Debug.LogWarning("[ElevatorController] Start时container为null，将在第一次使用时重新查找");
+            // 尝试自动查找
+            container = GetComponent<RectTransform>();
+            if (container == null)
+            {
+                container = transform.Find("Container") as RectTransform;
+            }
+        }
+        
+        if (container != null)
+        {
+            Debug.Log($"[ElevatorController] Start: container已绑定，当前位置={container.anchoredPosition}");
+        }
+
         // 电梯楼层与 DataNode 里存档的 Region 保持一致（比如读档、或场景重进时）
         SyncFloorFromDataNode();
 
         if (container != null)
         {
-            container.anchoredPosition = GetAnchoredPositionForFloor(currentFloor);
+            Vector2 initialPos = GetAnchoredPositionForFloor(currentFloor);
+            container.anchoredPosition = initialPos;
+            Debug.Log($"[ElevatorController] Start: 根据楼层{currentFloor}设置container初始位置={initialPos}");
         }
 
         // 背景过渡层初始位置设为0（与容器重合）
@@ -54,6 +74,82 @@ public class ElevatorController : MonoBehaviour
         }
 
         UpdateButtonsVisibility();
+    }
+
+    void Update()
+    {
+        // ★【修复】移除对humanButtons.activeSelf的检查，确保始终监控SAN值
+        // 即使按钮被隐藏，仍需要检测SAN值并进行自动切换
+        // 只在电梯正在运动时停止检测，其他时间都要实时检测
+        if (isMoving)
+        {
+            return;
+        }
+
+        // 获取当前SAN值
+        if (LingBoCanteen.GameEntry.DataNode == null)
+        {
+            return;
+        }
+
+        VarInt32 sanVar = LingBoCanteen.GameEntry.DataNode.GetData<VarInt32>("Player.San");
+        if (sanVar == null)
+        {
+            return;
+        }
+
+        int currentSan = sanVar.Value;
+        GameRegion targetRegion = GameRegion.Mortal;
+        int targetSan = 50;  // 人间的默认SAN值
+        bool needsSwitch = false;
+
+        // 根据当前区域和SAN值判断是否需要切换
+        if (currentFloor == 0)  // 天堂
+        {
+            // 天堂：SAN >= 57 时留在天堂，否则切换回人间
+            if (currentSan < 43)
+            {
+                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已低于43，需要从天堂切换回人间");
+                targetRegion = GameRegion.Mortal;
+                targetSan = 50;
+                needsSwitch = true;
+            }
+        }
+        else if (currentFloor == 2)  // 地狱
+        {
+            // 地狱：SAN <= 43 时留在地狱，否则切换回人间
+            if (currentSan >= 57)
+            {
+                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已高于57，需要从地狱切换回人间");
+                targetRegion = GameRegion.Mortal;
+                targetSan = 50;
+                needsSwitch = true;
+            }
+        }
+        else  // 人间
+        {
+            // 人间：SAN >= 57 时切换天堂，SAN <= 43 时切换地狱
+            if (currentSan >= 57)
+            {
+                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已高于等于57，需要从人间自动切换到天堂");
+                targetRegion = GameRegion.Heaven;
+                targetSan = Constant.GameConstant.HEAVEN_INIT_SAN;
+                needsSwitch = true;
+            }
+            else if (currentSan <= 43)
+            {
+                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已低于等于43，需要从人间自动切换到地狱");
+                targetRegion = GameRegion.Hell;
+                targetSan = Constant.GameConstant.HELL_INIT_SAN;
+                needsSwitch = true;
+            }
+        }
+
+        // 如果需要切换，触发自动切换并更新SAN值
+        if (needsSwitch)
+        {
+            StartCoroutine(DoAutoTransitionWithSanUpdate(targetRegion, targetSan, null));
+        }
     }
 
     /// <summary>
@@ -74,6 +170,7 @@ public class ElevatorController : MonoBehaviour
             _ => 1,
         };
 
+        Debug.Log($"[ElevatorController] SyncFloorFromDataNode: 从DataNode读取区域={region}，映射到楼层={currentFloor}");
         UpdateFloorName();
     }
 
@@ -106,24 +203,32 @@ public class ElevatorController : MonoBehaviour
 
     public void GoDown()
     {
-        if (isMoving || currentFloor != 1 || !CanUseElevator()) return;
+        if (isMoving) return;
 
+        // ★【修复】允许点击按钮直接切换到地狱，SAN会被强制重置为HELL_INIT_SAN
+        // 不再检查SAN范围，只检查是否能使用电梯（一次性、人间才能用）
+        if (currentFloor != 1 || !CanUseElevator()) return;
+
+        Debug.Log($"[Elevator] GoDown: 允许切换到地狱");
         currentFloor++;
         UpdateFloorName();
         ApplyRegionChange(GameRegion.Hell, Constant.GameConstant.HELL_INIT_SAN);
-
         HideHumanButtons();
         MoveToFloor(currentFloor);
     }
 
     public void GoUp()
     {
-        if (isMoving || currentFloor != 1 || !CanUseElevator()) return;
+        if (isMoving) return;
 
+        // ★【修复】允许点击按钮直接切换到天堂，SAN会被强制重置为HEAVEN_INIT_SAN
+        // 不再检查SAN范围，只检查是否能使用电梯（一次性、人间才能用）
+        if (currentFloor != 1 || !CanUseElevator()) return;
+
+        Debug.Log($"[Elevator] GoUp: 允许切换到天堂");
         currentFloor--;
         UpdateFloorName();
         ApplyRegionChange(GameRegion.Heaven, Constant.GameConstant.HEAVEN_INIT_SAN);
-
         HideHumanButtons();
         MoveToFloor(currentFloor);
     }
@@ -194,12 +299,20 @@ public class ElevatorController : MonoBehaviour
 
     void MoveToFloor(int floor)
     {
-        if (container == null) return;
+        // ★【修复】检查container引用，确保其存在且有效
+        if (container == null)
+        {
+            Debug.LogError("[ElevatorController] MoveToFloor: container为null！无法播放电梯动画");
+            isMoving = false;
+            return;
+        }
 
         isMoving = true;
         Vector3 targetPos = Vector3.zero;
         if (floor == 2) targetPos = new Vector3(0, floorHeight, 0);
         else if (floor == 0) targetPos = new Vector3(0, -floorHeight, 0);
+
+        Debug.Log($"[ElevatorController] MoveToFloor({floor}): 开始动画，container当前位置={container.anchoredPosition}，目标位置={targetPos}");
 
         Sequence seq = DOTween.Sequence();
 
@@ -213,7 +326,7 @@ public class ElevatorController : MonoBehaviour
             seq.Insert(0, backgroundTransition.DOLocalMove(Vector3.zero, moveTime).SetEase(Ease.InOutQuad));
         }
 
-        // 3. 电梯效果
+        // 3. 电梯到达时的震动效果
         seq.Append(container.DOLocalMoveY(targetPos.y - shakeIntensity * 1.2f, 0.04f).SetEase(Ease.OutQuad));
         seq.Append(container.DOLocalMoveY(targetPos.y + shakeIntensity * 0.5f, 0.05f).SetEase(Ease.InOutQuad));
         seq.Append(container.DOLocalMoveY(targetPos.y, 0.08f).SetEase(Ease.InOutQuad));
@@ -221,7 +334,7 @@ public class ElevatorController : MonoBehaviour
         seq.OnComplete(() =>
         {
             isMoving = false;
-            Debug.Log("Arrival：" + currentFloorName);
+            Debug.Log($"[ElevatorController] MoveToFloor({floor})动画完成，Arrival：{currentFloorName}");
             UpdateButtonsVisibility();
             OnFloorChanged?.Invoke(currentFloorName);
         });
@@ -237,8 +350,35 @@ public class ElevatorController : MonoBehaviour
         StartCoroutine(DoAutoTransition(targetRegion, onComplete));
     }
 
+    /// <summary>
+    /// ★【新增】自动切换带SAN值更新（用于Update中的自动检测切换）。
+    /// </summary>
+    private IEnumerator DoAutoTransitionWithSanUpdate(LingBoCanteen.GameRegion targetRegion, int targetSan, System.Action onComplete)
+    {
+        // 先播放动画切换到目标区域
+        yield return StartCoroutine(DoAutoTransition(targetRegion, null));
+        
+        // 动画完成后，更新SAN值
+        if (LingBoCanteen.GameEntry.DataNode != null)
+        {
+            LingBoCanteen.GameEntry.DataNode.SetData("Player.San", (VarInt32)targetSan);
+            Debug.Log($"[ElevatorController] DoAutoTransitionWithSanUpdate: 更新SAN = {targetSan}");
+        }
+        
+        // 执行完成回调
+        onComplete?.Invoke();
+    }
+
     private IEnumerator DoAutoTransition(LingBoCanteen.GameRegion targetRegion, System.Action onComplete)
     {
+        // ★【修复】检查container引用，确保AutoTransition能正确执行
+        if (container == null)
+        {
+            Debug.LogError("[ElevatorController] DoAutoTransition: container为null，无法播放电梯动画！");
+            onComplete?.Invoke();
+            yield break;
+        }
+
         int targetFloor = targetRegion switch
         {
             LingBoCanteen.GameRegion.Heaven => 0,
@@ -247,7 +387,7 @@ public class ElevatorController : MonoBehaviour
         };
 
         int startFloor = currentFloor;
-        Debug.Log($"[ElevatorController] AutoTransition开始：从第{startFloor}层({currentFloorName}) → 第{targetFloor}层");
+        Debug.Log($"[ElevatorController] AutoTransition开始：从第{startFloor}层({currentFloorName}) → 第{targetFloor}层，container={container}");
 
         // 如果需要经过多个楼层，逐层跳转
         if (startFloor < targetFloor)
@@ -257,6 +397,7 @@ public class ElevatorController : MonoBehaviour
             {
                 currentFloor = floor;
                 UpdateFloorName();
+                Debug.Log($"[ElevatorController] 正在跳转到第{floor}层");
                 MoveToFloor(floor);
                 yield return new WaitUntil(() => !isMoving); // 等待当前跳转完成
                 yield return new WaitForSeconds(0.3f); // 每层间隔0.3秒
@@ -269,6 +410,7 @@ public class ElevatorController : MonoBehaviour
             {
                 currentFloor = floor;
                 UpdateFloorName();
+                Debug.Log($"[ElevatorController] 正在跳转到第{floor}层");
                 MoveToFloor(floor);
                 yield return new WaitUntil(() => !isMoving); // 等待当前跳转完成
                 yield return new WaitForSeconds(0.3f); // 每层间隔0.3秒
@@ -277,6 +419,7 @@ public class ElevatorController : MonoBehaviour
 
         // 跳转完成，更新DataNode
         LingBoCanteen.EveningDayFlow.ApplyRegionChange(targetRegion);
+        Debug.Log($"[ElevatorController] DoAutoTransition已更新DataNode");
 
         // 刷新装饰（背景图等）
         if (LingBoCanteen.AreaSwitchManager.Instance != null)

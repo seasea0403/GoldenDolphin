@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using TMPro;
-using UnityEngine.EventSystems;
 
 namespace LingBoCanteen
 {
@@ -10,7 +9,7 @@ namespace LingBoCanteen
     /// 超市食材单个槽位，显示食材信息（图片、价格、库存）、管理购买按钮状态、显示 Tooltip、处理点击购买。
     /// 挂载到预制体的每个 slot 实体上。
     /// </summary>
-    public class MarketIngredientSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class MarketIngredientSlot : MonoBehaviour
     {
         [SerializeField] private Image m_IconImage;
         [SerializeField] private TextMeshProUGUI m_PriceText;
@@ -44,22 +43,21 @@ namespace LingBoCanteen
             }
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        private void OnMouseEnter()
         {
             if (m_IngredientId <= 0 || m_Row == null)
             {
                 return;
             }
 
-            IngredientUtility.EnsureUnlockDefaultStock(m_IngredientId);
             int stock = IngredientUtility.GetStock(m_IngredientId);
             if (IngredientTooltipView.Instance != null)
             {
-                IngredientTooltipView.Instance.Show(transform.position, m_Row.Name, stock, IngredientUtility.IsUnlimitedStock(m_IngredientId));
+                IngredientTooltipView.Instance.Show(transform.position, m_Row.Name, stock, false);
             }
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        private void OnMouseExit()
         {
             if (IngredientTooltipView.Instance != null)
             {
@@ -111,7 +109,6 @@ namespace LingBoCanteen
             // 显示库存
             if (m_StockText != null)
             {
-                IngredientUtility.EnsureUnlockDefaultStock(ingredientId);
                 int stock = IngredientUtility.GetStock(ingredientId);
                 m_StockText.text = "x" + stock;
             }

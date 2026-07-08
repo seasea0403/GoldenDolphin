@@ -127,6 +127,16 @@ namespace LingBoCanteen
             susopen();
         }
 
+        /// <summary>
+        /// 等待3秒后推进下一天（用于区域转换后的延迟）。
+        /// </summary>
+        private IEnumerator WaitFramesThenAdvanceDay(int seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            Debug.Log($"[SettlePanel] 已等待{seconds}秒，现在进入下一天");
+            EveningDayFlow.AdvanceToNextDay();
+        }
+
         private void OnConfirmClicked()
         {
             if (m_Root != null)
@@ -171,7 +181,7 @@ namespace LingBoCanteen
 
                 if (targetRegion != currentRegion)
                 {
-                    // 需要切换区域：先播放电梯动画，再进入下一天
+                    // 需要切换区域：先播放电梯动画，关掉SettlePanel，等3秒再进入下一天
                     // ★【修复】不在SettlePanel自身上跑协程（m_Root.SetActive(false)会导致协程被终止），
                     // 而是直接把"跳转完成后推进下一天"的回调交给ElevatorController（该对象始终保持激活）执行。
                     Debug.Log($"[SettlePanel] 需要从{currentRegion}切换到{targetRegion}，开始电梯动画");
@@ -180,8 +190,9 @@ namespace LingBoCanteen
                     {
                         elevatorController.AutoTransitionToRegion(targetRegion, () =>
                         {
-                            Debug.Log("[SettlePanel] 电梯跳转完成，现在进入下一天");
-                            EveningDayFlow.AdvanceToNextDay();
+                            Debug.Log("[SettlePanel] 电梯跳转完成，现在等待3秒后进入下一天");
+                            // ★【新增】等待3秒后再进入下一天，给视觉效果完成充分时间
+                            elevatorController.StartCoroutine(WaitFramesThenAdvanceDay(3));
                         });
                     }
                     else

@@ -22,7 +22,6 @@ namespace LingBoCanteen
         private int m_CurrentPage = 0;
         private int m_TotalPages = 1;
         private int m_CurrentDay = 1;
-        private int m_LastRecordedDay = -1;
 
         public int CurrentPage => m_CurrentPage;
         public int TotalPages => m_TotalPages;
@@ -34,10 +33,9 @@ namespace LingBoCanteen
 
         private void OnEnable()
         {
-            // 检查当前天数是否改变，如果改变则重新加载解锁列表
-            // ★【修复】超市在傍晚阶段打开（结算前），此时 DayCurrent.Value 还是"今天"，
-            // 但玩家实际是在为"明天"采购食材，所以解锁判定要使用"明天"的天数（若处于傍晚阶段）。
+            // ★【修复】每次打开超市都重新加载当前天数的解锁食材，解决从第一天到第四天不更新的问题
             int currentDay = GetEffectiveShoppingDay();
+            Log.Info($"[MarketPanel.OnEnable] 重新加载食材 - GetEffectiveShoppingDay() = {currentDay}");
             
             // m_SlotInstances可能还未初始化，先确保初始化
             if (m_SlotInstances == null || m_SlotInstances.Length == 0)
@@ -45,15 +43,13 @@ namespace LingBoCanteen
                 InitializeSlots();
             }
             
-            if (currentDay != m_LastRecordedDay)
-            {
-                m_CurrentDay = currentDay;
-                m_LastRecordedDay = currentDay;
-                m_UnlockedIngredientIds = new List<int>(IngredientUtility.GetUnlockedShelfIds(m_CurrentDay));
-                m_TotalPages = Mathf.Max(1, Mathf.CeilToInt((float)m_UnlockedIngredientIds.Count / (m_SlotInstances?.Length ?? 8)));
-                Log.Info($"[MarketPanel] 天数改变到{m_CurrentDay}，重新加载解锁物品列表，总页数={m_TotalPages}");
-                SetCurrentPage(0);
-            }
+            // 强制重新加载当天的解锁食材
+            m_CurrentDay = currentDay;
+            m_UnlockedIngredientIds = new List<int>(IngredientUtility.GetUnlockedShelfIds(m_CurrentDay));
+            m_TotalPages = Mathf.Max(1, Mathf.CeilToInt((float)m_UnlockedIngredientIds.Count / (m_SlotInstances?.Length ?? 8)));
+            Log.Info($"[MarketPanel] 重新加载天数{m_CurrentDay}的解锁物品，总页数={m_TotalPages}，已解锁食材数={m_UnlockedIngredientIds.Count}，内容=[{string.Join(",", m_UnlockedIngredientIds)}]");
+            
+            SetCurrentPage(0);
             RefreshUI();
         }
 
@@ -84,10 +80,9 @@ namespace LingBoCanteen
                 m_SlotInstances[i] = slot;
             }
 
-            m_CurrentDay = GetEffectiveShoppingDay();
+            m_CurrentDay = GetCurrentDaySafely();
             m_UnlockedIngredientIds = new List<int>(IngredientUtility.GetUnlockedShelfIds(m_CurrentDay));
             m_TotalPages = Mathf.Max(1, Mathf.CeilToInt((float)m_UnlockedIngredientIds.Count / m_SlotInstances.Length));
-            m_LastRecordedDay = m_CurrentDay;
 
             SetCurrentPage(0);
         }
@@ -212,7 +207,9 @@ namespace LingBoCanteen
             VarInt32 dayVar = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Value");
             if (dayVar != null)
             {
-                return dayVar.Value;
+                int day = dayVar.Value;
+                Log.Info($"[MarketPanel] GetCurrentDaySafely(): DayCurrent.Value = {day}");
+                return day;
             }
 
             Log.Warning("DayCurrent.Value 尚未初始化，默认使用 Day 1。");
@@ -228,16 +225,22 @@ namespace LingBoCanteen
         private int GetEffectiveShoppingDay()
         {
             int currentDay = GetCurrentDaySafely();
+            int phaseValue = -1;
 
             if (GameEntry.DataNode != null && GameEntry.DataNode.GetNode("DayCurrent.Phase") != null)
             {
-                int phaseValue = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase").Value;
+                phaseValue = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase").Value;
+                Log.Info($"[MarketPanel] GetEffectiveShoppingDay(): DayCurrent.Phase = {phaseValue} (Day={phaseValue == (int)TimeSection.Day}, Evening={phaseValue == (int)TimeSection.Evening})");
+                
                 if (phaseValue == (int)TimeSection.Evening)
                 {
-                    return currentDay + 1;
+                    int effectiveDay = currentDay + 1;
+                    Log.Info($"[MarketPanel] GetEffectiveShoppingDay(): 傍晚阶段，返回 {effectiveDay}");
+                    return effectiveDay;
                 }
             }
 
+            Log.Info($"[MarketPanel] GetEffectiveShoppingDay(): 白天阶段，返回 {currentDay}");
             return currentDay;
         }
         public void close()
