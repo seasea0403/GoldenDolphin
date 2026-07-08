@@ -81,12 +81,12 @@ namespace LingBoCanteen
                 currentRegion = (GameRegion)regionData.Value;
             }
 
-            // 获取当前时间阶段
+            // 获取当前时间阶段（兼容旧存档：0 -> Day，其他值 -> Evening）
             TimeSection currentTimeSection = TimeSection.Day;
             var phaseData = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase");
             if (phaseData != null)
             {
-                currentTimeSection = (TimeSection)phaseData.Value;
+                currentTimeSection = phaseData.Value == (int)TimeSection.Day ? TimeSection.Day : TimeSection.Evening;
             }
 
             // 获取对应的音乐ID

@@ -1,0 +1,862 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<UnityGameFramework>
+  <ResourceCollection>
+    <Resources>
+      <Resource Name="0_Scripts/IMPLEMENTATION_SUMMARY" LoadType="0" Packed="False" />
+      <Resource Name="0_Scripts/PLOT_SYSTEM_GUIDE" LoadType="0" Packed="False" />
+      <Resource Name="0_Scripts/PLOT_SYSTEM_QUICK_REF" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Bin/Bin" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Bin/Idle" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Bin/Open" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Egg/Egg" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Egg/Prep" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Egg/SAnim_Egg_01" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Egg/SAnim_Egg_02" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Egg/SAnim_Egg_03" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Egg/SAnim_Egg_04" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Egg/SAnim_Egg_05" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Flour/Flour" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Season/Cream" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Season/Oil" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Season/Pepper" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Season/Salt" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Season/Sauce" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Season/Season" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Animation/Season/Sugar" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/CG/NormalEnding" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/CG/TrueEnding" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/AngelCust_01" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/AngelCust_02" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/AngelCust_03" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/AngelCust_04" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/HumanCust_01" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/HumanCust_02" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/HumanCust_03" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/HumanCust_04" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/HumanCust_05" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/PlotCustomer_Celebrity" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/PlotCustomer_Deserter" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/PlotCustomer_Genius" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/SinCust_01" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/SinCust_02" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/SinCust_03" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Customers/SinCust_04" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_3" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_4" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_5" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL1_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL1_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL1_3" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL3_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL3_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL4" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Evening/Env_Evening_Heaven" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Evening/Env_Evening_Hell" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Evening/Env_Evening_HumanWorld" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL0_Heaven" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL0_Hell" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL0_HumanWorld" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL1_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL1_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL1_3" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL2_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL2_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL3_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL3_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL3_3" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL4_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL4_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_Ording/Env_Ording_IL4_3" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL0" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL2_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL2_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_3" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_4" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL4" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Env/Panels" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_AppleChickenCutlet" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_AppleJellyCup" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_BeefWithScallions" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_CheesePotatoPancake" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_ChickenWithMushroom" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_EggFriedRice" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_FishSoup" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_HawthornJelly" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_LemonShrimpPaste" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_LemonSorbet" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_Oyakodon" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_PumpkinSoup" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_RiceWithSlicedBeefEggs" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_Salad" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_StargazyPie" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_Steak" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_StoneGrilledMeat" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_TamotoMeatSauce" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_ToastedFish" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_TomatoMeatNoodles" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_TomatoStuffedWithMeat" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/Dishes_VeggieAndEggNoodles" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/FoodBurn" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Dishes/FoodBurnPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1001_Pumpkin/Ing_Pumpkin" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_CutKnob" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1002_Mushroom/Ing_Mushroom" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1002_Mushroom/Mushroom_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1002_Mushroom/Mushroom_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1002_Mushroom/Mushroom_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1003_Lemon/Ing_Lemon" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_CutKnob" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Moveable" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1004_Garlic/Garlic_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1004_Garlic/Garlic_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1004_Garlic/Garlic_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1004_Garlic/Ing_Garlic" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1005_Asparagus/Asparagus_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1005_Asparagus/Asparagus_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1005_Asparagus/Asparagus_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1005_Asparagus/Ing_Asparagus" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1006_Chili/Chili_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1006_Chili/Chili_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1006_Chili/Chili_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1006_Chili/Ing_Chili" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1007_GreenOnion/GreenOnion_Delepted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1007_GreenOnion/GreenOnion_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1007_GreenOnion/GreenOnion_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1007_GreenOnion/Ing_GreenOnion" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1008_Cheese/Cheese_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1008_Cheese/Cheese_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1008_Cheese/Cheese_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1008_Cheese/Ing_Cheese" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1009_Apple/Apple_CutKnob" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1009_Apple/Apple_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1009_Apple/Apple_Moveable" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1009_Apple/Apple_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1009_Apple/Ing_Apple" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1010_Yogurt/Ing_Yogurt" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1010_Yogurt/Yogurt_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1010_Yogurt/Yogurt_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1011_Gelatin/Gelatin_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1011_Gelatin/Gelatin_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1011_Gelatin/Ing_Gelatin" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1012_Tomato/Ing_Tamato" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1012_Tomato/Tamato_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1012_Tomato/Tamato_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1012_Tomato/Tamato_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1012_Tomato/Tamoto_Moveable" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1013_Rice/Ing_Rice" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1013_Rice/Rice_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1013_Rice/Rice_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_CutKnob" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1014_Hawthorn/Ing_Hawthorn" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1015_Potato/Ing_Potato" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1015_Potato/Patato_Moveable" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1015_Potato/Potato_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1015_Potato/Potato_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1015_Potato/Potato_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1016_Lettuce/Ing_Lettuce" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1016_Lettuce/Lettuce_Depleted" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1016_Lettuce/Lettuce_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Common/1016_Lettuce/Lettuce_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Drawer/1022_Flour/Flour_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Drawer/1022_Flour/Ing_Flour" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Drawer/1023_Egg/Egg_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/Drawer/1023_Egg/Ing_Egg" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1017_Beef/Beef_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1017_Beef/Beef_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1017_Beef/Ing_Beef" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1018_ChickenLeg/Chickenleg_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1018_ChickenLeg/Chickenleg_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1018_ChickenLeg/Ing_Chickenleg" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1019_Fish/Fish_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1019_Fish/Fish_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1019_Fish/Ing_Fish" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1020_Pork/Ing_Pork" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1020_Pork/Pork_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1020_Pork/Pork_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Ing_Shrimp" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_CutKnob" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_Mid" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_Output" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Bowl" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Bowl_Deco" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Cloth" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Glass" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Hearth" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/ItemInPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Oven" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Oven_Working" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_PresCooker" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_SoupPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_SoupPot_FullOfWater" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_Steamer" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_Wok" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_PresCooker" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_SoupPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_Steamer" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_Wok" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_BlackPepper" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Cream" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Oil" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Salt" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Sauce" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Sugar" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Cabinet" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Cabinet_Opened" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Cabinet_Opened_Deco" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/CuttingBoard" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Fridge" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Fridge_Opened" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Knife" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/SAnim_Bin_01" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/SAnim_Bin_02" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/SAnim_Bin_03" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Squeezer" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/LockedIng/LockedIng_01" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/LockedIng/LockedIng_02" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/LockedIng/LockedIng_03" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/LockedIng/LockedIng_04" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_AppleChickenCutlet" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_AppleJellyCup" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_BeefWithScallions" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_CheesePotat" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_ChikenWtihMushroom" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_EggFriedRice" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_FishSoup" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_HawthornJelly" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_LemonShrimpPaste" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_LemonSorbet" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_Oyakodon" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_PumpkinSoup" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_RiceWithSlicedBeefEggs" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_Salad" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_StaegazyPie" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_Steak" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_StoneGrilledMeat" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_ToastedFish" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_TomatoMeatNoodles" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_TomatoStuffedWithMeat" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/Foods/Recipe/Recipe_VeggieAndEggNoodles" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/pot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/MainMenu/Hover" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/MainMenu/MainMenu_Animation" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/MainMenu/MainMenu_Animator" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/MainMenu/MainMenu_Background" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/Market/LeftBtn" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/Market/RightBtn" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/Market/Slot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/Mouse/Mouse" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/Mouse/Mouse_Dragginng" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_Bubble" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_Coin" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_BackDrop_CookingProcess" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_CookingProcess_Oven" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_DayStatus" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_Location" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_San" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_Sounds" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_Story" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Backdrop_ToolshipCommon" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Backdrop/UI_Progress_BG" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_CallItADay" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_ChosingAPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Close" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_CookingArea" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_DinnerBell" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_GoDownstairs" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_GoUpstairs" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Order" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_PrepArea" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_PresPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Quit" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Quit_Deco" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Recipe" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Recipe_1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Setting_Base" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Setting_Hover" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Setting_Normal" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_SettleUp" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_SoupPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Start" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Steamer" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_TurnOnOven" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_TurnTheHearth" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Btn_Wok" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Icon_Pick" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Panel_Setting_New" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Slider_Fill" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Button/UI_Slider_Handle" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_Buff" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_CookingProcess" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_FoodBurn" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_Market" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_ModeSelection" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_Pick" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_Sin" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UI_Icon_Virtue" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Icon/UnlockMask" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/black_full" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/Settle_Common" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/Settle_Suspicion" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/Stamp" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/UI_Panel_Market" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/UI_Panel_Recipe" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/UI_Panel_Setting" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/UI_Panel_Story" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/UI_PanelChooseAPot" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/UI/UI_Panel/Warning" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/CookingArea" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/DialogueForm" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/MainMenu" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/MarketForm" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/OrderArea1" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/OrderArea2" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/OrderArea3" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/OrderAreajpg" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/PrepArea" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/SettingForm" LoadType="0" Packed="False" />
+      <Resource Name="4_Arts/VisualTarget/TextPanel" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/BGM/bgm_human_day" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/area_switch" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/buy_fail" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/buy_success" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/click" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/cook_complete" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/customer_enter" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/customer_leave" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/cut_knife" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/food_burn" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/gold_get" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/ingredient_place" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/juicer_loop" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/patience_warn" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/select" LoadType="0" Packed="False" />
+      <Resource Name="5_Audio/SFX/unlock" LoadType="0" Packed="False" />
+      <Resource Name="Configs/DefaultConfig" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day1" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day12" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day15" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day16_1" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day16_2" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day17" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day18" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day19" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day1_1" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day20_1" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day20_2" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day4" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day5" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Day9" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Ending0" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ExcelConfigs/Ending100" LoadType="0" Packed="False" />
+      <Resource Name="Configs/ResourceEditor" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Day" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Dish" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Entity" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Guest" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Ingredient" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Music" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Scene" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/Sound" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/UIForm" LoadType="0" Packed="False" />
+      <Resource Name="DataTables/UISound" LoadType="0" Packed="False" />
+      <Resource Name="Entities/Customer" LoadType="0" Packed="False" />
+      <Resource Name="Fonts/MainFont" LoadType="0" Packed="False" />
+      <Resource Name="Fonts/zh-cn" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_end_normal" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_heaven" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_hell" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_human_day" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_main_menu" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_night_settle" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_supermarket" LoadType="0" Packed="False" />
+      <Resource Name="Music/bgm_tension" LoadType="0" Packed="False" />
+      <Resource Name="Res/Char/Celebrity" LoadType="0" Packed="False" />
+      <Resource Name="Res/Char/Deserter" LoadType="0" Packed="False" />
+      <Resource Name="Res/Char/Genius" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/CateenArea" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/CookingScene" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/Main" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/Main1111" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/Menu" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/OrderingScene" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/Panels" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/PrepScene" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/SampleScene" LoadType="0" Packed="False" />
+      <Resource Name="Scenes/TestScene" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/area_switch" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/buy_fail" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/buy_success" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/click" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/cook_complete" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/customer_angry" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/customer_enter" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/customer_leave" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/cut_knife" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/food_burn" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/gold_get" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/hover" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/ingredient_place" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/juicer_loop" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/patience_warn" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/san_down" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/san_up" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/select" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/stove_on" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/trash_open" LoadType="0" Packed="False" />
+      <Resource Name="Sounds/unlock" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/DialogueForm" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/EndingForm" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/MarketForm" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/MenuForm" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/PotForm" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/RecipeForm" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIForms/SettingForm" LoadType="0" Packed="False" />
+      <Resource Name="UI/UIItems/Slot" LoadType="0" Packed="False" />
+    </Resources>
+    <Assets>
+      <Asset Guid="00cb75b4d4c16514b8af4074dc5bdddf" ResourceName="4_Arts/Foods/Ing/Common/1007_GreenOnion/GreenOnion_Output" />
+      <Asset Guid="016f0b955ff901d4aa9ea2a30a5c9d6b" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_PresCooker" />
+      <Asset Guid="017c8787867f4ea49ac4c886d1ab77cd" ResourceName="4_Arts/UI/UI_Button/UI_Slider_Fill" />
+      <Asset Guid="01888426e2cde7c44a9ad07dc2859151" ResourceName="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_CutKnob" />
+      <Asset Guid="047b51b15bdaae649acefb0eb0cca32c" ResourceName="UI/UIForms/RecipeForm" />
+      <Asset Guid="05325f43db456744fa613f208d28c2ad" ResourceName="DataTables/Entity" />
+      <Asset Guid="05606c1f517e237409d6b6519c0c6aed" ResourceName="Sounds/buy_success" />
+      <Asset Guid="06742f5b9e8d4f34198d020ea85357cf" ResourceName="4_Arts/UI/MainMenu/MainMenu_Background" />
+      <Asset Guid="067d858021e9a5f42a65159113449d7d" ResourceName="4_Arts/Animation/Season/Salt" />
+      <Asset Guid="06f3d131b097bad4482f4edf1f0c83b2" ResourceName="Scenes/PrepScene" />
+      <Asset Guid="0806e13aadc8ae94ab263adbf15839ce" ResourceName="4_Arts/Foods/Ing/Common/1016_Lettuce/Ing_Lettuce" />
+      <Asset Guid="081931742426c314d95a6d41970f5af2" ResourceName="4_Arts/Foods/Ing/Common/1002_Mushroom/Ing_Mushroom" />
+      <Asset Guid="086b6472e16a06d4fafab3ce040edba0" ResourceName="4_Arts/VisualTarget/SettingForm" />
+      <Asset Guid="09118e47547644044a7163bf175f6528" ResourceName="4_Arts/Foods/Ing/Common/1012_Tomato/Ing_Tamato" />
+      <Asset Guid="0b1bc7d6c51df9b469e938eb9f8f6ddb" ResourceName="4_Arts/Foods/Ing/Common/1004_Garlic/Ing_Garlic" />
+      <Asset Guid="0b8efcb614c3e4b478b6f88683ad1ed0" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_Buff" />
+      <Asset Guid="0c133f51e92e0344f94690240cf32bec" ResourceName="4_Arts/Foods/Dishes/Dishes_AppleChickenCutlet" />
+      <Asset Guid="0d64e7b915583a84585425e17bc18893" ResourceName="4_Arts/VisualTarget/MainMenu" />
+      <Asset Guid="0e6cbd5b4509b8a418c8dd9c558767d1" ResourceName="4_Arts/Customers/AngelCust_04" />
+      <Asset Guid="10c30b66a38425c4b8187961f9865797" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL2_2" />
+      <Asset Guid="10fb70b701e316441bc514cb43eba0e1" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Sauce" />
+      <Asset Guid="12290353a2292f84495b84477aa9035a" ResourceName="4_Arts/Foods/Ing/Common/1010_Yogurt/Yogurt_Output" />
+      <Asset Guid="127f2349c8032cd4ca4823c73d684e33" ResourceName="Configs/ExcelConfigs/Day16_2" />
+      <Asset Guid="1350f202abdf5ad45b792440753189b2" ResourceName="5_Audio/SFX/cook_complete" />
+      <Asset Guid="1380bd645e1ab714aac1a3c1037b3cae" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_Sounds" />
+      <Asset Guid="1487037c7461a9f4a84915009f49ef2f" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_Wok" />
+      <Asset Guid="160c1032ec6741046a354462a743155a" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_Bubble" />
+      <Asset Guid="171f65edeab18464791141bbd430db14" ResourceName="Configs/ExcelConfigs/Day1" />
+      <Asset Guid="175e96e2cc804ed49b69ca576e17817c" ResourceName="Sounds/ingredient_place" />
+      <Asset Guid="18701298d11f1d1438da1e58afbe674e" ResourceName="4_Arts/Foods/Ing/Common/1015_Potato/Potato_Depleted" />
+      <Asset Guid="18f6fd872a6abc143b5e793272c083f6" ResourceName="4_Arts/UI/UI_Button/UI_Btn_SettleUp" />
+      <Asset Guid="18f78794e9134db419833a831c319586" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/SAnim_Bin_02" />
+      <Asset Guid="1b5aaab3c7c263c4cbb4c1ade2085855" ResourceName="Configs/ExcelConfigs/Day1_1" />
+      <Asset Guid="1bd7f11b99870484a918cd57237c1858" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Hearth" />
+      <Asset Guid="1bf56a5da6df42644a659791262ed482" ResourceName="4_Arts/Animation/Season/Cream" />
+      <Asset Guid="1c77ac0b313c3bc46888d0605fbdca99" ResourceName="4_Arts/Foods/Ing/Common/1007_GreenOnion/GreenOnion_Mid" />
+      <Asset Guid="1ce6573a4a50b484dacb3ae32988833c" ResourceName="4_Arts/UI/UI_Panel/UI_PanelChooseAPot" />
+      <Asset Guid="1d3a3141ea5bfdd4aa32afeb19c23a44" ResourceName="4_Arts/Animation/Flour/Flour" />
+      <Asset Guid="1d5ef156df752564a89c3c3c894aaf49" ResourceName="4_Arts/Foods/Ing/InFridge/1019_Fish/Ing_Fish" />
+      <Asset Guid="1ed6dba1ccd874043b9d05b58ccf34d2" ResourceName="4_Arts/Foods/Ing/Common/1002_Mushroom/Mushroom_Depleted" />
+      <Asset Guid="1ed73c3d68f579f47a27501142214ab6" ResourceName="4_Arts/Customers/SinCust_02" />
+      <Asset Guid="1f0ba62191e18b742995b667ad1c8d71" ResourceName="4_Arts/Env/Env_Evening/Env_Evening_HumanWorld" />
+      <Asset Guid="1f9d2685daeb00d4f85d0e16493facf4" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_Steamer" />
+      <Asset Guid="1fe878e3208dafb4f921a4cf99fe31ea" ResourceName="UI/UIForms/EndingForm" />
+      <Asset Guid="205badfa0ae0f414687745f9f4ded650" ResourceName="4_Arts/UI/Market/LeftBtn" />
+      <Asset Guid="20ea296d2a1d3a544b9656be13044578" ResourceName="4_Arts/UI/Mouse/Mouse_Dragginng" />
+      <Asset Guid="21d062c1a7a7eba46980b562f3517c05" ResourceName="4_Arts/Foods/Ing/Common/1009_Apple/Ing_Apple" />
+      <Asset Guid="22de72e69c9c1cf4189406241a4ca4b3" ResourceName="Music/bgm_tension" />
+      <Asset Guid="243efa57bbd83724bbb5036bbf1074c0" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_Steamer" />
+      <Asset Guid="248e9fc818e32c64aac197122289d667" ResourceName="4_Arts/Foods/Dishes/Dishes_Salad" />
+      <Asset Guid="2502c434d2c2e93438d336580f4e8c9c" ResourceName="4_Arts/Foods/Ing/InFridge/1018_ChickenLeg/Chickenleg_Output" />
+      <Asset Guid="25a023cb60f9f9f4399464b15468718d" ResourceName="UI/UIForms/PotForm" />
+      <Asset Guid="25b57e9172911084491ab8160a054b8d" ResourceName="4_Arts/Foods/Recipe/Recipe_LemonShrimpPaste" />
+      <Asset Guid="2688280e223a46e40bcd69a50395cd2b" ResourceName="4_Arts/Foods/Ing/Common/1015_Potato/Potato_Mid" />
+      <Asset Guid="26b7c785f6fbd0c4dabd6ede3e1b0bdd" ResourceName="Scenes/OrderingScene" />
+      <Asset Guid="26f4dda877c7c6e449ba32f562c0dabd" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_Market" />
+      <Asset Guid="296c2051daa85b64a8eeb039db0a2ed2" ResourceName="4_Arts/Foods/Dishes/Dishes_StoneGrilledMeat" />
+      <Asset Guid="296f2f93d7faa374188e6b5b1ef67585" ResourceName="Sounds/customer_angry" />
+      <Asset Guid="2a115dd2c1ff2da4da16ef7277eea29b" ResourceName="4_Arts/Foods/Dishes/Dishes_ToastedFish" />
+      <Asset Guid="2a2519a317915fe49b5539d5651b517e" ResourceName="4_Arts/UI/UI_Button/UI_Icon_Pick" />
+      <Asset Guid="2a5dbb4938a117e43947dfa0c7037aa3" ResourceName="4_Arts/Foods/Ing/Common/1004_Garlic/Garlic_Mid" />
+      <Asset Guid="2a8cf25200e650f4bbc49eb720b88f58" ResourceName="Configs/ExcelConfigs/Day18" />
+      <Asset Guid="2a9c21011f69ab04e864a25ae757ef70" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/SAnim_Bin_01" />
+      <Asset Guid="2ab950895b20aae4b88e3d779d5e2e8a" ResourceName="4_Arts/UI/UI_Button/UI_Btn_DinnerBell" />
+      <Asset Guid="2ad09f25e7524c040ba195acd8a077bf" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL4" />
+      <Asset Guid="2af781df59098a54c8f537f46f1befbb" ResourceName="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_Mid" />
+      <Asset Guid="2b471208a65b5c646b4adba1fb8fb3c2" ResourceName="4_Arts/Foods/Dishes/Dishes_AppleJellyCup" />
+      <Asset Guid="2b844056127e1e849a3eddf082d1d78e" ResourceName="5_Audio/SFX/customer_leave" />
+      <Asset Guid="2ba0d622db2592043b0ad20e7edb5184" ResourceName="4_Arts/pot" />
+      <Asset Guid="2c11417a6e26cd742ad9b87f90c726c3" ResourceName="4_Arts/CG/TrueEnding" />
+      <Asset Guid="2cda990e2423bbf4892e6590ba056729" ResourceName="Scenes/SampleScene" />
+      <Asset Guid="2d7319329a9efcd4eb0058f77ad25c82" ResourceName="4_Arts/Foods/Ing/Common/1011_Gelatin/Gelatin_Depleted" />
+      <Asset Guid="2d9c7da5329fe4142b2319ca004ae569" ResourceName="Scenes/CateenArea" />
+      <Asset Guid="2dbb6f81fbc3a3f4bad360374edb19d0" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_San" />
+      <Asset Guid="2dda3a4f9fe6acf46ad3e65d5533762d" ResourceName="4_Arts/Foods/LockedIng/LockedIng_03" />
+      <Asset Guid="2e96ca864d02ccf4c95786868641e5a9" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_4" />
+      <Asset Guid="2ef895e8d6265fa4395894ad48ef5ccf" ResourceName="4_Arts/UI/UI_Panel/UI_Panel_Setting" />
+      <Asset Guid="2f1e6e99dc52893458c7698483ad02f7" ResourceName="4_Arts/Foods/Ing/Common/1009_Apple/Apple_CutKnob" />
+      <Asset Guid="30e00c46b31da004c833b5d24b237be1" ResourceName="Music/bgm_main_menu" />
+      <Asset Guid="30ff7e81c8f43774188f942beb9eb0c7" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/CuttingBoard" />
+      <Asset Guid="317303c16c990bf4d9316fb48377019e" ResourceName="4_Arts/Foods/Dishes/Dishes_VeggieAndEggNoodles" />
+      <Asset Guid="317d685c3e74a814284d5cb5de227f28" ResourceName="4_Arts/Foods/Ing/Common/1015_Potato/Patato_Moveable" />
+      <Asset Guid="31ad45f7380b053478f83179d9e9cbf9" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_1" />
+      <Asset Guid="31dd092629823cf41b4724a41aeab136" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Oil" />
+      <Asset Guid="326d123f8b1cd194ea9670812b38eb31" ResourceName="4_Arts/Foods/Ing/InFridge/1017_Beef/Beef_Mid" />
+      <Asset Guid="32d1fabb9a45aad4a9384160f36eca86" ResourceName="4_Arts/Animation/Egg/SAnim_Egg_02" />
+      <Asset Guid="32f1278353916524c806297cbf695009" ResourceName="4_Arts/UI/UI_Button/UI_Btn_SoupPot" />
+      <Asset Guid="3459b85b348034741ae7b49b418dbf3d" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL0_Heaven" />
+      <Asset Guid="34b7a1e44e23cbb458612357231aeb45" ResourceName="5_Audio/SFX/select" />
+      <Asset Guid="34c31467c550dc840b1780a1ffcc1165" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_CookingProcess" />
+      <Asset Guid="34fde66bff9855941abf94693e53da56" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Oven" />
+      <Asset Guid="353095f8e8a47a64d9385d46e7617f83" ResourceName="Fonts/zh-cn" />
+      <Asset Guid="354fb9b704d74b642ac68fa910fc825d" ResourceName="4_Arts/Env/Env_Evening/Env_Evening_Hell" />
+      <Asset Guid="35bbd931b6cc06047a1ec0cdc6fb03ff" ResourceName="4_Arts/Foods/Dishes/Dishes_TomatoMeatNoodles" />
+      <Asset Guid="35d42c171be9d9a43a48738511405034" ResourceName="4_Arts/UI/MainMenu/MainMenu_Animator" />
+      <Asset Guid="36ddeb6a29efd974ca9ffea8c4f1d3d7" ResourceName="4_Arts/Foods/Ing/Common/1009_Apple/Apple_Mid" />
+      <Asset Guid="36ef68b1fa9d8ba4ab0fd70edf3f3aef" ResourceName="Configs/DefaultConfig" />
+      <Asset Guid="373a52d8977613347bcbd29eb6ef020d" ResourceName="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_CutKnob" />
+      <Asset Guid="37e3d9e4f6e40dc4391e7c3d20439ff9" ResourceName="Configs/ExcelConfigs/Day15" />
+      <Asset Guid="395b6c0e176677447a4e2f4b6efc4b85" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_Story" />
+      <Asset Guid="3a1fa3613ff15954aa1f4ccc8132310c" ResourceName="Configs/ExcelConfigs/Day5" />
+      <Asset Guid="3a5ebd9e99dc94a439e4f93ccf00e723" ResourceName="4_Arts/Foods/Dishes/Dishes_RiceWithSlicedBeefEggs" />
+      <Asset Guid="3b36f4168a97b564b9d05c3fd1c72e34" ResourceName="4_Arts/UI/UI_Button/UI_Slider_Handle" />
+      <Asset Guid="3bd0e5638b017154d9f3f340d0b8ffd8" ResourceName="Scenes/CookingScene" />
+      <Asset Guid="3c821b3becb0abf4b919880e339f3389" ResourceName="4_Arts/Foods/Recipe/Recipe_BeefWithScallions" />
+      <Asset Guid="3d725072826f1b1498fb340a2365de53" ResourceName="5_Audio/SFX/patience_warn" />
+      <Asset Guid="3d8ce50200899814192f9f0d133b2a81" ResourceName="DataTables/UIForm" />
+      <Asset Guid="3df0e8441f276874582f7b4ac9fc7003" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_Pick" />
+      <Asset Guid="3f4927f5f2dd4d348a0c690dacd4922c" ResourceName="Scenes/TestScene" />
+      <Asset Guid="3f7833012b4b3f44d916dfa40c3e7d83" ResourceName="4_Arts/Foods/Ing/Common/1002_Mushroom/Mushroom_Mid" />
+      <Asset Guid="41f97a67258aec147879cfa5df9ebc9c" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL3_1" />
+      <Asset Guid="436bc5891b7d58747a235b823b1e03d5" ResourceName="4_Arts/Foods/Recipe/Recipe_TomatoMeatNoodles" />
+      <Asset Guid="43de44f04b3392b4fa29b52ca7c3ff80" ResourceName="4_Arts/Animation/Egg/SAnim_Egg_05" />
+      <Asset Guid="4416f1ed01c3b7846954f1bb9163ccfb" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_ModeSelection" />
+      <Asset Guid="44cbfb428d4bbd24793585aa727d8c67" ResourceName="4_Arts/Animation/Egg/SAnim_Egg_01" />
+      <Asset Guid="44ff0bfe6e5eef348af26271e4085be1" ResourceName="4_Arts/Foods/Dishes/Dishes_Oyakodon" />
+      <Asset Guid="45593cf10b597064bbadb85a1b2ab6b4" ResourceName="Configs/ExcelConfigs/Day20_1" />
+      <Asset Guid="45ef3fbd43158624ca69764eb1a6d449" ResourceName="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Mid" />
+      <Asset Guid="471846bd4772b7f439f7db7bfa6fffd8" ResourceName="4_Arts/Foods/Recipe/Recipe_Oyakodon" />
+      <Asset Guid="474d79a7baa3ad04397cead11fffbede" ResourceName="4_Arts/Customers/HumanCust_03" />
+      <Asset Guid="479549312949c614c847ca34a7bcaf00" ResourceName="4_Arts/UI/UI_Panel/Stamp" />
+      <Asset Guid="485447edd0401924eb89847b6c68db3f" ResourceName="Configs/ExcelConfigs/Day20_2" />
+      <Asset Guid="485efe2e0f3ff7440885786cd233528c" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL2_2" />
+      <Asset Guid="494ff225bbd69a84cbec4fbfd4f1f5ac" ResourceName="4_Arts/Foods/Ing/Common/1012_Tomato/Tamato_Depleted" />
+      <Asset Guid="498a03ba7fc457b409ff7a707e5f113d" ResourceName="4_Arts/Foods/Ing/Common/1015_Potato/Potato_Output" />
+      <Asset Guid="4a9ee1aa7a1eaf84f8b99b4bc26e18af" ResourceName="4_Arts/Animation/Season/Pepper" />
+      <Asset Guid="4abc078aef7f9594e8ba316e70e204ea" ResourceName="4_Arts/Foods/Ing/Common/1016_Lettuce/Lettuce_Output" />
+      <Asset Guid="4b83d3695109c4045a38fe1e39befff2" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_BlackPepper" />
+      <Asset Guid="4ba9d1d294244214ba215336f07ec1a2" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL3_2" />
+      <Asset Guid="4c0488171ab8d104e97b2b80065668f9" ResourceName="Configs/ExcelConfigs/Day12" />
+      <Asset Guid="4cb047ce76e545c48a1eb578ec1b161e" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/ItemInPot" />
+      <Asset Guid="4da4e05622b9dd44091d82a05e362d28" ResourceName="4_Arts/Foods/Ing/InFridge/1018_ChickenLeg/Chickenleg_Mid" />
+      <Asset Guid="4f4a613f7acee4b4ca21b0bba8ef8b87" ResourceName="4_Arts/Foods/Ing/Drawer/1023_Egg/Egg_Output" />
+      <Asset Guid="4f70b3e328b470240aec0aad9194c8bd" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Cream" />
+      <Asset Guid="50870ec4c075f68488d66c07c7119796" ResourceName="4_Arts/VisualTarget/OrderArea2" />
+      <Asset Guid="50ba971cccdd50d4cbfd1f9aa729ac39" ResourceName="4_Arts/Foods/Ing/Common/1006_Chili/Ing_Chili" />
+      <Asset Guid="51b9ca8148cc995429247d4e785f56f2" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL4_2" />
+      <Asset Guid="51d42bed22a03f949bff68e745737458" ResourceName="5_Audio/SFX/buy_fail" />
+      <Asset Guid="520c81d9a5e754442a75b8f4afc12649" ResourceName="4_Arts/Foods/Ing/Common/1009_Apple/Apple_Output" />
+      <Asset Guid="524d807c11973404eb1081fd7105ebcf" ResourceName="4_Arts/UI/UI_Button/UI_Btn_CallItADay" />
+      <Asset Guid="52957384eb695d5479b177f8f7648c51" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL1_3" />
+      <Asset Guid="53164b969e4e94d41ac512f7ea4a47da" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL2_1" />
+      <Asset Guid="5397921f7ae029c4e8976eff407e758e" ResourceName="4_Arts/Foods/Ing/Common/1005_Asparagus/Asparagus_Output" />
+      <Asset Guid="53ce1492192a7a54f899796d74d688e5" ResourceName="Sounds/stove_on" />
+      <Asset Guid="53e3d206b51105f4b9ec6282dea47d3e" ResourceName="4_Arts/Foods/Ing/Common/1012_Tomato/Tamato_Output" />
+      <Asset Guid="543af5e54ba5d5b43aad65dec8035a3e" ResourceName="4_Arts/Foods/Recipe/Recipe_LemonSorbet" />
+      <Asset Guid="5452ab6ccaf7f2043a2087d6828b075d" ResourceName="DataTables/UISound" />
+      <Asset Guid="54a5009417fabc64cb0387e197cbec98" ResourceName="UI/UIForms/MarketForm" />
+      <Asset Guid="55c426d9267351649bd3d29e79fd4dda" ResourceName="4_Arts/Foods/Ing/Common/1008_Cheese/Ing_Cheese" />
+      <Asset Guid="55f38808d287acf4fa6bfbe4b51253bf" ResourceName="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_Mid" />
+      <Asset Guid="58d14a340bfbf6049b6cb648170d53cf" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Cabinet_Opened_Deco" />
+      <Asset Guid="5c3d7bc86f345b944bc0078eed9ebf43" ResourceName="4_Arts/Foods/Ing/Common/1011_Gelatin/Ing_Gelatin" />
+      <Asset Guid="5d3ebbbca897ae549b1d71e0eb30166f" ResourceName="DataTables/Guest" />
+      <Asset Guid="5d486f5764e918645be6a4cfc882f25b" ResourceName="4_Arts/Foods/Ing/InFridge/1017_Beef/Beef_Output" />
+      <Asset Guid="5f2d8e87745cff14e8348a201eb01665" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Quit" />
+      <Asset Guid="60f3bb49fd5901d41bbebbc4bfbbc3b0" ResourceName="4_Arts/Foods/Ing/Common/1011_Gelatin/Gelatin_Output" />
+      <Asset Guid="6158a43354bd5c341bf112cdbdf61545" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Quit_Deco" />
+      <Asset Guid="61bf0d29e6c4b5d47b3a4064fe45693d" ResourceName="4_Arts/Customers/AngelCust_02" />
+      <Asset Guid="62e44d1230c850b4690662cfc6232bab" ResourceName="5_Audio/SFX/cut_knife" />
+      <Asset Guid="63cc42547d165bb42bfa521176a235a0" ResourceName="Configs/ExcelConfigs/Day4" />
+      <Asset Guid="65875645454ac4743ab72f1229ad8073" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_DayStatus" />
+      <Asset Guid="66684ee7752a8f049adbeefc0653a249" ResourceName="Sounds/food_burn" />
+      <Asset Guid="6683d1f090d16d64597f975d03a85008" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL1_1" />
+      <Asset Guid="68b273e881eaa8d429d21ab929cc8492" ResourceName="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_Output" />
+      <Asset Guid="69611ca00c5863e45a63ac7306786628" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_Sin" />
+      <Asset Guid="6988a3db388b33345816ef7135b35419" ResourceName="4_Arts/Animation/Egg/SAnim_Egg_03" />
+      <Asset Guid="6a2204fcd981f6a47b1d7607cbef7080" ResourceName="5_Audio/SFX/food_burn" />
+      <Asset Guid="6b1d7d4dcd4339f4aad659074a90523b" ResourceName="4_Arts/UI/Mouse/Mouse" />
+      <Asset Guid="6b5b327ab58ec624fb0328caf10a5a98" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_Location" />
+      <Asset Guid="6bb8553751a46964d8c0c793c73394f1" ResourceName="4_Arts/Foods/Ing/Common/1015_Potato/Ing_Potato" />
+      <Asset Guid="6bf66353bc475ba46b7a03019179e757" ResourceName="4_Arts/Foods/Ing/Common/1005_Asparagus/Asparagus_Mid" />
+      <Asset Guid="6c933d2ccfe8afb4bb525965669f8781" ResourceName="4_Arts/Animation/Season/Oil" />
+      <Asset Guid="6d92dde28326c344aaa92ccf9d166ec4" ResourceName="4_Arts/Animation/Flour/Flour" />
+      <Asset Guid="6e4bc0b5f7764fa448612679409a6f2d" ResourceName="4_Arts/Foods/Recipe/Recipe_AppleChickenCutlet" />
+      <Asset Guid="6e55dd49cfc6ae449b42b64117ed0319" ResourceName="4_Arts/Customers/PlotCustomer_Celebrity" />
+      <Asset Guid="6fba0babfc19be24fb01244fcd716031" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Oven_Working" />
+      <Asset Guid="70a6308762b4425468a45aad6e4ea637" ResourceName="4_Arts/Foods/LockedIng/LockedIng_01" />
+      <Asset Guid="7139f95cf5fae7145a458a33f5f5b5de" ResourceName="4_Arts/Foods/Ing/Common/1014_Hawthorn/Ing_Hawthorn" />
+      <Asset Guid="72e715773c0630c47837c8e872c043bf" ResourceName="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_CutKnob" />
+      <Asset Guid="73300f18d097fb44bb17ef8a2a61af27" ResourceName="4_Arts/Animation/Egg/Egg" />
+      <Asset Guid="73a2a1d6fae8c71438e4b93fd494d425" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL1_1" />
+      <Asset Guid="75db4d4a7a0eaec49b4ed5d6167d2e95" ResourceName="4_Arts/Customers/AngelCust_01" />
+      <Asset Guid="77a272e609e90384dabed6de30dcfdc0" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL2" />
+      <Asset Guid="77bc70e7822026a46b60b89a2de50dad" ResourceName="4_Arts/VisualTarget/TextPanel" />
+      <Asset Guid="77d3b79e4b87d2c448589f4d4335d554" ResourceName="UI/UIForms/SettingForm" />
+      <Asset Guid="783de2cc81e4ab94d86a11058b85c0dd" ResourceName="4_Arts/Foods/Ing/InFridge/1019_Fish/Fish_Output" />
+      <Asset Guid="78c8f2cf87576104197ce956283e5bc4" ResourceName="4_Arts/Foods/Recipe/Recipe_ChikenWtihMushroom" />
+      <Asset Guid="79b1f3e85cfcf2649b19349f2e7f8c1b" ResourceName="4_Arts/Foods/Recipe/Recipe_EggFriedRice" />
+      <Asset Guid="79e9df558dc98ee43bc7765a899ccd29" ResourceName="4_Arts/Foods/Dishes/Dishes_FishSoup" />
+      <Asset Guid="79ee35476954a2241ab38ff7d971e274" ResourceName="4_Arts/Foods/Ing/Common/1010_Yogurt/Yogurt_Depleted" />
+      <Asset Guid="7a89b3f23b015eb40ba970b652fada45" ResourceName="Configs/ResourceEditor" />
+      <Asset Guid="7b00f5c342a298e4cb9a701accb3e5c0" ResourceName="5_Audio/SFX/customer_enter" />
+      <Asset Guid="7e072587ee49bf04f8a0246e518caa3f" ResourceName="4_Arts/UI/UI_Panel/UI_Panel_Recipe" />
+      <Asset Guid="7e59cc94b41768b489a5557973bdb3c7" ResourceName="4_Arts/Animation/Season/Sugar" />
+      <Asset Guid="7ec8d8b91c71ba945ba061b2e3b8d2be" ResourceName="4_Arts/Animation/Bin/Idle" />
+      <Asset Guid="7efe7fe00b1ff3044990b7b4af412c16" ResourceName="4_Arts/Foods/Recipe/Recipe_VeggieAndEggNoodles" />
+      <Asset Guid="7f07d43abce803f408f74617d73c6be5" ResourceName="4_Arts/Customers/HumanCust_02" />
+      <Asset Guid="7f5d19e7dec55d0488f5e420eea72143" ResourceName="4_Arts/UI/UI_Button/UI_Btn_TurnTheHearth" />
+      <Asset Guid="80590e9553909624d89baf1b37f20681" ResourceName="4_Arts/Foods/Ing/Common/1013_Rice/Rice_Depleted" />
+      <Asset Guid="8069d9e0a798a8349a5b2a59a98bc34e" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_SoupPot" />
+      <Asset Guid="80d290cb38f7c4345bb2826aac4df7d1" ResourceName="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_Output" />
+      <Asset Guid="810d2cc1dc03798458d8e3d03594033d" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL4_1" />
+      <Asset Guid="81f3f60c330e6d941981198b47342807" ResourceName="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Depleted" />
+      <Asset Guid="821199fe0db58fe458118e49434fdfba" ResourceName="Sounds/juicer_loop" />
+      <Asset Guid="8229abb94b0dc9f47a682b6018a758c0" ResourceName="Sounds/gold_get" />
+      <Asset Guid="824be6cfa362b8c449cc7aa400d9db71" ResourceName="4_Arts/Customers/HumanCust_01" />
+      <Asset Guid="83580cf4920f1fb4a87acc4efd8a18cf" ResourceName="4_Arts/Foods/Dishes/Dishes_CheesePotatoPancake" />
+      <Asset Guid="838848f67c4c17d478ed912c8d606f81" ResourceName="4_Arts/UI/UI_Panel/black_full" />
+      <Asset Guid="838ced71da51fec47acd0f8d795edcdc" ResourceName="Scenes/Main" />
+      <Asset Guid="8446f362808f61149b30e311667a706c" ResourceName="4_Arts/VisualTarget/MarketForm" />
+      <Asset Guid="851aefdb332708a469511c2e853b3743" ResourceName="UI/UIForms/DialogueForm" />
+      <Asset Guid="8552619195a442543939efdd1920ab5b" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Cabinet_Opened" />
+      <Asset Guid="874c270f5ee87c54aab163adba5a917d" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL0_Heaven" />
+      <Asset Guid="88548f221206ec8428b94af84036206a" ResourceName="4_Arts/UI/UI_Button/UI_Btn_GoUpstairs" />
+      <Asset Guid="88b09367e8754cf449ca15200bb7675e" ResourceName="4_Arts/Foods/Dishes/Dishes_TamotoMeatSauce" />
+      <Asset Guid="88f26e50e3d9e3046a956c52d302197c" ResourceName="4_Arts/Foods/Recipe/Recipe_ToastedFish" />
+      <Asset Guid="89a618559870ce24bbe75c25cd3dd2ca" ResourceName="Entities/Customer" />
+      <Asset Guid="8b830bfeb2830da46b65c5ecd0611323" ResourceName="4_Arts/Foods/Ing/Common/1005_Asparagus/Asparagus_Depleted" />
+      <Asset Guid="8bb815cb30932ea47835ee4277000fc5" ResourceName="4_Arts/Animation/Bin/Bin" />
+      <Asset Guid="8c8b508879a766d4185859f814d1a6c8" ResourceName="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Output" />
+      <Asset Guid="8da6434060276c442ae55a8be8013179" ResourceName="4_Arts/VisualTarget/OrderArea1" />
+      <Asset Guid="8e51cdec7e29f5c498a58c9f63c7d621" ResourceName="4_Arts/Foods/Ing/InFridge/1020_Pork/Ing_Pork" />
+      <Asset Guid="8e6e88dc135fbfe438b4f6733cd09701" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Cabinet" />
+      <Asset Guid="8f485fd1012fcfe40beeb6f5a7630eb4" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_3" />
+      <Asset Guid="8f67b4cd7d046e6409a683e35d50785c" ResourceName="Configs/ExcelConfigs/Day16_1" />
+      <Asset Guid="8f9e5bb1c983d4241a8c9272c81ef45b" ResourceName="4_Arts/Foods/Recipe/Recipe_PumpkinSoup" />
+      <Asset Guid="900bc1cf775f1cb4e8805bd42f76c716" ResourceName="4_Arts/Foods/Dishes/Dishes_ChickenWithMushroom" />
+      <Asset Guid="900ff00df930e4447a038814edada7b2" ResourceName="4_Arts/Customers/SinCust_01" />
+      <Asset Guid="90d1947a5e2b8d242a4ce02856d186cb" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Fridge" />
+      <Asset Guid="914bbdc2d54d4064a89bc6e32aac8938" ResourceName="4_Arts/Foods/Ing/Common/1003_Lemon/Ing_Lemon" />
+      <Asset Guid="918a0686f8568534a9fcaba89c2f7924" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_4" />
+      <Asset Guid="92325ead0b62f3a45af0883d6d397095" ResourceName="Sounds/cook_complete" />
+      <Asset Guid="94353b910671288458f70a77cb631559" ResourceName="4_Arts/Foods/Recipe/Recipe_AppleJellyCup" />
+      <Asset Guid="94e78cc2b9238754db8994068bd8a412" ResourceName="Configs/ExcelConfigs/Ending100" />
+      <Asset Guid="96a2fbed81fe88e4d91ad9dda2ab0e7c" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_CookingProcess_Oven" />
+      <Asset Guid="96fa3b2d8602b8a468b32b9cc9f96ae2" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Recipe" />
+      <Asset Guid="9780eb5e9b4fb4346bc82e3375e8b323" ResourceName="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Ing_Shrimp" />
+      <Asset Guid="97de5fc3fd357e244a3106ca4b094313" ResourceName="DataTables/Sound" />
+      <Asset Guid="9864acdd9c9da1f42813a77df07d0e3d" ResourceName="4_Arts/Customers/SinCust_04" />
+      <Asset Guid="98dcef8b4cc334d4f8e018757409fd8e" ResourceName="4_Arts/UI/UI_Panel/Warning" />
+      <Asset Guid="9941ee397decd254a83eb18d2c5f4a69" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Steamer" />
+      <Asset Guid="9ab1e782ef5aa824e9a2ec5c1f02f2e3" ResourceName="4_Arts/Customers/AngelCust_03" />
+      <Asset Guid="9af442e2f101d924da87bc2cfe63a4a2" ResourceName="4_Arts/Foods/Ing/Common/1007_GreenOnion/Ing_GreenOnion" />
+      <Asset Guid="9b0801079a74b9f4486d5a4c0e4101ac" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Setting_Normal" />
+      <Asset Guid="9b6b002e99406e041b74d706956e6c23" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL3_1" />
+      <Asset Guid="9c1e53a32744906478251cfdf17d5c59" ResourceName="4_Arts/Foods/Ing/InFridge/1020_Pork/Pork_Output" />
+      <Asset Guid="9c1ea73d5ad678f43ae601d011d1aaa3" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_FoodBurn" />
+      <Asset Guid="9c2f33f07aab7594ca52db0a4567fd5b" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Wok" />
+      <Asset Guid="9c8718c4144917342a0551350ae71df6" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Knife" />
+      <Asset Guid="9cd5d2b4aabdee149b0d0bb02b9e4c78" ResourceName="5_Audio/SFX/unlock" />
+      <Asset Guid="9deba3cf6496e3649a9b08de957afaea" ResourceName="4_Arts/Customers/SinCust_03" />
+      <Asset Guid="9eec497c7b106504e924c77d1ddc1b3d" ResourceName="4_Arts/Foods/Recipe/Recipe_FishSoup" />
+      <Asset Guid="9effd734190878d4db8338ccee6a5c25" ResourceName="5_Audio/SFX/buy_success" />
+      <Asset Guid="9fcfa416f1107c2429b48608e025ac76" ResourceName="4_Arts/Foods/Recipe/Recipe_Salad" />
+      <Asset Guid="a0324289fa193a34dbec1561c6827bd6" ResourceName="Configs/ExcelConfigs/Day9" />
+      <Asset Guid="a163b05bbedc8fc43b14606b71637721" ResourceName="Sounds/customer_leave" />
+      <Asset Guid="a1cf205ba124f254abe9627ba82ad028" ResourceName="4_Arts/Foods/LockedIng/LockedIng_04" />
+      <Asset Guid="a1ea673c80915684fb93fec67fb92ccb" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Setting_Base" />
+      <Asset Guid="a1fe34227e5b6c2488146b6dcddf4050" ResourceName="4_Arts/VisualTarget/PrepArea" />
+      <Asset Guid="a24abcfa473ed1b4a8a77e0840a7c7ad" ResourceName="4_Arts/Foods/Ing/Common/1013_Rice/Ing_Rice" />
+      <Asset Guid="a2bf3116c012f114db62aae4abb5fe07" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL3_2" />
+      <Asset Guid="a3c7b4a72c3a52240b022a463921dc41" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Start" />
+      <Asset Guid="a52fca7344fb3294eb324d65508f8a65" ResourceName="Sounds/unlock" />
+      <Asset Guid="a5d00ac4aa50522478d17721e089191b" ResourceName="Music/bgm_end_normal" />
+      <Asset Guid="a68478090915769439775cc289c29c35" ResourceName="4_Arts/UI/UI_Panel/UI_Panel_Market" />
+      <Asset Guid="a704024c676e43c4d9d1e1ef39aa1097" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_SoupPot_FullOfWater" />
+      <Asset Guid="a7526bea3eccf0a459ed98c2d1391e6d" ResourceName="4_Arts/UI/UI_Button/UI_Btn_TurnOnOven" />
+      <Asset Guid="a75b21595b486bf4daf8b8eefb7b4059" ResourceName="Music/bgm_night_settle" />
+      <Asset Guid="a971f0ed9c28d8e4bba0c678b323c6b4" ResourceName="4_Arts/Foods/Dishes/Dishes_StargazyPie" />
+      <Asset Guid="a9bb236f131000d4e85449b7178492a9" ResourceName="4_Arts/UI/UI_Panel/Settle_Common" />
+      <Asset Guid="aa7802d54aa43094fbe35a475ff7dccf" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_3" />
+      <Asset Guid="aaf73aa2afaa3594982de4de05d9883f" ResourceName="4_Arts/Customers/PlotCustomer_Deserter" />
+      <Asset Guid="ab070ae7a8bde7040900d68082fe4b66" ResourceName="DataTables/Ingredient" />
+      <Asset Guid="aceb344cb76ce5b4bb3fce4ac756ffac" ResourceName="4_Arts/Foods/Ing/Common/1008_Cheese/Cheese_Output" />
+      <Asset Guid="ae579476838d011429769315688c797e" ResourceName="4_Arts/Animation/Bin/Open" />
+      <Asset Guid="af3f8b3998a02304b8b9b27cd6c47ce3" ResourceName="UI/UIItems/Slot" />
+      <Asset Guid="af44ebf2806d01e4abfe60410501a614" ResourceName="Music/bgm_human_day" />
+      <Asset Guid="af471b989be18024fa453a60efb02cf2" ResourceName="4_Arts/Foods/Ing/Common/1009_Apple/Apple_Moveable" />
+      <Asset Guid="b0749a2b0bf8d9d44a3276994d68515b" ResourceName="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_Depleted" />
+      <Asset Guid="b16016c971e67af42a3aba531ba3db36" ResourceName="Configs/ExcelConfigs/Day19" />
+      <Asset Guid="b20b456ab95ad134db53e82aab079ff6" ResourceName="Scenes/Menu" />
+      <Asset Guid="b27fb5e177d79bc43a3b68b445f2a8c0" ResourceName="DataTables/Day" />
+      <Asset Guid="b2c919a5adf3cfd468ef2f2cccb761e3" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Salt" />
+      <Asset Guid="b2e652b6084cdcf4f87d7fe1fc5009f2" ResourceName="Sounds/select" />
+      <Asset Guid="b2fb8d2bc8c221a40b9a3a603f84d960" ResourceName="4_Arts/Foods/Recipe/Recipe_HawthornJelly" />
+      <Asset Guid="b34502cebebcd9a4781ea9144badcb30" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_Coin" />
+      <Asset Guid="b36d9d857fc89d747a4c977c8feeadc4" ResourceName="Sounds/patience_warn" />
+      <Asset Guid="b40f64b15a5a2d54387d28ad3d59fc9d" ResourceName="4_Arts/Animation/Egg/SAnim_Egg_04" />
+      <Asset Guid="b4185ce741dd8c443a9c4e8d4c6f18cb" ResourceName="4_Arts/Foods/Ing/Common/1001_Pumpkin/Pumpkin_Depleted" />
+      <Asset Guid="b499d0b468baa984aa8ecd25e22a5f0f" ResourceName="Fonts/MainFont" />
+      <Asset Guid="b4d93f5ec3098df47835a31f7a8aa623" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Bowl_Deco" />
+      <Asset Guid="b4eb8bd9f1ed5c943aa2d0283c5dcee9" ResourceName="5_Audio/SFX/click" />
+      <Asset Guid="b5951114e8bdf8348bfb00106c7a2806" ResourceName="Scenes/Panels" />
+      <Asset Guid="b66ddb15feb488b4682bd4cd826c2a00" ResourceName="4_Arts/Foods/Ing/Common/1014_Hawthorn/Hawthorn_Output" />
+      <Asset Guid="b7a88f09c243bdb418acd8e9dbb1ff9e" ResourceName="4_Arts/UI/UI_Icon/UI_Icon_Virtue" />
+      <Asset Guid="b8539f1b992a7f64099d9724fae0f9e1" ResourceName="Music/bgm_supermarket" />
+      <Asset Guid="b99a36fba7b191b489b6c5be0127f5f8" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL2_1" />
+      <Asset Guid="b9e09e1eeb794b44fbee40ec39e342b8" ResourceName="4_Arts/Foods/Recipe/Recipe_RiceWithSlicedBeefEggs" />
+      <Asset Guid="ba0dad7d80ab218478318debff32210f" ResourceName="4_Arts/Env/Panels" />
+      <Asset Guid="ba0ea4d929b08ef499d30d3c58661aa3" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Squeezer" />
+      <Asset Guid="bb428e69f26db3f4eb644a442b6e589e" ResourceName="4_Arts/Foods/Dishes/Dishes_Steak" />
+      <Asset Guid="bbfa4d914f29ea34798ca16124207738" ResourceName="Music/bgm_heaven" />
+      <Asset Guid="bc3778c0cc4029d4f8d2572acee47f6c" ResourceName="Configs/ExcelConfigs/Day17" />
+      <Asset Guid="bc922e9231d0ecc479ba3e50a96e5466" ResourceName="4_Arts/Foods/Dishes/Dishes_LemonShrimpPaste" />
+      <Asset Guid="bd9a7a92271717240b043f4344949f02" ResourceName="4_Arts/VisualTarget/OrderAreajpg" />
+      <Asset Guid="be74d6cdfcf9ac64b9c420e0860f22b1" ResourceName="4_Arts/UI/UI_Panel/Settle_Suspicion" />
+      <Asset Guid="bf166af7c50b03344b8ce1c12b00baf9" ResourceName="5_Audio/SFX/area_switch" />
+      <Asset Guid="bf8bb9545933ef648a9dadbd7b37f61e" ResourceName="4_Arts/Foods/Ing/Common/1016_Lettuce/Lettuce_Mid" />
+      <Asset Guid="bfa2cb3ac2dfd1c44b9e934661436a06" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_PresCooker" />
+      <Asset Guid="c000306dfbdae5544a2954900f6e64a5" ResourceName="5_Audio/SFX/gold_get" />
+      <Asset Guid="c139a2b631680ce48974e87b1f3e3b85" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/PotCover_Wok" />
+      <Asset Guid="c1b924fc167747c429c792241ee45509" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Bowl" />
+      <Asset Guid="c1babbdf5f6afdb45bd596928806687d" ResourceName="4_Arts/VisualTarget/OrderArea3" />
+      <Asset Guid="c25aa62f0f092ea4d958cd33884346cc" ResourceName="4_Arts/Customers/HumanCust_05" />
+      <Asset Guid="c29e35176be6c8e46945f36d250ca7c7" ResourceName="Res/Char/Genius" />
+      <Asset Guid="c3a3248834cf9cf429681a1825829d8d" ResourceName="4_Arts/Foods/Ing/Common/1012_Tomato/Tamoto_Moveable" />
+      <Asset Guid="c413c22f8a64d6f48b4c72a3c795ac12" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Seasoning/Seasoning_Sugar" />
+      <Asset Guid="c45deb4e99fc4a241b6b54a638b48962" ResourceName="4_Arts/Foods/Ing/InFridge/1020_Pork/Pork_Mid" />
+      <Asset Guid="c51f2166cffcab541a7909b456f6456a" ResourceName="DataTables/Scene" />
+      <Asset Guid="c5ccd6de2747b174fa4e3dc73d0a128d" ResourceName="4_Arts/Foods/Ing/Common/1005_Asparagus/Ing_Asparagus" />
+      <Asset Guid="c6c6cf13ad57e684386b2d9a35fbc7af" ResourceName="DataTables/Music" />
+      <Asset Guid="c712538b6f3f0d843bb54ea81e4f71a2" ResourceName="Res/Char/Celebrity" />
+      <Asset Guid="c73a6b4e2e4484b4baf9e5a95e214ac0" ResourceName="Sounds/san_up" />
+      <Asset Guid="c7499a61655353e4eb15ef71a1c0b854" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Pot_SoupPot" />
+      <Asset Guid="c84b7ebcac9efba469397884a0f0d8db" ResourceName="Sounds/san_down" />
+      <Asset Guid="c859cbc3b25d80f4db6e0ee991840aed" ResourceName="4_Arts/Foods/Dishes/FoodBurnPot" />
+      <Asset Guid="c8d196725e736d049b25da9eb399d2be" ResourceName="4_Arts/Foods/Ing/Common/1008_Cheese/Cheese_Depleted" />
+      <Asset Guid="c957a4a8bc283b046a4bf07e07cc9cd1" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_5" />
+      <Asset Guid="c96f0880a5cdb9746950729bbbdf894e" ResourceName="4_Arts/Foods/Ing/Common/1007_GreenOnion/GreenOnion_Delepted" />
+      <Asset Guid="c9ffc2465fd239049ab2c5db810c1369" ResourceName="5_Audio/SFX/juicer_loop" />
+      <Asset Guid="cb1e56ef7da8aec4f96849525c39df89" ResourceName="4_Arts/Env/Env_Evening/Env_Evening_Heaven" />
+      <Asset Guid="cb36fec92bf32b4468cf18bd0f5189fd" ResourceName="4_Arts/Customers/PlotCustomer_Genius" />
+      <Asset Guid="cba77c74394dbd64aab73d9224129182" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/Fridge_Opened" />
+      <Asset Guid="cbcaa1ab446f3a847b912816f8c9de9c" ResourceName="Sounds/trash_open" />
+      <Asset Guid="cbce2353a7340534d8156b822152c474" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL4_3" />
+      <Asset Guid="cc26adec1f35bae45ad63eef1967b1b0" ResourceName="4_Arts/Foods/Ing/Common/1008_Cheese/Cheese_Mid" />
+      <Asset Guid="cdb2d8cb6873e5b48b373b37cae2c6dd" ResourceName="DataTables/Dish" />
+      <Asset Guid="ce0d7a3355567804e9ce79078fa2a9f6" ResourceName="Configs/ExcelConfigs/Ending0" />
+      <Asset Guid="cf160624be747c4439b31b78835d1e6b" ResourceName="4_Arts/Animation/Season/Season" />
+      <Asset Guid="cfadd067b33599d428b759b16b1f7b7d" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL1" />
+      <Asset Guid="cfc68ebe85eea114f800413d9a72d337" ResourceName="4_Arts/Foods/Recipe/Recipe_Steak" />
+      <Asset Guid="cfd3e4aa186d673408adac002ee9ea52" ResourceName="4_Arts/Foods/Dishes/Dishes_PumpkinSoup" />
+      <Asset Guid="d028ee180c0e7a244abdf43cca82e2fd" ResourceName="4_Arts/Foods/Ing/Common/1012_Tomato/Tamato_Mid" />
+      <Asset Guid="d28453724bc872442ae753c5eb997607" ResourceName="0_Scripts/PLOT_SYSTEM_GUIDE" />
+      <Asset Guid="d3aa6720458352d4b85077ee8ff0103b" ResourceName="4_Arts/Foods/Recipe/Recipe_StoneGrilledMeat" />
+      <Asset Guid="d481b18fc338a6542aaf1d68d0967be3" ResourceName="4_Arts/CG/NormalEnding" />
+      <Asset Guid="d498b8d0b1a389d448cfd8da636c4402" ResourceName="4_Arts/Foods/Ing/Common/1002_Mushroom/Mushroom_Output" />
+      <Asset Guid="d5c5cf9ed8130f54e8ca1297c97256b8" ResourceName="Fonts/MainFont" />
+      <Asset Guid="d6875cd6e0ce8e643ad48981824b7691" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Cloth" />
+      <Asset Guid="d6ba08aa4209c0b4ca092d31dbd5b65b" ResourceName="Music/bgm_hell" />
+      <Asset Guid="d7484d2bf1731714d8774eb4736b9473" ResourceName="4_Arts/UI/UI_Button/UI_Btn_PrepArea" />
+      <Asset Guid="d769708f8e9439540a0fa8c58e59a6dd" ResourceName="Sounds/click" />
+      <Asset Guid="d890214c04350bd4faf1371723e6e146" ResourceName="4_Arts/Animation/Season/Sauce" />
+      <Asset Guid="d9a313e0c581d8343bfc2994049d5c6d" ResourceName="4_Arts/Foods/Ing/Common/1010_Yogurt/Ing_Yogurt" />
+      <Asset Guid="dabbce3a4e9560942b7c13b282e9b76e" ResourceName="4_Arts/Foods/Dishes/FoodBurn" />
+      <Asset Guid="dace0a7ebb64f2d49be4e4370625ad4e" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL3_3" />
+      <Asset Guid="db0c1a6b809ac414987030ec850b8549" ResourceName="4_Arts/Animation/Egg/Prep" />
+      <Asset Guid="dbe87aec919af754e879933d88ad196d" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/PrepArea/SAnim_Bin_03" />
+      <Asset Guid="dc13ad7bea0582f4c9c2ebe475a16346" ResourceName="4_Arts/Foods/Ing/Drawer/1022_Flour/Ing_Flour" />
+      <Asset Guid="dc4d04c39534c6242ad4e427fd1d97cb" ResourceName="5_Audio/SFX/ingredient_place" />
+      <Asset Guid="dc5d971dd64b9c04db627345c21869e0" ResourceName="5_Audio/BGM/bgm_human_day" />
+      <Asset Guid="dc8de38718eaf8a4ab43987ec351edec" ResourceName="4_Arts/Foods/Ing/Common/1013_Rice/Rice_Output" />
+      <Asset Guid="dcfe938e4499bb54c9b7b0c8206b7339" ResourceName="4_Arts/Foods/Ing/InFridge/Obj/CookingArea/Glass" />
+      <Asset Guid="dd98298405fb3e54fbd571b3d26f7ea9" ResourceName="4_Arts/VisualTarget/CookingArea" />
+      <Asset Guid="de7f8acb09dc7414fa8510dcbe408081" ResourceName="4_Arts/Foods/LockedIng/LockedIng_02" />
+      <Asset Guid="df8470076eaff1349a5bdf539218e926" ResourceName="4_Arts/UI/UI_Panel/UI_Panel_Story" />
+      <Asset Guid="e0889d96776b5a140888570047394b6f" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Close" />
+      <Asset Guid="e0f1c08aaa394b542a98c2b435c46adc" ResourceName="4_Arts/UI/Market/RightBtn" />
+      <Asset Guid="e15dae9d835196c438f3de0c2cd6b63a" ResourceName="4_Arts/VisualTarget/DialogueForm" />
+      <Asset Guid="e30abd039bd137546acd1cde17a717ef" ResourceName="4_Arts/UI/UI_Button/UI_Btn_CookingArea" />
+      <Asset Guid="e364fd93800ab97428fad76883b1a29c" ResourceName="4_Arts/Foods/Ing/Drawer/1023_Egg/Ing_Egg" />
+      <Asset Guid="e48252f4dd6f0b54a959fa1959a6869a" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL0_HumanWorld" />
+      <Asset Guid="e489aeae1a7134e42a2087fb19f726ad" ResourceName="4_Arts/Foods/Ing/Common/1004_Garlic/Garlic_Depleted" />
+      <Asset Guid="e66ca1b3f6d19a44299fb9d0a6c02902" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Setting_Hover" />
+      <Asset Guid="e67be8abfaccc8f4fa30bc0ae369fe05" ResourceName="4_Arts/Foods/Ing/InFridge/1017_Beef/Ing_Beef" />
+      <Asset Guid="e68b9236bb9c3334d9c73ebc44878994" ResourceName="4_Arts/Foods/Dishes/Dishes_BeefWithScallions" />
+      <Asset Guid="e6e18906a96849946bf9ad0675288a3e" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL1_2" />
+      <Asset Guid="e6f15800b1eb02f4eac58269e578ecbc" ResourceName="4_Arts/Foods/Ing/InFridge/1018_ChickenLeg/Ing_Chickenleg" />
+      <Asset Guid="e7480975d765bfb4ca6537a0268b430f" ResourceName="4_Arts/UI/UI_Backdrop/UI_BackDrop_CookingProcess" />
+      <Asset Guid="e75282c5f8e679a4390159913d93d65d" ResourceName="4_Arts/UI/UI_Icon/UnlockMask" />
+      <Asset Guid="e79d935d6c4f646459100895f08165a6" ResourceName="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_CutKnob" />
+      <Asset Guid="e7d549c7090c286489b227bfadf51be6" ResourceName="UI/UIForms/MenuForm" />
+      <Asset Guid="e82578bbda7abcb4b995eb7dc72816ae" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Recipe_1" />
+      <Asset Guid="e983b8f8fd815434389f7fe137c762e7" ResourceName="4_Arts/Foods/Ing/Common/1016_Lettuce/Lettuce_Depleted" />
+      <Asset Guid="e98de31adc65f49479cea4bbe514ce76" ResourceName="Sounds/customer_enter" />
+      <Asset Guid="e9904abefdc94f24f8445c82cf0ed70a" ResourceName="4_Arts/UI/UI_Backdrop/UI_Backdrop_ToolshipCommon" />
+      <Asset Guid="e9e1ed8506ae0f5458a35a42b0d14d95" ResourceName="Sounds/area_switch" />
+      <Asset Guid="eabb532667d038b4f9edf7dd166b6fc9" ResourceName="0_Scripts/IMPLEMENTATION_SUMMARY" />
+      <Asset Guid="ec5b9a7a1eceea043b9d819f214c8463" ResourceName="4_Arts/UI/MainMenu/Hover" />
+      <Asset Guid="ed1daaafa8e7fe848958bc3aab810b3b" ResourceName="4_Arts/UI/UI_Button/UI_Btn_GoDownstairs" />
+      <Asset Guid="ed784279cb1902f4f834d533734b4ff0" ResourceName="4_Arts/Foods/Ing/Common/1003_Lemon/Lemon_Moveable" />
+      <Asset Guid="ee5b00ab8fba2ad48b335b432720e7c1" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL4" />
+      <Asset Guid="ef188cead9729b54faac9575ad95a4c6" ResourceName="4_Arts/Foods/Recipe/Recipe_StaegazyPie" />
+      <Asset Guid="ef29f97db880d6043837b9ffa21f7ed2" ResourceName="4_Arts/Foods/Dishes/Dishes_LemonSorbet" />
+      <Asset Guid="ef3e04ebd8abdf8439ab35f9aeec56f6" ResourceName="0_Scripts/PLOT_SYSTEM_QUICK_REF" />
+      <Asset Guid="efc7de05544a82b4ebb439619ea61063" ResourceName="4_Arts/Foods/Ing/Common/1006_Chili/Chili_Mid" />
+      <Asset Guid="f0091187e6e263d43b4b08daa118bff4" ResourceName="4_Arts/UI/UI_Backdrop/UI_Progress_BG" />
+      <Asset Guid="f021e82b4382bf648928c4276011ec6f" ResourceName="Sounds/hover" />
+      <Asset Guid="f14e7be113e12174cbbea964bc9122ec" ResourceName="4_Arts/UI/Market/Slot" />
+      <Asset Guid="f2bc884e4ce9df6468d97fb4123706da" ResourceName="4_Arts/Foods/Ing/Common/1001_Pumpkin/Ing_Pumpkin" />
+      <Asset Guid="f4a8a6ff28bdbae40b3f7ff21f7353b7" ResourceName="4_Arts/Foods/Ing/Common/1006_Chili/Chili_Depleted" />
+      <Asset Guid="f4ae5f0dcbf4a684c80ab3141c620b97" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_1" />
+      <Asset Guid="f4f42b3a4535e9b4cbc54753efc4aaed" ResourceName="Sounds/buy_fail" />
+      <Asset Guid="f54193c29390c224fab8210036346c8e" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL0" />
+      <Asset Guid="f76e6be429af7be4d9905d1d80bc1d74" ResourceName="4_Arts/Env/Env_CookingArea/Env_CookingArea_IL0_2" />
+      <Asset Guid="f7c029337f5ee6e4f8a4f863dcda5a06" ResourceName="4_Arts/Foods/Recipe/Recipe_TomatoStuffedWithMeat" />
+      <Asset Guid="f7cbfbd84ff443649a156ddcb3e4ff91" ResourceName="4_Arts/Foods/Dishes/Dishes_TomatoStuffedWithMeat" />
+      <Asset Guid="f83c17c0825cfc940aad88c9cc6f2071" ResourceName="4_Arts/Foods/Dishes/Dishes_EggFriedRice" />
+      <Asset Guid="f89cfea5b1a897f469545b307737444a" ResourceName="Scenes/Main1111" />
+      <Asset Guid="f92c0ea9fe84e434489b05cfedbc15b6" ResourceName="4_Arts/Foods/Ing/Common/1006_Chili/Chili_Output" />
+      <Asset Guid="f93b3b399f8f6874fbc1f9df1ac2fd49" ResourceName="4_Arts/Foods/Ing/InFridge/1021_Shrimp/Shrimp_Mid" />
+      <Asset Guid="f99aa2223ca5fa84d9fad30fb23c324d" ResourceName="4_Arts/UI/UI_Button/UI_Btn_Order" />
+      <Asset Guid="f9d9d54bed489034eb8f10da4f5f8f58" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL1_2" />
+      <Asset Guid="f9fb0de8179ad704794ca8839f70af05" ResourceName="Sounds/cut_knife" />
+      <Asset Guid="fa7fe17d1d45f4c448f3bce682d8d926" ResourceName="4_Arts/Foods/Ing/InFridge/1019_Fish/Fish_Mid" />
+      <Asset Guid="fbd129aaf393b29488bb2383cefa4f99" ResourceName="4_Arts/Env/Env_PrepArea/Env_PrepArea_IL3_2" />
+      <Asset Guid="fc4f506a854eeb14c9b2d5328ccba65d" ResourceName="4_Arts/Foods/Dishes/Dishes_HawthornJelly" />
+      <Asset Guid="fcba4c2290e99fe429c5b268d1598121" ResourceName="4_Arts/UI/UI_Button/UI_Btn_PresPot" />
+      <Asset Guid="fcce038e89eedc04db7eedf27be2142b" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL0_Hell" />
+      <Asset Guid="fd3212565ee05c641a953712e71e36ba" ResourceName="4_Arts/Env/Env_Ording/Env_Ording_IL1_3" />
+      <Asset Guid="fdfe4daf0e93fc04a8d1d7882b746ca3" ResourceName="4_Arts/UI/UI_Button/UI_Panel_Setting_New" />
+      <Asset Guid="fe00e05a734072e4c9a67d7c60dc67d8" ResourceName="4_Arts/Foods/Ing/Common/1004_Garlic/Garlic_Output" />
+      <Asset Guid="fe06efa83cfe1814ab6087a172f2a9a4" ResourceName="4_Arts/Foods/Ing/Drawer/1022_Flour/Flour_Output" />
+      <Asset Guid="fe483e8d601719541891287e1fb448da" ResourceName="4_Arts/Customers/HumanCust_04" />
+      <Asset Guid="ff11da4e05cf4944d83243947b5a2c1d" ResourceName="4_Arts/UI/MainMenu/MainMenu_Animation" />
+      <Asset Guid="ff39151a6185e8140a48935d6b45d779" ResourceName="4_Arts/Foods/Recipe/Recipe_CheesePotat" />
+      <Asset Guid="ff7179ccc44c9fd4aaa09130d8a2115d" ResourceName="4_Arts/UI/UI_Button/UI_Btn_ChosingAPot" />
+      <Asset Guid="ffe918aa851f4374e8a9283d81de52b7" ResourceName="Res/Char/Deserter" />
+    </Assets>
+  </ResourceCollection>
+</UnityGameFramework>

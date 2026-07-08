@@ -20,7 +20,6 @@ namespace LingBoCanteen
     {
         Day = 0,    // 白天（营业）
         Evening = 1,// 傍晚（采购）
-        Night = 2,  // 深夜（结算+剧情）
     }
 
     /// <summary>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GameFramework;
 using GameFramework.DataTable;
@@ -137,7 +138,7 @@ namespace LingBoCanteen
 
         /// <summary>
         /// 货架食材首次解锁时自动赋予默认库存（Constant.GameConstant.DEFAULT_UNLOCK_STOCK）。
-        /// 用“库存字典里是否已存在该 Id 的 key”判断“是否已经发放过”，已发放过（哪怕已消耗到 0）
+        /// 用"库存字典里是否已存在该 Id 的 key"判断"是否已经发放过"，已发放过（哪怕已消耗到 0）
         /// 不会重复赋值，因此可以每次 <see cref="Ingredient.Refresh"/> 时安全地重复调用。
         /// 冰箱/抽屉食材无库存概念，直接忽略。
         /// </summary>
@@ -218,31 +219,184 @@ namespace LingBoCanteen
 
             if (sprite == null)
             {
-                Log.Warning("食材美术资源未找到：Id={0} EnName={1} AssetName={2}，期望路径={3}（请确认文件夹按 “编号_英文名” 命名，文件按对应 AssetName 命名）。", row.Id, row.EnName, assetName, assetPath);
+                Log.Warning("食材美术资源未找到：Id={0} EnName={1} AssetName={2}，期望路径={3}（请确认文件夹按 编号_英文名 命名，文件按对应 AssetName 命名）。", row.Id, row.EnName, assetName, assetPath);
             }
 
             s_SpriteCache[cacheKey] = sprite;
             return sprite;
 #else
-            // 运行时走异步加载：先返回 null，加载完成后写入缓存，调用方下一次取（例如下一帧刷新）即可命中。
+            // 运行时从 AssetBundle 加载食材美术资源。
+            // UGF 的 LoadAsset 是异步回调 API（最少需要 assetName + LoadAssetCallbacks 两个参数，
+            // 且返回值为 void），无法在此同步方法中直接获取 Sprite。
+            // Sprite 需要在资源初始化阶段通过 LoadAssetCallbacks 预加载到 s_SpriteCache。
+            // 若运行时缓存未命中，说明该资源未被预加载。
+            Sprite sprite = null;
+            s_SpriteCache.TryGetValue(cacheKey, out sprite);
+
+            if (sprite == null)
+            {
+                Log.Error("食材美术资源未预加载：{0}（请确保在 Ingredient 初始化流程中已通过 LoadAsset 异步预加载 Sprite）。", assetPath);
+            }
+
+            s_SpriteCache[cacheKey] = sprite;
+            return sprite;
+#endif
+        }
+
+        /// <summary>
+        /// 预加载 Ingredient 表中所有食材的美术资源（初始态/移动态/中间产物/最终态等），
+        /// 供 ProcedureLaunch 在进入游戏前统一等待完成。
+        /// </summary>
+        public static void PreloadAllIngredientSprites(Action onAllLoaded)
+        {
+            IDataTable<DRIngredient> ingredientTable = GameEntry.DataTable.GetDataTable<DRIngredient>();
+            if (ingredientTable == null)
+            {
+                onAllLoaded?.Invoke();
+                return;
+            }
+
+            DRIngredient[] allRows = ingredientTable.GetAllDataRows();
+            if (allRows.Length == 0)
+            {
+                onAllLoaded?.Invoke();
+                return;
+            }
+
+            // 统计需要加载的总资源数（跳过空的AssetName）
+            int totalToLoad = 0;
+            int loadedCount = 0;
+
+            // 第一遍：统计总数
+            foreach (DRIngredient row in allRows)
+            {
+                if (!string.IsNullOrEmpty(row.InitialAssetName))
+                    totalToLoad++;
+                if (!string.IsNullOrEmpty(row.MoveAssetName))
+                    totalToLoad++;
+                if (!string.IsNullOrEmpty(row.MidAssetName))
+                    totalToLoad++;
+                if (!string.IsNullOrEmpty(row.CutKnobName))
+                    totalToLoad++;
+                if (!string.IsNullOrEmpty(row.FinalAssetName))
+                    totalToLoad++;
+            }
+
+            // 如果没有资源需要加载，直接完成
+            if (totalToLoad == 0)
+            {
+                onAllLoaded?.Invoke();
+                return;
+            }
+
+            // 第二遍：真正加载
+            foreach (DRIngredient row in allRows)
+            {
+                // 加载初始资源
+                if (!string.IsNullOrEmpty(row.InitialAssetName))
+                {
+                    LoadIngredientSpriteAsync(row, row.InitialAssetName, () =>
+                    {
+                        if (++loadedCount == totalToLoad)
+                        {
+                            Log.Info("All ingredient sprites preloaded.");
+                            onAllLoaded?.Invoke();
+                        }
+                    });
+                }
+
+                // 加载移动态资源
+                if (!string.IsNullOrEmpty(row.MoveAssetName))
+                {
+                    LoadIngredientSpriteAsync(row, row.MoveAssetName, () =>
+                    {
+                        if (++loadedCount == totalToLoad)
+                        {
+                            Log.Info("All ingredient sprites preloaded.");
+                            onAllLoaded?.Invoke();
+                        }
+                    });
+                }
+
+                // 加载中间产物资源
+                if (!string.IsNullOrEmpty(row.MidAssetName))
+                {
+                    LoadIngredientSpriteAsync(row, row.MidAssetName, () =>
+                    {
+                        if (++loadedCount == totalToLoad)
+                        {
+                            Log.Info("All ingredient sprites preloaded.");
+                            onAllLoaded?.Invoke();
+                        }
+                    });
+                }
+
+                // 加载二次处理产物资源
+                if (!string.IsNullOrEmpty(row.CutKnobName))
+                {
+                    LoadIngredientSpriteAsync(row, row.CutKnobName, () =>
+                    {
+                        if (++loadedCount == totalToLoad)
+                        {
+                            Log.Info("All ingredient sprites preloaded.");
+                            onAllLoaded?.Invoke();
+                        }
+                    });
+                }
+
+                // 加载最终产物资源
+                if (!string.IsNullOrEmpty(row.FinalAssetName))
+                {
+                    LoadIngredientSpriteAsync(row, row.FinalAssetName, () =>
+                    {
+                        if (++loadedCount == totalToLoad)
+                        {
+                            Log.Info("All ingredient sprites preloaded.");
+                            onAllLoaded?.Invoke();
+                        }
+                    });
+                }
+            }
+        }
+
+        /// <summary>
+        /// 异步加载单个食材Sprite到缓存。
+        /// </summary>
+        private static void LoadIngredientSpriteAsync(DRIngredient row, string assetName, Action onComplete)
+        {
+            string cacheKey = row.Id + "/" + assetName;
+            if (s_SpriteCache.ContainsKey(cacheKey))
+            {
+                // 已在缓存中，直接回调
+                onComplete?.Invoke();
+                return;
+            }
+
+            string assetPath = AssetUtility.GetIngredientAsset(GetAreaSubFolder(GetAreaType(row.Id)), row.Id, row.EnName, assetName);
+
             GameEntry.Resource.LoadAsset(assetPath, Constant.AssetPriority.IngredientIconAsset, new LoadAssetCallbacks(
                 (loadedAssetName, asset, duration, userData) =>
                 {
-                    Sprite loadedSprite = asset as Sprite;
-                    if (loadedSprite == null && asset is Texture2D texture)
+                    Sprite sprite = asset as Sprite;
+                    if (sprite == null && asset is Texture2D texture)
                     {
-                        loadedSprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                        sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                     }
 
-                    s_SpriteCache[cacheKey] = loadedSprite;
+                    s_SpriteCache[cacheKey] = sprite;
+                    if (sprite == null)
+                    {
+                        Log.Warning("食材美术资源加载为空：Id={0} EnName={1} AssetName={2}，路径={3}", row.Id, row.EnName, assetName, assetPath);
+                    }
+
+                    onComplete?.Invoke();
                 },
                 (loadedAssetName, status, errorMessage, userData) =>
                 {
-                    Log.Error("加载食材美术资源失败：{0}，错误：{1}", loadedAssetName, errorMessage);
+                    Log.Error("食材美术资源加载失败：Id={0} EnName={1} AssetName={2}，路径={3}，错误={4}", row.Id, row.EnName, assetName, assetPath, errorMessage);
                     s_SpriteCache[cacheKey] = null;
+                    onComplete?.Invoke();
                 }));
-            return null;
-#endif
         }
     }
 }

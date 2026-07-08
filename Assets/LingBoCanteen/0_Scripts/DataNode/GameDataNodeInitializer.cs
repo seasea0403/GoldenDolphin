@@ -30,7 +30,20 @@ namespace LingBoCanteen
             GameEntry.DataNode.SetData("DayCurrent.Value", (VarInt32)1);
             GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)false);
             GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)(int)TimeSection.Day);
-            // 注：Phase 对应 TimeSection 枚举：0=白天 1=傍晚 2=深夜
+            // 注：Phase 对应 TimeSection 枚举：0=白天 1=傍晚
+
+            // 兼容处理：确保 DayCurrent.Phase 为合法值（迁移旧存档中可能存在的 2->Evening）
+            var _phaseNode = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase");
+            if (_phaseNode != null)
+            {
+                int _raw = _phaseNode.Value;
+                int _san = _raw == (int)TimeSection.Day ? (int)TimeSection.Day : (int)TimeSection.Evening;
+                if (_san != _raw)
+                {
+                    GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)_san);
+                    Log.Info($"[Init] 迁移旧 Phase 值 {_raw} -> {_san}");
+                }
+            }
 
             // 3. 区域与电梯状态（存档项）
             GameEntry.DataNode.SetData("Area.CurrentType", (VarInt32)(int)GameRegion.Mortal);

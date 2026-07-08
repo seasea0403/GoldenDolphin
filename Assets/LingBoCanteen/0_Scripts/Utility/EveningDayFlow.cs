@@ -87,6 +87,10 @@ namespace LingBoCanteen
             {
                 AreaSwitchManager.Instance.SwitchToArea(AreaSwitchManager.AreaType.Order);
             }
+
+            // ★【新增】天数改变时，强制重新播放背景音乐
+            // 确保即使是同一首音乐，也会重新播放（例如从傍晚回到白天时的音乐更新）
+            SoundManager.Instance?.ForceReplayMusicForCurrentGameState();
         }
 
         /// <summary>

@@ -439,6 +439,17 @@ namespace LingBoCanteen
         }
 
         /// <summary>
+        /// 强制重新播放当前状态对应的背景音乐（即使音乐ID相同也会重新播放）
+        /// 用于天数改变、区域改变等特殊情况下重置音乐
+        /// </summary>
+        public void ForceReplayMusicForCurrentGameState()
+        {
+            Debug.Log($"[SoundManager] 强制重新播放当前状态的音乐（重置 m_CurrentMusicId）");
+            m_CurrentMusicId = -1; // 重置当前音乐ID，强制下次播放
+            PlayMusicForCurrentGameState();
+        }
+
+        /// <summary>
         /// 根据区域和时间阶段获取对应的音乐ID
         /// </summary>
         private int GetMusicIdForGameState(GameRegion region, TimeSection timeSection)

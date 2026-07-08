@@ -16,7 +16,10 @@ namespace LingBoCanteen
     public class ProcedureLaunch : ProcedureBase
     {
         private const string DishIconsFlagKey = "DishIcons";
-
+        private const string IngredientSpritesFlagKey = "IngredientSprites";
+        private bool m_InitResourcesComplete = false;
+        
+        private bool temp = false;
         // 需要加载的所有数据表名称
         private static readonly string[] DataTableNames = new string[]
         {
@@ -37,6 +40,12 @@ namespace LingBoCanteen
         protected override void OnEnter(ProcedureOwner procedureOwner)
         {
             base.OnEnter(procedureOwner);
+            Debug.Log("launch!");
+ 
+            //初始化资源标记
+            m_InitResourcesComplete = false;
+ 
+            temp = false;
 
             GameEntry.Event.Subscribe(LoadConfigSuccessEventArgs.EventId, OnLoadConfigSuccess);
             GameEntry.Event.Subscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
@@ -48,9 +57,14 @@ namespace LingBoCanteen
 
             m_LoadedFlag.Clear();
             m_LoadedFlag.Add(DishIconsFlagKey, false);
-            PreloadResources();
-            // 初始化 DataNode（将初始化逻辑集中到启动流程，避免早期脚本执行顺序问题）
-            GameDataNodeInitializer.Initialize();
+            m_LoadedFlag.Add(IngredientSpritesFlagKey, false);
+
+            // 必须等资源系统真正初始化完成（版本清单加载解析完毕）之后，
+            // 才能开始读取 Config/DataTable/Font 等资源，否则会报
+            // "Data asset '...' is 'NotExist'"（此时资源数据库还没建好）。
+            // 资源系统需要完全初始化后才能加载Config/DataTable等
+            // 编辑器和非编辑器都要调用InitResources，确保资源数据库完全准备好
+            GameEntry.Resource.InitResources(OnInitResourcesComplete);
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -66,6 +80,11 @@ namespace LingBoCanteen
         protected override void OnUpdate(ProcedureOwner procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
+            if (!m_InitResourcesComplete)
+            {
+                // 初始化资源未完成则继续等待
+                return;
+            }
 
             foreach (KeyValuePair<string, bool> loadedFlag in m_LoadedFlag)
             {
@@ -125,6 +144,16 @@ namespace LingBoCanteen
                 }));
         }
 
+        private void OnInitResourcesComplete()
+        {
+            m_InitResourcesComplete = true;
+            Log.Info("Init resources complete.");
+
+            PreloadResources();
+            // 初始化 DataNode（将初始化逻辑集中到启动流程，避免早期脚本执行顺序问题）
+            GameDataNodeInitializer.Initialize();
+        }
+
         private void InitSoundSettings()
         {
             GameEntry.Sound.Mute("Music", GameEntry.Setting.GetBool(Constant.Setting.MusicMuted, false));
@@ -170,6 +199,16 @@ namespace LingBoCanteen
 
             m_LoadedFlag[ne.DataTableAssetName] = true;
             Log.Info("Load data table '{0}' OK.", ne.DataTableAssetName);
+
+            if (ne.DataTableAssetName == AssetUtility.GetDataTableAsset("Ingredient", false))
+            {
+                Log.Info("Ingredient table loaded, start preloading all ingredient sprites.");
+                IngredientUtility.PreloadAllIngredientSprites(() =>
+                {
+                    m_LoadedFlag[IngredientSpritesFlagKey] = true;
+                    Log.Info("All ingredient sprites preloaded.");
+                });
+            }
 
             if (ne.DataTableAssetName == AssetUtility.GetDataTableAsset("Dish", false))
             {

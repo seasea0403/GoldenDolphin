@@ -28,6 +28,12 @@ namespace LingBoCanteen
             if (m_GhostRenderer != null)
             {
                 m_GhostRenderer.gameObject.SetActive(false);
+                // 如果 Ghost 有 LockColliderWhileScaleSprite，设置其缩放倍数为 0.7
+                LockColliderWhileScaleSprite ghostScaler = m_GhostRenderer.GetComponent<LockColliderWhileScaleSprite>();
+                if (ghostScaler != null)
+                {
+                    ghostScaler.ScaleMultiplier = 0.7f;
+                }
             }
         }
 

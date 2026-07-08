@@ -25,6 +25,7 @@ namespace LingBoCanteen
         [Header("怀疑线相关")]
         public GameObject susroot;
         [SerializeField] private Image m_BackgroundImage;  // 结算面板背景图
+        [SerializeField] private Sprite m_SuspicionBackgroundSprite;  // 怀疑线主题背景（在Inspector中拖拽引用）
 
         [Header("文本显示")]
         [SerializeField] private TMP_Text m_DayText;
@@ -71,19 +72,15 @@ namespace LingBoCanteen
                     Debug.Log("[SettlePanel] 怀疑线Root已显示");
                 }
                 
-                // 切换背景图片为怀疑线主题背景
-                if (m_BackgroundImage != null)
+                // 切换背景图片为怀疑线主题背景（直接引用，不再用 Resources.Load）
+                if (m_BackgroundImage != null && m_SuspicionBackgroundSprite != null)
                 {
-                    Sprite suspicionBg = Resources.Load<Sprite>("Assets/LingBoCanteen/4_Arts/UI/UI_Panel/Settle_Suspicion.png");
-                    if (suspicionBg != null)
-                    {
-                        m_BackgroundImage.sprite = suspicionBg;
-                        Debug.Log("[SettlePanel] 背景图已切换为怀疑线主题");
-                    }
-                    else
-                    {
-                        Debug.LogWarning("[SettlePanel] 无法加载怀疑线背景图：Assets/LingBoCanteen/4_Arts/UI/UI_Panel/Settle_Suspicion.png");
-                    }
+                    m_BackgroundImage.sprite = m_SuspicionBackgroundSprite;
+                    Debug.Log("[SettlePanel] 背景图已切换为怀疑线主题");
+                }
+                else if (m_BackgroundImage != null)
+                {
+                    Debug.LogWarning("[SettlePanel] 未在Inspector中设置 m_SuspicionBackgroundSprite，无法切换背景图");
                 }
             }
         }

@@ -111,6 +111,9 @@ namespace LingBoCanteen
             m_MoveElapsed = 0f;
             CachedTransform.position = m_Data.SpawnPosition;
 
+            // 强制设置顾客实体的缩放，确保在所有平台和实体预制件设置下保持一致
+            CachedTransform.localScale = Vector3.one * 0.4f;
+
             PortraitAssetName = m_Data.AssetName;
             ApplyCustomerPortrait(m_Data.AssetName);
 
