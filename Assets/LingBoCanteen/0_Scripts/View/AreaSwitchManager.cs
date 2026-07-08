@@ -53,6 +53,7 @@ namespace LingBoCanteen
         [SerializeField] private GameObject m_EveningWorldGroup;
         [Tooltip("傍晚阶段独立配置的额外背景/物体")]
         [SerializeField] private GameObject[] m_EveningExtraObjects;
+  
 
         [Header("Morning (早上启动) 区域")]
         [Tooltip("早上启动场景的根节点 (进入时自动激活)")]
@@ -68,6 +69,8 @@ namespace LingBoCanteen
         [SerializeField] private Image m_MaskImage;
         [Tooltip("Order区域的背景图渲染器")]
         [SerializeField] private SpriteRenderer m_OrderBackgroundRenderer;
+        [Tooltip("傍晚阶段的背景图渲染器")]
+        [SerializeField] private SpriteRenderer m_EveningBackgroundRenderer;
         [Tooltip("不同 Region 辖区的差异化渲染配置列表")]
         [SerializeField] private RegionDecorationConfig[] m_RegionConfigs;
 
@@ -310,7 +313,10 @@ namespace LingBoCanteen
             SetUIRootState(m_EveningUIRoot, true);
             SetWorldGroupState(m_EveningWorldGroup, true, m_EveningExtraObjects);
 
-            // 3. 傍晚阶段顾客一律不可见
+            // 3.根据region切换对应的精灵图
+            ApplyRegionDecorations();
+
+            // 4. 傍晚阶段顾客一律不可见
             SetCustomerEntitiesVisibility(false);
 
             // ★ 【新增】傍晚切换时，设置时间阶段为Evening，触发音乐更新
@@ -360,6 +366,12 @@ namespace LingBoCanteen
                 {
                     m_OrderBackgroundRenderer.sprite = cfg.OrderBackgroundSprite;
                 }
+
+                // ★【删除】傍晚精灵图逻辑已迁移到ElevatorController，不在此处处理
+                // if (m_EveningBackgroundRenderer != null && cfg.EveningBackgroundSprite != null)
+                // {
+                //     m_EveningBackgroundRenderer.sprite = cfg.EveningBackgroundSprite;
+                // }
             }
         }
 

@@ -1,30 +1,34 @@
 using LingBoCanteen;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class LockColliderWhileScaleSprite : MonoBehaviour
 {
     [Header("统一图片显示边界（世界单位）")]
     public float BoundWidth = 3.2f;
     public float BoundHeight = 2.2f;
     
-    [Header("缩放倍数（用于 Ghost 等特殊对象）")]
+    [Header("缩放倍数")]
     public float ScaleMultiplier = 1f;
 
     private SpriteRenderer m_SpriteRender;
     private BoxCollider2D m_BoxCol;
-    private Vector2 m_FixedColliderSize; // 初始锁定的碰撞尺寸
+    private Vector2 m_FixedColliderSize; // 初始锁定的碰撞尺寸，有碰撞体才生效
     private Camera m_MainCam;
     private CustomerEntity m_CustomerEntity;
 
     private void Awake()
     {
         m_SpriteRender = GetComponent<SpriteRenderer>();
-        m_BoxCol = GetComponent<BoxCollider2D>();
         m_MainCam = Camera.main;
 
-        // 【核心】读取初始碰撞大小，永久锁定
-        m_FixedColliderSize = m_BoxCol.size;
+        // 尝试获取碰撞体，不存在则置空
+        m_BoxCol = GetComponent<BoxCollider2D>();
+        if (m_BoxCol != null)
+        {
+            // 【核心】读取初始碰撞大小，永久锁定
+            m_FixedColliderSize = m_BoxCol.size;
+        }
         
         // 检查是否是 CustomerEntity
         m_CustomerEntity = GetComponent<CustomerEntity>();
@@ -58,11 +62,14 @@ public class LockColliderWhileScaleSprite : MonoBehaviour
         
         transform.localScale = Vector3.one * finalScale;
 
-        // 3. 反向补偿碰撞，抵消缩放，维持初始锁定大小
-        m_BoxCol.size = new Vector2(
-            m_FixedColliderSize.x / finalScale,
-            m_FixedColliderSize.y / finalScale
-        );
+        // 3. 有碰撞体才执行反向补偿，抵消缩放维持原始碰撞大小
+        if (m_BoxCol != null)
+        {
+            m_BoxCol.size = new Vector2(
+                m_FixedColliderSize.x / finalScale,
+                m_FixedColliderSize.y / finalScale
+            );
+        }
     }
 
     // 外部切换图片接口

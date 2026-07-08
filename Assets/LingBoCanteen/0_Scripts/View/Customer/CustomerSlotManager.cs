@@ -123,6 +123,14 @@ namespace LingBoCanteen
             int initialCount = UnityEngine.Random.Range(2, 4); // 返回 2 或 3
             initialCount = Mathf.Min(initialCount, m_TotalCustomerToday);
 
+            // ★ 【新增】获取当天剧情角色（如果有的话）
+            string plotCharacterId = null;
+            if (PlotTriggerManager.Instance != null && PlotTriggerManager.Instance.IsPlayingPlot())
+            {
+                plotCharacterId = PlotTriggerManager.Instance.GetTodayPlotCharacterId();
+                Log.Info($"[CustomerSlotManager.Start] 检测到剧情角色: {plotCharacterId}");
+            }
+
             for (int i = 0; i < m_SlotStates.Length; i++)
             {
                 if (i < initialCount)
@@ -130,8 +138,20 @@ namespace LingBoCanteen
                     // 初始顾客延迟出现的间隔在 [0, 10]
                     m_SlotStates[i] = SlotState.Cooldown;
                     m_SlotCooldownTimer[i] = UnityEngine.Random.Range(0f, 10f);
-                    // 预先选择立绘，避免与上一个重复
-                    m_PendingPortraitNames[i] = ChooseGuestAssetForSlot(i);
+                    
+                    // ★ 【修改】如果是第一个顾客且有剧情角色，直接使用剧情角色；否则随机选择
+                    if (i == 0 && !string.IsNullOrEmpty(plotCharacterId))
+                    {
+                        m_PendingPortraitNames[i] = plotCharacterId;
+                        m_PlotAssignedToFirstCustomer = true;
+                        Log.Info($"[CustomerSlotManager.Start] 第一个顾客已绑定剧情角色: {plotCharacterId}");
+                    }
+                    else
+                    {
+                        // 预先选择立绘，避免与上一个重复
+                        m_PendingPortraitNames[i] = ChooseGuestAssetForSlot(i);
+                    }
+                    
                     m_LastGeneratedPortraitName = m_PendingPortraitNames[i];
                     m_CustomersSpawnedToday++;
                 }
@@ -687,6 +707,7 @@ namespace LingBoCanteen
             m_CanSpawnCustomers = false;
             m_DebugSpawningBlockedLogged = false;  // 重置日志标志
             m_DialogueInProgress = false;  // 重置对话标志
+            m_PlotAssignedToFirstCustomer = false;  // ★【修复】重置剧情立绘分配标记，否则第2个及以后的剧情天会因为该标记恒为true而永远无法再次分配剧情立绘
             Log.Info($"CustomerSlotManager.ReinitializeDaily(): 重置 m_CanSpawnCustomers = false");
             
             // ★ 【修复】取消之前的订阅，然后立即重新订阅，确保即使 CheckAndPlayPlotForDay 立即触发回调也能被正确处理
@@ -695,6 +716,21 @@ namespace LingBoCanteen
                 PlotTriggerManager.Instance.OnPlotDialogueComplete -= EnableCustomerSpawning;
                 PlotTriggerManager.Instance.OnPlotDialogueComplete += EnableCustomerSpawning;
                 Log.Info($"CustomerSlotManager.ReinitializeDaily(): 重新订阅 OnPlotDialogueComplete");
+                
+                // ★ 【新增】如果当前没有剧情进行，立即允许客人生成
+                // （避免 CheckAndPlayPlotForDay 已经在 ReinitializeDaily() 之前调用且立即发出完成事件，
+                //   导致还没订阅时事件就已触发，客人永远无法生成的问题）
+                if (!PlotTriggerManager.Instance.IsPlayingPlot())
+                {
+                    Log.Info($"CustomerSlotManager.ReinitializeDaily(): 当前无剧情进行，直接允许客人生成");
+                    m_CanSpawnCustomers = true;
+                }
+            }
+            else
+            {
+                // PlotTriggerManager 不存在，直接允许客人生成
+                Log.Info($"CustomerSlotManager.ReinitializeDaily(): PlotTriggerManager 不存在，直接允许客人生成");
+                m_CanSpawnCustomers = true;
             }
 
             // 重新执行 Start() 中的初始化逻辑
@@ -718,6 +754,14 @@ namespace LingBoCanteen
             int initialCount = UnityEngine.Random.Range(2, 4); // 返回 2 或 3
             initialCount = Mathf.Min(initialCount, m_TotalCustomerToday);
 
+            // ★ 【新增】获取当天剧情角色（如果有的话）
+            string plotCharacterId = null;
+            if (PlotTriggerManager.Instance != null && PlotTriggerManager.Instance.IsPlayingPlot())
+            {
+                plotCharacterId = PlotTriggerManager.Instance.GetTodayPlotCharacterId();
+                Log.Info($"[CustomerSlotManager.ReinitializeDaily] 检测到剧情角色: {plotCharacterId}");
+            }
+
             for (int i = 0; i < m_SlotStates.Length; i++)
             {
                 if (i < initialCount)
@@ -725,8 +769,20 @@ namespace LingBoCanteen
                     // 初始顾客延迟出现的间隔在 [0, 10]
                     m_SlotStates[i] = SlotState.Cooldown;
                     m_SlotCooldownTimer[i] = UnityEngine.Random.Range(0f, 10f);
-                    // 预先选择立绘，避免与上一个重复
-                    m_PendingPortraitNames[i] = ChooseGuestAssetForSlot(i);
+                    
+                    // ★ 【修改】如果是第一个顾客且有剧情角色，直接使用剧情角色；否则随机选择
+                    if (i == 0 && !string.IsNullOrEmpty(plotCharacterId))
+                    {
+                        m_PendingPortraitNames[i] = plotCharacterId;
+                        m_PlotAssignedToFirstCustomer = true;
+                        Log.Info($"[CustomerSlotManager.ReinitializeDaily] 第一个顾客已绑定剧情角色: {plotCharacterId}");
+                    }
+                    else
+                    {
+                        // 预先选择立绘，避免与上一个重复
+                        m_PendingPortraitNames[i] = ChooseGuestAssetForSlot(i);
+                    }
+                    
                     m_LastGeneratedPortraitName = m_PendingPortraitNames[i];
                     m_CustomersSpawnedToday++;
                 }

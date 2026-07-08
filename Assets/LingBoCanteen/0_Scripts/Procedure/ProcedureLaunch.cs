@@ -64,7 +64,13 @@ namespace LingBoCanteen
             // "Data asset '...' is 'NotExist'"（此时资源数据库还没建好）。
             // 资源系统需要完全初始化后才能加载Config/DataTable等
             // 编辑器和非编辑器都要调用InitResources，确保资源数据库完全准备好
+        #if UNITY_EDITOR
+            // 编辑器模式：不走AB资源初始化，直接同步加载资源
+            OnInitResourcesComplete();
+        #else
+            // 打包真机模式：原有异步初始化逻辑
             GameEntry.Resource.InitResources(OnInitResourcesComplete);
+        #endif
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)

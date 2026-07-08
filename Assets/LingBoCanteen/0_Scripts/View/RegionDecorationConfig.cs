@@ -18,5 +18,8 @@ namespace LingBoCanteen
 
         [Header("Order区相应的专属背景图精灵")]
         public Sprite OrderBackgroundSprite;
+
+        [Header("傍晚阶段的专属背景图精灵")]
+        public Sprite EveningBackgroundSprite;
     }
 }

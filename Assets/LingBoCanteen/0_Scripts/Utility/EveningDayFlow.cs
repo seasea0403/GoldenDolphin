@@ -34,8 +34,8 @@ namespace LingBoCanteen
             GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)false);
             GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)(int)TimeSection.Day);
 
-            // ★【新增】检查SAN值是否超出Mortal区间，自动切换region
-            CheckAndUpdateRegionBySAN();
+            // ★【修改】分离计算与执行，不在这里直接切换
+            // 由SettlePanel根据目标区域决定是否播放电梯动画
 
             // ★【新增】进入第16天时，检查HasMovedBeforeDay15标志
             if (nextDay == 16)
@@ -52,6 +52,19 @@ namespace LingBoCanteen
             GameEntry.DataNode.SetData("Business.TodaySanDelta", (VarInt32)0);
 
             // 重新初始化顾客（清理旧顾客，加载新一天的顾客）
+            // ★ 【修改】确保剧情系统先于顾客初始化准备好，这样 CustomerSlotManager 在
+            // ReinitializeDaily() 里读取 PlotTriggerManager.GetTodayPlotCharacterId() 时能拿到当天最新值
+            if (PlotTriggerManager.Instance == null)
+            {
+                GameObject plotManagerObj = new GameObject("PlotTriggerManager");
+                plotManagerObj.transform.SetParent(null);
+                plotManagerObj.AddComponent<PlotTriggerManager>();
+            }
+
+            PlotTriggerManager.Instance?.CheckAndPlayPlotForDay(nextDay);
+
+            // 重新初始化顾客（清理旧顾客，加载新一天的顾客）
+            // ★ 【修改】确保顾客初始化在区域改变、剧情检查之后进行，避免与剧情立绘冲突
             if (CustomerSlotManager.Instance != null)
             {
                 CustomerSlotManager.Instance.ReinitializeDaily();
@@ -72,16 +85,6 @@ namespace LingBoCanteen
                 PrepAreaManager.Instance.RefreshAllShelfIngredients();
             }
 
-            // 在切回白天前，确保剧情系统为新的一天准备并播放（如果有的话）
-            if (PlotTriggerManager.Instance == null)
-            {
-                GameObject plotManagerObj = new GameObject("PlotTriggerManager");
-                plotManagerObj.transform.SetParent(null);
-                plotManagerObj.AddComponent<PlotTriggerManager>();
-            }
-
-            PlotTriggerManager.Instance?.CheckAndPlayPlotForDay(nextDay);
-
             // 切回白天订单区域（会自动关闭傍晚区域的 UI 与世界物体）
             if (AreaSwitchManager.Instance != null)
             {
@@ -94,56 +97,102 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 检查SAN值是否超出Mortal区间，自动切换region。
-        /// 当SAN >= SAN_MORTAL_MAX 时切换到Heaven，当SAN <= SAN_MORTAL_MIN 时切换到Hell。
-        /// 仅切换区域，不重置SAN值。
+        /// 全区域SAN自动切换逻辑：人间、天堂、地狱均可互相自动跳转
+        /// 返回目标区域，不修改DataNode（由调用者决定是否执行切换）
         /// </summary>
-        private static void CheckAndUpdateRegionBySAN()
+        private static GameRegion CalculateTargetRegionBySAN()
+        {
+            if (GameEntry.DataNode == null)
+            {
+                return GameRegion.Mortal;
+            }
+
+            // 读取当前所在区域
+            int currentRegion = GameEntry.DataNode.GetData<VarInt32>("Area.CurrentType").Value;
+            GameRegion curRegionType = (GameRegion)currentRegion;
+
+            // 读取当前SAN值，兜底初始值
+            int currentSan = GameEntry.DataNode.GetNode("Player.San") != null
+                ? GameEntry.DataNode.GetData<VarInt32>("Player.San").Value
+                : Constant.GameConstant.INITIAL_SAN;
+
+            GameRegion targetRegion = curRegionType;
+
+            // ========== 分区域判定规则 ==========
+            switch (curRegionType)
+            {
+                case GameRegion.Mortal:
+                    // 人间：SAN超上限去天堂，低于下限去地狱
+                    if (currentSan >= Constant.GameConstant.SAN_MORTAL_MAX)
+                    {
+                        targetRegion = GameRegion.Heaven;
+                        Debug.Log($"[SAN AutoSwitch][Mortal→Heaven] SAN={currentSan} ≥ {Constant.GameConstant.SAN_MORTAL_MAX}");
+                    }
+                    else if (currentSan <= Constant.GameConstant.SAN_MORTAL_MIN)
+                    {
+                        targetRegion = GameRegion.Hell;
+                        Debug.Log($"[SAN AutoSwitch][Mortal→Hell] SAN={currentSan} ≤ {Constant.GameConstant.SAN_MORTAL_MIN}");
+                    }
+                    break;
+
+                case GameRegion.Heaven:
+                    // 天堂：SAN回落至正常人间区间，自动回归人间
+                    if (currentSan > Constant.GameConstant.SAN_MORTAL_MIN && currentSan < Constant.GameConstant.SAN_MORTAL_MAX)
+                    {
+                        targetRegion = GameRegion.Mortal;
+                        Debug.Log($"[SAN AutoSwitch][Heaven→Mortal] SAN回落至正常区间 {currentSan}");
+                    }
+                    break;
+
+                case GameRegion.Hell:
+                    // 地狱：SAN回升至正常人间区间，自动回归人间
+                    if (currentSan > Constant.GameConstant.SAN_MORTAL_MIN && currentSan < Constant.GameConstant.SAN_MORTAL_MAX)
+                    {
+                        targetRegion = GameRegion.Mortal;
+                        Debug.Log($"[SAN AutoSwitch][Hell→Mortal] SAN回升至正常区间 {currentSan}");
+                    }
+                    break;
+            }
+
+            return targetRegion;
+        }
+
+        /// <summary>
+        /// 公开方法供SettlePanel查询是否需要区域切换。
+        /// 返回目标区域，如果不需要切换则返回当前区域。
+        /// </summary>
+        public static GameRegion GetTargetRegionForNextDay()
+        {
+            return CalculateTargetRegionBySAN();
+        }
+
+        /// <summary>
+        /// 执行区域切换的DataNode更新（由ElevatorController在动画完成后调用）。
+        /// </summary>
+        public static void ApplyRegionChange(GameRegion targetRegion)
         {
             if (GameEntry.DataNode == null)
             {
                 return;
             }
 
-            // 只对Mortal区域进行检查（Heaven和Hell有各自的SAN边界管理逻辑）
-            var regionData = GameEntry.DataNode.GetNode("Area.CurrentType");
-            if (regionData == null)
-            {
-                return;
-            }
-
             int currentRegion = GameEntry.DataNode.GetData<VarInt32>("Area.CurrentType").Value;
-            if (currentRegion != (int)GameRegion.Mortal)
-            {
-                return; // 只在Mortal区域进行自动切换
-            }
+            GameRegion curRegionType = (GameRegion)currentRegion;
 
-            // 读取当前SAN值
-            int currentSan = GameEntry.DataNode.GetNode("Player.San") != null
-                ? GameEntry.DataNode.GetData<VarInt32>("Player.San").Value
-                : Constant.GameConstant.INITIAL_SAN;
-
-            // 判断是否需要切换region
-            GameRegion newRegion = GameRegion.Mortal;
-
-            if (currentSan >= Constant.GameConstant.SAN_MORTAL_MAX)
+            if (targetRegion != curRegionType)
             {
-                // SAN超过上界，自动升天
-                newRegion = GameRegion.Heaven;
-                Debug.Log($"[SAN AutoSwitch] SAN={currentSan} >= {Constant.GameConstant.SAN_MORTAL_MAX}, 自动切换到Heaven");
-            }
-            else if (currentSan <= Constant.GameConstant.SAN_MORTAL_MIN)
-            {
-                // SAN低于下界，自动下地狱
-                newRegion = GameRegion.Hell;
-                Debug.Log($"[SAN AutoSwitch] SAN={currentSan} <= {Constant.GameConstant.SAN_MORTAL_MIN}, 自动切换到Hell");
-            }
-
-            // 应用region变化（不重置SAN值）
-            if (newRegion != GameRegion.Mortal)
-            {
-                GameEntry.DataNode.SetData("Area.CurrentType", (VarInt32)(int)newRegion);
-                GameEntry.DataNode.SetData("Area.ElevatorUsedOnce", (VarBoolean)true); // 标记曾改变过Region
+                GameEntry.DataNode.SetData("Area.CurrentType", (VarInt32)(int)targetRegion);
+                GameEntry.DataNode.SetData("Area.ElevatorUsedOnce", (VarBoolean)true);
+                
+                // 同步更新全局标记：15天前是否切换过区域（结局分支用）
+                int currentDay = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Value").Value;
+                if (currentDay < 15)
+                {
+                    GameEntry.DataNode.SetData("Area.HasMovedBeforeDay15", (VarBoolean)true);
+                    Debug.Log($"[EveningDayFlow] 当前天数{currentDay}<15，标记 HasMovedBeforeDay15 = true");
+                }
+                
+                Debug.Log($"[EveningDayFlow] 区域已切换到: {targetRegion}");
             }
         }
 

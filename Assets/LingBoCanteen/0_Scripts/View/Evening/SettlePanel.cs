@@ -145,36 +145,57 @@ namespace LingBoCanteen
             if (san <= Constant.GameConstant.SAN_BOUNDARY_MIN)
             {
                 // 地狱结局：直接触发游戏结束
-                // 尝试通过反射调用 GameEndingManager.TriggerHellEnding()
                 if (!TryInvokeManagerMethod("LingBoCanteen.GameEndingManager", "TriggerHellEnding"))
                 {
+                    // ★【修复】m_Root已被SetActive(false)，此时在SettlePanel自身上StartCoroutine不会执行，
+                    // 这里是找不到GameEndingManager的边缘兜底分支，直接推进下一天即可
                     Debug.LogError("[SettlePanel] GameEndingManager instance not found via reflection!");
-                    StartCoroutine(DelayThenNextDay());
-                }
-                else
-                {
-                    Debug.LogError("[SettlePanel] GameEndingManager instance not found!");
-                    StartCoroutine(DelayThenNextDay());
+                    EveningDayFlow.AdvanceToNextDay();
                 }
             }
             else if (san >= Constant.GameConstant.SAN_BOUNDARY_MAX)
             {
                 // 天堂结局：直接触发游戏结束
-                // 尝试通过反射调用 GameEndingManager.TriggerHeavenEnding()
                 if (!TryInvokeManagerMethod("LingBoCanteen.GameEndingManager", "TriggerHeavenEnding"))
                 {
+                    // ★【修复】同上，直接推进下一天
                     Debug.LogError("[SettlePanel] GameEndingManager instance not found via reflection!");
-                    StartCoroutine(DelayThenNextDay());
-                }
-                else
-                {
-                    Debug.LogError("[SettlePanel] GameEndingManager instance not found!");
-                    StartCoroutine(DelayThenNextDay());
+                    EveningDayFlow.AdvanceToNextDay();
                 }
             }
             else
             {
-                EveningDayFlow.AdvanceToNextDay();
+                // 正常推进到下一天：先计算是否需要区域切换
+                GameRegion targetRegion = EveningDayFlow.GetTargetRegionForNextDay();
+                GameRegion currentRegion = (GameRegion)ReadInt("Area.CurrentType", 1);
+
+                if (targetRegion != currentRegion)
+                {
+                    // 需要切换区域：先播放电梯动画，再进入下一天
+                    // ★【修复】不在SettlePanel自身上跑协程（m_Root.SetActive(false)会导致协程被终止），
+                    // 而是直接把"跳转完成后推进下一天"的回调交给ElevatorController（该对象始终保持激活）执行。
+                    Debug.Log($"[SettlePanel] 需要从{currentRegion}切换到{targetRegion}，开始电梯动画");
+                    ElevatorController elevatorController = FindObjectOfType<ElevatorController>();
+                    if (elevatorController != null)
+                    {
+                        elevatorController.AutoTransitionToRegion(targetRegion, () =>
+                        {
+                            Debug.Log("[SettlePanel] 电梯跳转完成，现在进入下一天");
+                            EveningDayFlow.AdvanceToNextDay();
+                        });
+                    }
+                    else
+                    {
+                        Debug.LogError("[SettlePanel] 未找到ElevatorController，直接进入下一天（无动画）！");
+                        EveningDayFlow.AdvanceToNextDay();
+                    }
+                }
+                else
+                {
+                    // 不需要切换区域：直接进入下一天
+                    Debug.Log($"[SettlePanel] 无需切换区域，直接进入下一天");
+                    EveningDayFlow.AdvanceToNextDay();
+                }
             }
         }
 

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityGameFramework.Runtime;
 using LingBoCanteen;
+using System.Collections;
 
 public class ElevatorController : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public class ElevatorController : MonoBehaviour
 
     // 事件：到达新楼层时自动广播（参数是楼层名称）
     public static event System.Action<string> OnFloorChanged;
+    
+    // 事件：自动跳转完成时广播
+    public static event System.Action OnTransitionComplete;
 
 
     private int currentFloor = 1;        // 0=天堂, 1=人间, 2=地狱
@@ -221,5 +225,77 @@ public class ElevatorController : MonoBehaviour
             UpdateButtonsVisibility();
             OnFloorChanged?.Invoke(currentFloorName);
         });
+    }
+
+    /// <summary>
+    /// 自动根据目标区域播放电梯跳转动画（支持多层跳转，如天堂→人间→地狱）。
+    /// 由SettlePanel在区域需要改变时调用，跳转完成后触发OnTransitionComplete事件，并执行onComplete回调。
+    /// 该协程运行在ElevatorController自身（始终常驻激活），不受SettlePanel隐藏面板时SetActive(false)的影响。
+    /// </summary>
+    public void AutoTransitionToRegion(LingBoCanteen.GameRegion targetRegion, System.Action onComplete = null)
+    {
+        StartCoroutine(DoAutoTransition(targetRegion, onComplete));
+    }
+
+    private IEnumerator DoAutoTransition(LingBoCanteen.GameRegion targetRegion, System.Action onComplete)
+    {
+        int targetFloor = targetRegion switch
+        {
+            LingBoCanteen.GameRegion.Heaven => 0,
+            LingBoCanteen.GameRegion.Hell => 2,
+            _ => 1,
+        };
+
+        int startFloor = currentFloor;
+        Debug.Log($"[ElevatorController] AutoTransition开始：从第{startFloor}层({currentFloorName}) → 第{targetFloor}层");
+
+        // 如果需要经过多个楼层，逐层跳转
+        if (startFloor < targetFloor)
+        {
+            // 向下跳转：逐层经过
+            for (int floor = startFloor + 1; floor <= targetFloor; floor++)
+            {
+                currentFloor = floor;
+                UpdateFloorName();
+                MoveToFloor(floor);
+                yield return new WaitUntil(() => !isMoving); // 等待当前跳转完成
+                yield return new WaitForSeconds(0.3f); // 每层间隔0.3秒
+            }
+        }
+        else if (startFloor > targetFloor)
+        {
+            // 向上跳转：逐层经过
+            for (int floor = startFloor - 1; floor >= targetFloor; floor--)
+            {
+                currentFloor = floor;
+                UpdateFloorName();
+                MoveToFloor(floor);
+                yield return new WaitUntil(() => !isMoving); // 等待当前跳转完成
+                yield return new WaitForSeconds(0.3f); // 每层间隔0.3秒
+            }
+        }
+
+        // 跳转完成，更新DataNode
+        LingBoCanteen.EveningDayFlow.ApplyRegionChange(targetRegion);
+
+        // 刷新装饰（背景图等）
+        if (LingBoCanteen.AreaSwitchManager.Instance != null)
+        {
+            LingBoCanteen.AreaSwitchManager.Instance.ApplyRegionDecorations();
+        }
+
+        // 播放区域切换音效
+        SoundManager.Instance?.PlayAreaSwitchSound();
+
+        // 触发BGM切换
+        SoundManager.Instance?.PlayMusicForCurrentGameState();
+
+        Debug.Log($"[ElevatorController] AutoTransition完成：已到达第{currentFloor}层({currentFloorName})");
+
+        // 触发完成事件
+        OnTransitionComplete?.Invoke();
+
+        // 执行传入的完成回调（例如推进到下一天）
+        onComplete?.Invoke();
     }
 }

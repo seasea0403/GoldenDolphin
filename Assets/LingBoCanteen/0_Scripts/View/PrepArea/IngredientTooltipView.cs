@@ -89,14 +89,14 @@ namespace LingBoCanteen
 
         private void FollowWorldPosition(Vector3 worldPosition)
         {
-            Camera cam = m_WorldCamera != null ? m_WorldCamera : Camera.main;
-            if (cam == null)
+            if (m_Root == null)
             {
                 return;
             }
 
-            Vector3 screenPoint = cam.WorldToScreenPoint(worldPosition);
-            m_Root.position = screenPoint + (Vector3)m_ScreenOffset;
+            // 直接跟随鼠标位置 + offset
+            Vector3 mouseScreenPos = Input.mousePosition;
+            m_Root.position = mouseScreenPos + (Vector3)m_ScreenOffset;
         }
     }
 }

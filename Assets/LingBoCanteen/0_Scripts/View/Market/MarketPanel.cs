@@ -22,6 +22,7 @@ namespace LingBoCanteen
         private int m_CurrentPage = 0;
         private int m_TotalPages = 1;
         private int m_CurrentDay = 1;
+        private int m_LastRecordedDay = -1;
 
         public int CurrentPage => m_CurrentPage;
         public int TotalPages => m_TotalPages;
@@ -33,6 +34,26 @@ namespace LingBoCanteen
 
         private void OnEnable()
         {
+            // 检查当前天数是否改变，如果改变则重新加载解锁列表
+            // ★【修复】超市在傍晚阶段打开（结算前），此时 DayCurrent.Value 还是"今天"，
+            // 但玩家实际是在为"明天"采购食材，所以解锁判定要使用"明天"的天数（若处于傍晚阶段）。
+            int currentDay = GetEffectiveShoppingDay();
+            
+            // m_SlotInstances可能还未初始化，先确保初始化
+            if (m_SlotInstances == null || m_SlotInstances.Length == 0)
+            {
+                InitializeSlots();
+            }
+            
+            if (currentDay != m_LastRecordedDay)
+            {
+                m_CurrentDay = currentDay;
+                m_LastRecordedDay = currentDay;
+                m_UnlockedIngredientIds = new List<int>(IngredientUtility.GetUnlockedShelfIds(m_CurrentDay));
+                m_TotalPages = Mathf.Max(1, Mathf.CeilToInt((float)m_UnlockedIngredientIds.Count / (m_SlotInstances?.Length ?? 8)));
+                Log.Info($"[MarketPanel] 天数改变到{m_CurrentDay}，重新加载解锁物品列表，总页数={m_TotalPages}");
+                SetCurrentPage(0);
+            }
             RefreshUI();
         }
 
@@ -63,9 +84,10 @@ namespace LingBoCanteen
                 m_SlotInstances[i] = slot;
             }
 
-            m_CurrentDay = GetCurrentDaySafely();
+            m_CurrentDay = GetEffectiveShoppingDay();
             m_UnlockedIngredientIds = new List<int>(IngredientUtility.GetUnlockedShelfIds(m_CurrentDay));
             m_TotalPages = Mathf.Max(1, Mathf.CeilToInt((float)m_UnlockedIngredientIds.Count / m_SlotInstances.Length));
+            m_LastRecordedDay = m_CurrentDay;
 
             SetCurrentPage(0);
         }
@@ -195,6 +217,28 @@ namespace LingBoCanteen
 
             Log.Warning("DayCurrent.Value 尚未初始化，默认使用 Day 1。");
             return 1;
+        }
+
+        /// <summary>
+        /// 计算超市货架解锁应使用的"有效天数"：
+        /// - 若当前处于傍晚阶段（DayCurrent.Phase == Evening，即结算前的采购窗口），
+        ///   玩家实际是在为明天做准备，因此使用 currentDay + 1；
+        /// - 若处于白天阶段，直接使用当前天数。
+        /// </summary>
+        private int GetEffectiveShoppingDay()
+        {
+            int currentDay = GetCurrentDaySafely();
+
+            if (GameEntry.DataNode != null && GameEntry.DataNode.GetNode("DayCurrent.Phase") != null)
+            {
+                int phaseValue = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Phase").Value;
+                if (phaseValue == (int)TimeSection.Evening)
+                {
+                    return currentDay + 1;
+                }
+            }
+
+            return currentDay;
         }
         public void close()
         {
