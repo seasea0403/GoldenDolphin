@@ -14,6 +14,8 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
+            if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
+
             if (KitchenDragController.Instance == null || m_IconRenderer == null)
             {
                 return;

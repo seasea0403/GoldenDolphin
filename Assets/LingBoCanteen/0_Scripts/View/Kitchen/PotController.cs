@@ -106,6 +106,7 @@ namespace LingBoCanteen
         private List<int> m_PendingCandidates;
         private int m_MatchedDishId = -1;
         private float m_CookElapsed;
+        private float m_CookDuration;
         private float m_FinishedElapsed;
         private float m_PrepareElapsed;
         private Quaternion m_CookButtonInitialRotation;
@@ -235,6 +236,8 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
+            if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
+
             m_ShouldOpenSelectionOnMouseUp = false;
             switch (m_State)
             {
@@ -536,6 +539,11 @@ namespace LingBoCanteen
             m_State = PotStationState.Cooking;
             m_CookElapsed = 0f;
 
+            // 勤奋(Diligent)：场上若有正等待这道菜的顾客带该 Buff，本锅烹饪耗时按比例缩短。
+            bool hasDiligentWaiter = CustomerSlotManager.Instance != null
+                && CustomerSlotManager.Instance.AnyOccupantNeedsDishWithBuff(m_MatchedDishId, LingBoCanteen.Definition.Enum.CustomerBuff.Diligent);
+            m_CookDuration = Constant.GameConstant.DEFAULT_COOK_TIME * CustomerBuffUtility.GetCookDurationMultiplier(hasDiligentWaiter);
+
             // ★ 【新增】确保锅的贴图在开火时可见
             if (m_PotRenderer != null)
             {
@@ -590,10 +598,10 @@ namespace LingBoCanteen
 
             if (m_ProgressSlider != null)
             {
-                m_ProgressSlider.value = Mathf.Clamp01(m_CookElapsed / Constant.GameConstant.DEFAULT_COOK_TIME);
+                m_ProgressSlider.value = Mathf.Clamp01(m_CookElapsed / m_CookDuration);
             }
 
-            if (m_CookElapsed < Constant.GameConstant.DEFAULT_COOK_TIME)
+            if (m_CookElapsed < m_CookDuration)
             {
                 return;
             }
@@ -663,6 +671,10 @@ namespace LingBoCanteen
                 return;
             }
 
+            // 节制(Frugal)/暴食(Gluttony)：菜品做成时，若场上有等待该菜的对应 Buff 顾客，
+            // 对本次配方中实际用到的一份限库存食材做 +1(退还)/-1(额外消耗) 调整。
+            ApplyFrugalGluttonyAdjustment(recipe);
+
             // 6 秒烹饪结束但还没点关火、也还没糊锅之前，循环烹饪动画继续播放，直到 PowerOff/BecomeBurnt 才停止。
             m_State = PotStationState.Finished;
             m_FinishedElapsed = 0f;
@@ -688,6 +700,37 @@ namespace LingBoCanteen
             {
                 // 旋转角度保持开火时的状态不变，仅恢复可点击，供玩家点击执行关火。
                 SetButtonGrayedOut(false);
+            }
+        }
+
+        /// <summary>
+        /// 节制(Frugal)/暴食(Gluttony) Buff 效果：只对本次配方中实际用到、且有库存限制的
+        /// 货架食材（<see cref="IngredientUtility.IsUnlimitedStock"/> 为 false）生效一份，
+        /// 冰箱/抽屉食材无库存概念，调整没有意义。两个 Buff 同时命中时优先按节制处理。
+        /// </summary>
+        private void ApplyFrugalGluttonyAdjustment(DishRecipeUtility.DishRecipe recipe)
+        {
+            if (recipe == null || CustomerSlotManager.Instance == null)
+            {
+                return;
+            }
+
+            bool frugal = CustomerSlotManager.Instance.AnyOccupantNeedsDishWithBuff(m_MatchedDishId, LingBoCanteen.Definition.Enum.CustomerBuff.Frugal);
+            bool gluttony = !frugal && CustomerSlotManager.Instance.AnyOccupantNeedsDishWithBuff(m_MatchedDishId, LingBoCanteen.Definition.Enum.CustomerBuff.Gluttony);
+            if (!frugal && !gluttony)
+            {
+                return;
+            }
+
+            foreach (int itemId in recipe.IngIds)
+            {
+                if (!m_PlacedItemIds.Contains(itemId) || IngredientUtility.IsUnlimitedStock(itemId))
+                {
+                    continue;
+                }
+
+                IngredientUtility.AddStock(itemId, frugal ? 1 : -1);
+                break;
             }
         }
 

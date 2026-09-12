@@ -18,12 +18,12 @@ namespace LingBoCanteen
             public const float SQUEEZE_ANIM_TIME = 1.6f;           // 榨汁动画时长
             
             // San值区间
-            public const int SAN_MORTAL_MIN = 43;
-            public const int SAN_MORTAL_MAX = 57;
+            public const int SAN_MORTAL_MIN = 36;
+            public const int SAN_MORTAL_MAX = 70;
             
             // 订单San值规则
-            public const int ORDER_SUCCESS_BASE_SAN = 2;
-            public const int ORDER_FAIL_SAN = -3;
+            public const int ORDER_SUCCESS_BASE_SAN = 1;
+            public const int ORDER_FAIL_SAN = -2;
             
             // 区域跳转初始San
             public const int HEAVEN_INIT_SAN = 70;
@@ -38,6 +38,12 @@ namespace LingBoCanteen
             public const float NEXT_CUSTOMER_INTERVAL = 10f; // 一个顾客离场后，同一槽位下一位顾客的进入间隔（秒）
             public const float BUFF_PATIENCE_DELTA = 10f;    // 温和/暴怒等 Buff 对耐心时间的修正幅度（秒）
             public const float DUAL_ORDER_CHANCE = 0.1f;     // 顾客点 2 道菜的概率(10%)，其余为 1 道菜(90%)
+
+            // 美德/原罪 Buff 数值规则
+            public const float BUFF_COOK_SPEED_RATIO = 0.1f;   // 勤奋：烹饪速度加快比例(10%)
+            public const float BUFF_REWARD_RATIO = 0.1f;       // 慎虑/贪婪：完成订单报酬的增减比例(10%)
+            public const float BUFF_SLOTH_WAIT_SECONDS = 10f;  // 懒惰：等待多久后开始判定提前离开
+            public const float BUFF_SLOTH_LEAVE_CHANCE = 0.5f; // 懒惰：判定时提前离开的概率(50%)
 
             // 备菜区配置
             public const float CUTTING_MID_TIME = 0.6f;      // 放入菜板后，切到中间态的时间点（秒）

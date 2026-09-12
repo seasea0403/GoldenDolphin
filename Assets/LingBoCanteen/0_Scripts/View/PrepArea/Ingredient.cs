@@ -128,6 +128,8 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
+            if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
+
             Log.Info($"点击食材，ID:{m_IngredientId}，区域类型:{m_AreaType}，可交互:{m_IsInteractable}");
             
             if (!m_IsInteractable || m_Row == null)

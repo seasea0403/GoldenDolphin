@@ -39,6 +39,8 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
+            if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
+
             // 如果plate上有菜品，优先允许拖拽；否则触发收集菜品
             if (HasAnyDish())
             {

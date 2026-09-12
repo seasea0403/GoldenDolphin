@@ -52,6 +52,8 @@ namespace LingBoCanteen
         private float m_MoveElapsed;
         private Vector3 m_LeaveFrom;
         private Vector3 m_LeaveTo;
+        private float m_WaitElapsed;
+        private bool m_SlothRolled;
 
         /// <summary>
         /// 当前剩余耐心时间（秒），供 CustomerSlotManager/CustomerBubbleView 使用。
@@ -106,6 +108,8 @@ namespace LingBoCanteen
             m_PatienceRemaining = m_Data.PatienceSeconds;
             m_IsResolved = false;
             m_LastSuccess = false;
+            m_WaitElapsed = 0f;
+            m_SlothRolled = false;
 
             m_State = CustomerState.Entering;
             m_MoveElapsed = 0f;
@@ -176,8 +180,21 @@ namespace LingBoCanteen
                     if (CustomerSlotManager.Instance != null && !CustomerSlotManager.Instance.IsDialogueInProgress())
                     {
                         m_PatienceRemaining -= elapseSeconds;
+                        m_WaitElapsed += elapseSeconds;
                     }
-                    
+
+                    // 懒惰：等待达到指定秒数后，只判定一次是否提前离开（不影响耐心计时本身）
+                    if (!m_SlothRolled && m_Data.Buff == CustomerBuff.Sloth
+                        && m_WaitElapsed >= Constant.GameConstant.BUFF_SLOTH_WAIT_SECONDS)
+                    {
+                        m_SlothRolled = true;
+                        if (Random.value < Constant.GameConstant.BUFF_SLOTH_LEAVE_CHANCE)
+                        {
+                            BeginLeave(false);
+                            break;
+                        }
+                    }
+
                     if (m_PatienceRemaining <= 0f)
                     {
                         m_PatienceRemaining = 0f;

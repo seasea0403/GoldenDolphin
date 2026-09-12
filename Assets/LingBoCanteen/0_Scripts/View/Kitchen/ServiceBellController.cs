@@ -18,6 +18,8 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
+            if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
+
             Collider2D col = GetComponent<Collider2D>();
             Debug.Log($"[ServiceBellController] OnMouseDown - Collider2D.enabled={col.enabled}, ServingCounter={m_ServingCounter != null}");
             m_ServingCounter?.TryServeAll();

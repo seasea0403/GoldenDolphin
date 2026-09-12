@@ -63,14 +63,15 @@ namespace LingBoCanteen
             // 才能开始读取 Config/DataTable/Font 等资源，否则会报
             // "Data asset '...' is 'NotExist'"（此时资源数据库还没建好）。
             // 资源系统需要完全初始化后才能加载Config/DataTable等
-            // 编辑器和非编辑器都要调用InitResources，确保资源数据库完全准备好
-        #if UNITY_EDITOR
-            // 编辑器模式：不走AB资源初始化，直接同步加载资源
-            OnInitResourcesComplete();
-        #else
-            // 打包真机模式：原有异步初始化逻辑
-            GameEntry.Resource.InitResources(OnInitResourcesComplete);
-        #endif
+            if (GameEntry.Base.EditorResourceMode)
+            {
+                // 编辑器资源模式：无版本清单可初始化，直接视为完成
+                OnInitResourcesComplete();
+            }
+            else
+            {
+                GameEntry.Resource.InitResources(OnInitResourcesComplete);
+            }
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -156,6 +157,10 @@ namespace LingBoCanteen
             Log.Info("Init resources complete.");
 
             PreloadResources();
+
+            // 启动即加载自定义光标，覆盖菜单与游戏全程
+            CursorManager.Instance.PrepareCursors();
+
             // 初始化 DataNode（将初始化逻辑集中到启动流程，避免早期脚本执行顺序问题）
             GameDataNodeInitializer.Initialize();
         }

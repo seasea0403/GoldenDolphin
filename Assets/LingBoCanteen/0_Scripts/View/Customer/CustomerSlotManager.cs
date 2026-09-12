@@ -539,6 +539,29 @@ namespace LingBoCanteen
         }
 
         /// <summary>
+        /// 场上是否存在正等待该道菜、且拥有指定 Buff 的顾客。
+        /// 供烹调区（勤奋加速）和结算（慎虑/贪婪报酬修正、节制/暴食耗材修正）查询使用。
+        /// </summary>
+        public bool AnyOccupantNeedsDishWithBuff(int dishId, CustomerBuff buff)
+        {
+            if (m_SlotOccupants == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < m_SlotOccupants.Length; i++)
+            {
+                CustomerEntity occupant = m_SlotOccupants[i];
+                if (occupant != null && occupant.Buff == buff && occupant.NeedsDish(dishId))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// 上菜：把做好的菜品交给场上需要它的顾客，成功后按 Dish 表 EarnMoney 与
         /// <see cref="Constant.GameConstant.ORDER_SUCCESS_BASE_SAN"/> 结算金币与 San 值。
         /// 如果多个顾客同时需要该菜品，优先满足剩余耐心值最低（最快超时）的那一位。
@@ -561,23 +584,31 @@ namespace LingBoCanteen
                 }
             }
 
-            if (target == null || !target.TryFulfillDish(dishId))
+            if (target == null)
             {
                 return false;
             }
 
-            SettleServeReward(dishId);
+            CustomerBuff buff = target.Buff;
+
+            if (!target.TryFulfillDish(dishId))
+            {
+                return false;
+            }
+
+            SettleServeReward(dishId, buff);
             return true;
         }
 
         /// <summary>
-        /// 上菜成功后的金币/San 结算：金币加 Dish 表的 EarnMoney，San 加固定的成功值。
-        /// 同时累加当日金币/San变化量（供傍晚"结束今日"结算面板展示）。
+        /// 上菜成功后的金币/San 结算：金币加 Dish 表的 EarnMoney（受慎虑/贪婪 Buff 修正），
+        /// San 加固定的成功值。同时累加当日金币/San变化量（供傍晚"结束今日"结算面板展示）。
         /// </summary>
-        private void SettleServeReward(int dishId)
+        private void SettleServeReward(int dishId, CustomerBuff buff)
         {
             DRDish dishRow = GameEntry.DataTable.GetDataTable<DRDish>().GetDataRow(dishId);
-            int earnMoney = dishRow != null ? dishRow.EarnMoney : 0;
+            int baseEarnMoney = dishRow != null ? dishRow.EarnMoney : 0;
+            int earnMoney = Mathf.RoundToInt(baseEarnMoney * CustomerBuffUtility.GetRewardMultiplier(buff));
 
             int gold = GameEntry.DataNode.GetData<VarInt32>("Player.Gold");
             GameEntry.DataNode.SetData("Player.Gold", (VarInt32)(gold + earnMoney));

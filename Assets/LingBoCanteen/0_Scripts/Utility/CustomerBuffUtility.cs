@@ -77,6 +77,51 @@ namespace LingBoCanteen
         }
 
         /// <summary>
+        /// 烹饪时长的修正倍率：如果本次要做的菜有勤奋(Diligent) Buff 顾客在等待，烹饪速度加快
+        /// <see cref="Constant.GameConstant.BUFF_COOK_SPEED_RATIO"/>（即耗时按比例缩短），否则倍率为 1（不变）。
+        /// </summary>
+        public static float GetCookDurationMultiplier(bool hasDiligentWaiter)
+        {
+            return hasDiligentWaiter ? 1f - Constant.GameConstant.BUFF_COOK_SPEED_RATIO : 1f;
+        }
+
+        /// <summary>
+        /// 完成订单报酬的修正倍率：慎虑(Thoughtful)多得、贪婪(Greed)少得，均为
+        /// <see cref="Constant.GameConstant.BUFF_REWARD_RATIO"/>，其余 Buff 不影响报酬。
+        /// </summary>
+        public static float GetRewardMultiplier(CustomerBuff buff)
+        {
+            switch (buff)
+            {
+                case CustomerBuff.Thoughtful:
+                    return 1f + Constant.GameConstant.BUFF_REWARD_RATIO;
+                case CustomerBuff.Greed:
+                    return 1f - Constant.GameConstant.BUFF_REWARD_RATIO;
+                default:
+                    return 1f;
+            }
+        }
+
+        /// <summary>
+        /// 获取 Buff 的具体效果说明文案，供悬浮提示（Tooltip）展示。
+        /// </summary>
+        public static string GetEffectDescription(CustomerBuff buff)
+        {
+            switch (buff)
+            {
+                case CustomerBuff.Temperate: return "耐心消耗时间增加10秒";
+                case CustomerBuff.Diligent: return "作为顾客时烹饪速度加快10%";
+                case CustomerBuff.Thoughtful: return "完成订单时多获得10%报酬";
+                case CustomerBuff.Frugal: return "制作餐品时少消耗一份原材料";
+                case CustomerBuff.Wrath: return "耐心消耗时间减少10秒";
+                case CustomerBuff.Sloth: return "等待10秒后有50%概率提前离开";
+                case CustomerBuff.Greed: return "完成订单时少获得10%报酬";
+                case CustomerBuff.Gluttony: return "制作餐品时多消耗一份原材料";
+                default: return string.Empty;
+            }
+        }
+
+        /// <summary>
         /// 获取 Buff 的展示文案，用于顾客气泡上的文字。
         /// </summary>
         public static string GetDescription(CustomerBuff buff)

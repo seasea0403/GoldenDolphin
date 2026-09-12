@@ -62,9 +62,9 @@ MonoBehaviour:
     speakingContent: "(\uFF40\u76BF\xB4\uFF03) \u4E0D\u559C\u6B22\u53EF\u4EE5\u4E0D\u7528\u52C9\u5F3A\u7684\uFF0C\u672C\u6765\u5C0F\u5E97\u4E5F\u6253\u7B97\u6253\u70CA\u4E86\u3002"
     charImage: {fileID: 0}
   - id: 13
-    speakerName: "\u6211"
+    speakerName: "\u201C\u5927\u4EBA\u7269\u201D"
     speakingContent: "\u6211\u8FDB\u6765\u4E86\u3002"
-    charImage: {fileID: 0}
+    charImage: {fileID: 21300000, guid: c712538b6f3f0d843bb54ea81e4f71a2, type: 3}
   - id: 14
     speakerName: "\u7C89\u4E1D"
     speakingContent: "\u5076\u50CF\u6211\u4EEC\u559C\u6B22\u4F60\uFF01"

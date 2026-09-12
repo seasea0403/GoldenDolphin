@@ -181,6 +181,8 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
+            if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
+
             if (TryPickPreCutItem(out IngredientDragPayload payload, out Sprite ghostSprite))
             {
                 PrepDragController.Instance.BeginDrag(payload, ghostSprite, transform.position);

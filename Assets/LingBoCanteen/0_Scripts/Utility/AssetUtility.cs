@@ -1,4 +1,4 @@
-﻿using GameFramework;
+using GameFramework;
 
 namespace LingBoCanteen
 {
@@ -47,6 +47,11 @@ namespace LingBoCanteen
         public static string GetCustomerPortraitAsset(string assetName)
         {
             return Utility.Text.Format("Assets/LingBoCanteen/4_Arts/Customers/{0}.png", assetName);
+        }
+
+        public static string GetUICursorAsset(string assetName)
+        {
+            return Utility.Text.Format("Assets/LingBoCanteen/4_Arts/UI/Mouse/{0}.png", assetName);
         }
 
         /// <summary>

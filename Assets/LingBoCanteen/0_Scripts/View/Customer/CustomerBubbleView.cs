@@ -53,6 +53,12 @@ namespace LingBoCanteen
         private CustomerEntity m_BoundCustomer;
         private int m_LastDishCount = -1;
 
+        /// <summary>
+        /// 当前绑定顾客抽到的 Buff，供 <see cref="CustomerBuffHoverTrigger"/> 悬浮提示查询。
+        /// </summary>
+        public LingBoCanteen.Definition.Enum.CustomerBuff CurrentBuff =>
+            m_BoundCustomer != null ? m_BoundCustomer.Buff : LingBoCanteen.Definition.Enum.CustomerBuff.None;
+
         private void Awake()
         {
             if (m_WorldCamera == null)
@@ -85,6 +91,7 @@ namespace LingBoCanteen
         {
             m_BoundCustomer = null;
             gameObject.SetActive(false);
+            CustomerBuffTooltipView.Instance?.Hide();
         }
 
         private void LateUpdate()
