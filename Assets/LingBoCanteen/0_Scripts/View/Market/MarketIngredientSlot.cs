@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using TMPro;
@@ -8,8 +9,9 @@ namespace LingBoCanteen
     /// <summary>
     /// 超市食材单个槽位，显示食材信息（图片、价格、库存）、管理购买按钮状态、显示 Tooltip、处理点击购买。
     /// 挂载到预制体的每个 slot 实体上。
+    /// 悬浮提示通过 EventSystem 指针事件实现（UI 元素没有 Collider，OnMouseEnter 不会触发）。
     /// </summary>
-    public class MarketIngredientSlot : MonoBehaviour
+    public class MarketIngredientSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image m_IconImage;
         [SerializeField] private TextMeshProUGUI m_PriceText;
@@ -22,10 +24,11 @@ namespace LingBoCanteen
         private int m_CurrentDay = 1;
         private DRIngredient m_Row;
         private bool m_IsUnlocked = false;
+        private bool m_IsHovered = false;
         private CanvasGroup m_CanvasGroup;
 
-        public delegate void PurchaseClickedDelegate(int ingredientId);
-        public event PurchaseClickedDelegate OnPurchaseClicked;
+        public delegate void ItemClickedDelegate(int ingredientId);
+        public event ItemClickedDelegate OnItemClicked;
 
         private void Awake()
         {
@@ -43,7 +46,22 @@ namespace LingBoCanteen
             }
         }
 
-        private void OnMouseEnter()
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            m_IsHovered = true;
+            ShowTooltip();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            m_IsHovered = false;
+            if (IngredientTooltipView.Instance != null)
+            {
+                IngredientTooltipView.Instance.Hide();
+            }
+        }
+
+        private void ShowTooltip()
         {
             if (m_IngredientId <= 0 || m_Row == null)
             {
@@ -53,15 +71,29 @@ namespace LingBoCanteen
             int stock = IngredientUtility.GetStock(m_IngredientId);
             if (IngredientTooltipView.Instance != null)
             {
-                IngredientTooltipView.Instance.Show(transform.position, m_Row.Name, stock, false);
+                IngredientTooltipView.Instance.Show(transform.position, m_Row.Name, stock, false, transform);
             }
         }
 
-        private void OnMouseExit()
+        /// <summary>
+        /// 刷新库存数字显示；指针悬浮在本槽位上时同步刷新 Tooltip 数量，实现购买后的实时显示。
+        /// </summary>
+        public void RefreshStockDisplay()
         {
-            if (IngredientTooltipView.Instance != null)
+            if (m_IngredientId <= 0 || m_Row == null)
             {
-                IngredientTooltipView.Instance.Hide();
+                return;
+            }
+
+            int stock = IngredientUtility.GetStock(m_IngredientId);
+            if (m_StockText != null)
+            {
+                m_StockText.text = "x" + stock;
+            }
+
+            if (m_IsHovered)
+            {
+                ShowTooltip();
             }
         }
 
@@ -156,8 +188,8 @@ namespace LingBoCanteen
         /// <summary>
         /// 刷新购买按钮的状态：
         /// - 未解锁：显示 Mask、禁用按钮、恢复正常色。
-        /// - 已解锁 + 金币足够：隐藏 Mask、启用按钮、正常色。
-        /// - 已解锁 + 金币不足：隐藏 Mask、禁用按钮、置灰。
+        /// - 已解锁：按钮可点击（点击打开购买二级窗口，金币是否足够由窗口内的确认键控制），
+        ///   金币不足时按钮图标置灰作为提示。
         /// </summary>
         public void RefreshButtonState()
         {
@@ -176,12 +208,12 @@ namespace LingBoCanteen
                 return;
             }
 
-            // 已解锁：检查金币
+            // 已解锁：始终可点击打开二级窗口
+            SetButtonInteractable(true);
+
             VarInt32 goldVar = GameEntry.DataNode.GetData<VarInt32>("Player.Gold");
             int currentGold = goldVar != null ? goldVar.Value : 0;
             bool canAfford = currentGold >= m_Row.ConsumeMoney;
-
-            SetButtonInteractable(canAfford);
             SetButtonColor(canAfford ? Color.white : m_GrayedOutColor);
         }
 
@@ -222,7 +254,8 @@ namespace LingBoCanteen
                 return;
             }
 
-            OnPurchaseClicked?.Invoke(m_IngredientId);
+            // 点击物品不再直接购买，而是通知外部打开购买二级窗口
+            OnItemClicked?.Invoke(m_IngredientId);
         }
     }
 }

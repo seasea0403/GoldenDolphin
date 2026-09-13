@@ -12,7 +12,7 @@ namespace LingBoCanteen
     /// 场景中放 3 个实例：2 个普通炉灶（m_IsOven=false）+ 1 个烤箱（m_IsOven=true，恒定 PotType.Oven，永不进入 Empty）。
     ///
     /// 锅本身不可拖拽：Idle 状态下锅里还没放入任何食材/调料时，点击视为“重新选锅”（见 <see cref="OnMouseDown"/>）。
-    /// 只有 Burnt 状态下的糊锅食物允许拖去垃圾桶。
+    /// Finished（已成熟）/ ReadyToServe（已关火）/ Burnt（糊锅）状态下的锅内食物都允许拖去垃圾桶倒掉。
     ///
     /// 碰撞体归属：<see cref="KitchenStationBase"/> 要求的 <see cref="Collider2D"/> 挂在本组件所在的同一个
     /// GameObject 上（就是接受 <see cref="OnMouseDown"/> 点击选锅的那个物体），后续投料的拖放命中检测
@@ -110,8 +110,6 @@ namespace LingBoCanteen
         private float m_FinishedElapsed;
         private float m_PrepareElapsed;
         private Quaternion m_CookButtonInitialRotation;
-        private float m_CookButtonInitialAlpha; // 保存按钮初始透明度，置灰时不改变透明度
-        private Color m_CookButtonInitialColor; // 保存按钮初始颜色，用于恢复
         private static readonly DishUnlockService s_DishService = new DishUnlockService();
 
         public bool IsReadyToServe => m_State == PotStationState.ReadyToServe;
@@ -143,20 +141,13 @@ namespace LingBoCanteen
                 m_CookButton.onClick.AddListener(OnCookButtonClicked);
                 m_CookButton.interactable = false;
                 m_CookButtonInitialRotation = m_CookButton.transform.localRotation;
-                
-                // 保存按钮的初始颜色和透明度
-                Image buttonImage = m_CookButton.GetComponent<Image>();
-                if (buttonImage != null)
-                {
-                    m_CookButtonInitialColor = buttonImage.color;
-                    m_CookButtonInitialAlpha = buttonImage.color.a;
-                }
-                else
-                {
-                    m_CookButtonInitialColor = Color.white;
-                    m_CookButtonInitialAlpha = 1f;
-                }
-                
+
+                // uGUI Button 的 ColorTint 过渡会在 interactable=false 时自动叠加 disabledColor
+                // （默认半透明灰），开火后按钮被禁用导致图标变淡；把 disabledColor 改为纯白即可保持原色
+                ColorBlock colors = m_CookButton.colors;
+                colors.disabledColor = Color.white;
+                m_CookButton.colors = colors;
+
                 // 绑定音效
                 UIButtonSoundHelper.BindButtonSound(m_CookButton);
             }
@@ -232,18 +223,17 @@ namespace LingBoCanteen
             }
         }
 
-        private bool m_ShouldOpenSelectionOnMouseUp;
-
         private void OnMouseDown()
         {
             if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
 
-            m_ShouldOpenSelectionOnMouseUp = false;
             switch (m_State)
             {
                 case PotStationState.Empty:
-                    // 标记在鼠标释放时打开选锅面板
-                    m_ShouldOpenSelectionOnMouseUp = true;
+                    // 空炉灶：立即弹出选锅面板（必须在 OnMouseDown 里直接打开：
+                    // OnMouseUp 按"释放时指针位置"发送，轻微漂移就会丢失，且残留的延迟标记
+                    // 会让面板在下次松开鼠标时错误地对准之前点过的炉灶）
+                    m_SelectionPanel?.Open(this);
                     break;
 
                 case PotStationState.Idle:
@@ -255,25 +245,18 @@ namespace LingBoCanteen
                     }
                     else if (!m_IsOven && m_PlacedItemIds.Count == 0)
                     {
-                        // 无食材，重新选锅（标记在鼠标释放时打开）
+                        // 无食材，重新选锅
                         ResetToEmpty();
-                        m_ShouldOpenSelectionOnMouseUp = true;
+                        m_SelectionPanel?.Open(this);
                     }
                     break;
 
+                case PotStationState.Finished:
+                case PotStationState.ReadyToServe:
                 case PotStationState.Burnt:
+                    // 锅里已有成品/糊锅食物：拖拽食物到垃圾桶倒掉
                     BeginDragFoodOnly();
                     break;
-            }
-        }
-
-        private void OnMouseUp()
-        {
-            // 鼠标释放时才打开选锅面板
-            if (m_ShouldOpenSelectionOnMouseUp)
-            {
-                m_ShouldOpenSelectionOnMouseUp = false;
-                m_SelectionPanel?.Open(this);
             }
         }
 
@@ -517,6 +500,7 @@ namespace LingBoCanteen
         /// </summary>
         private void OnCookButtonClicked()
         {
+            Debug.Log($"[PotController] 开火按钮点击: 当前状态={m_State}");
             switch (m_State)
             {
                 case PotStationState.Idle:
@@ -761,6 +745,7 @@ namespace LingBoCanteen
         private void PowerOff()
         {
             m_State = PotStationState.ReadyToServe;
+            Debug.Log($"[PotController] PowerOff: {name} 已进入 ReadyToServe，可点击桌布装盘");
 
             if (m_StoveAnimator != null)
             {
@@ -822,7 +807,8 @@ namespace LingBoCanteen
         }
 
         /// <summary>
-        /// 设置按钮置灰状态，保持透明度不变（只改变颜色，不改变alpha）
+        /// 设置按钮是否可点击。只切换 interactable，不改变图标颜色
+        /// （开火后按钮通过旋转角度表示状态，置灰不变色）。
         /// </summary>
         private void SetButtonGrayedOut(bool grayed)
         {
@@ -832,25 +818,6 @@ namespace LingBoCanteen
             }
 
             m_CookButton.interactable = !grayed;
-            
-            // 手动调整颜色但保持透明度
-            Image buttonImage = m_CookButton.GetComponent<Image>();
-            if (buttonImage != null)
-            {
-                Color targetColor;
-                if (grayed)
-                {
-                    // 置灰：降低色彩饱和度
-                    targetColor = Color.Lerp(m_CookButtonInitialColor, Color.gray, 0.5f);
-                }
-                else
-                {
-                    // 恢复初始颜色
-                    targetColor = m_CookButtonInitialColor;
-                }
-                targetColor.a = m_CookButtonInitialAlpha;
-                buttonImage.color = targetColor;
-            }
         }
 
         private void BeginDragFoodOnly()

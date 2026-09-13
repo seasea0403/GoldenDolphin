@@ -51,7 +51,7 @@ namespace LingBoCanteen
         {
             if (!IsEmpty && IngredientTooltipView.Instance != null)
             {
-                IngredientTooltipView.Instance.ShowNameOnly(transform.position, OutputName);
+                IngredientTooltipView.Instance.ShowNameOnly(transform.position, OutputName, transform);
             }
         }
 

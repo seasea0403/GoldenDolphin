@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using LingBoCanteen.Definition.Enum;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using TMPro;
 namespace LingBoCanteen
@@ -15,6 +17,9 @@ namespace LingBoCanteen
         [SerializeField] private Transform[] m_SlotPositions;
         [SerializeField] private MarketIngredientSlot m_SlotPrefab;
         [SerializeField] private TextMeshProUGUI m_GoldDisplay;
+        [SerializeField] private MarketPurchasePanel m_PurchasePanel;
+        [SerializeField] private Button m_PrevPageButton;
+        [SerializeField] private Button m_NextPageButton;
         public GameObject uiRoot;
 
         private MarketIngredientSlot[] m_SlotInstances;
@@ -28,12 +33,32 @@ namespace LingBoCanteen
 
         private void Awake()
         {
+            if (m_PurchasePanel == null)
+            {
+                m_PurchasePanel = GetComponentInChildren<MarketPurchasePanel>(true);
+            }
+
+            // 翻页箭头按钮：代码里绑定点击事件（如果已在 Inspector 里用 onClick 接过会重复触发，
+            // 请把 Inspector 里的手动接线删掉，统一由这里管理），翻页后由 RefreshUI 更新可用状态
+            if (m_PrevPageButton != null)
+            {
+                m_PrevPageButton.onClick.AddListener(PrevPage);
+                UIButtonSoundHelper.BindButtonSound(m_PrevPageButton);
+            }
+
+            if (m_NextPageButton != null)
+            {
+                m_NextPageButton.onClick.AddListener(NextPage);
+                UIButtonSoundHelper.BindButtonSound(m_NextPageButton);
+            }
+
             InitializeSlots();
         }
 
         private void OnEnable()
         {
-            // ★【修复】每次打开超市都重新加载当前天数的解锁食材，解决从第一天到第四天不更新的问题
+            // 每次打开超市都重置：二级窗口收起、重新加载当前天数的解锁食材
+            m_PurchasePanel?.Close();
             int currentDay = GetEffectiveShoppingDay();
             Log.Info($"[MarketPanel.OnEnable] 重新加载食材 - GetEffectiveShoppingDay() = {currentDay}");
             
@@ -46,6 +71,13 @@ namespace LingBoCanteen
             // 强制重新加载当天的解锁食材
             m_CurrentDay = currentDay;
             m_UnlockedIngredientIds = new List<int>(IngredientUtility.GetUnlockedShelfIds(m_CurrentDay));
+            // 傍晚超市预览的是"明天解锁"的食材，备菜区场景里还没有它们，
+            // EnsureUnlockDefaultStock 不会被 Ingredient.Refresh 触发，这里统一补发首次解锁的默认库存（已发放过的不会重复发）
+            foreach (int id in m_UnlockedIngredientIds)
+            {
+                IngredientUtility.EnsureUnlockDefaultStock(id);
+            }
+
             m_TotalPages = Mathf.Max(1, Mathf.CeilToInt((float)m_UnlockedIngredientIds.Count / (m_SlotInstances?.Length ?? 8)));
             Log.Info($"[MarketPanel] 重新加载天数{m_CurrentDay}的解锁物品，总页数={m_TotalPages}，已解锁食材数={m_UnlockedIngredientIds.Count}，内容=[{string.Join(",", m_UnlockedIngredientIds)}]");
             
@@ -76,7 +108,7 @@ namespace LingBoCanteen
                 MarketIngredientSlot slot = Instantiate(m_SlotPrefab, m_SlotPositions[i]);
                 slot.transform.localPosition = Vector3.zero;
                 slot.transform.localScale = Vector3.one;
-                slot.OnPurchaseClicked += OnSlotPurchaseClicked;
+                slot.OnItemClicked += OnSlotItemClicked;
                 m_SlotInstances[i] = slot;
             }
 
@@ -145,6 +177,16 @@ namespace LingBoCanteen
         {
             UpdateGoldDisplay();
 
+            if (m_PrevPageButton != null)
+            {
+                m_PrevPageButton.interactable = m_CurrentPage > 0;
+            }
+
+            if (m_NextPageButton != null)
+            {
+                m_NextPageButton.interactable = m_CurrentPage < m_TotalPages - 1;
+            }
+
             if (m_SlotInstances == null)
             {
                 return;
@@ -155,6 +197,7 @@ namespace LingBoCanteen
                 if (slot != null)
                 {
                     slot.RefreshButtonState();
+                    slot.RefreshStockDisplay();
                 }
             }
         }
@@ -171,7 +214,10 @@ namespace LingBoCanteen
             m_GoldDisplay.text = "金币: " + gold;
         }
 
-        private void OnSlotPurchaseClicked(int ingredientId)
+        /// <summary>
+        /// 槽位物品被点击：打开购买二级窗口，确认后走 <see cref="OnPurchaseConfirmed"/>。
+        /// </summary>
+        private void OnSlotItemClicked(int ingredientId)
         {
             DRIngredient row = GameEntry.DataTable.GetDataTable<DRIngredient>().GetDataRow(ingredientId);
             if (row == null)
@@ -179,24 +225,47 @@ namespace LingBoCanteen
                 return;
             }
 
+            if (m_PurchasePanel == null)
+            {
+                Log.Error("MarketPanel 未配置 MarketPurchasePanel（二级购买窗口）。");
+                return;
+            }
+
+            m_PurchasePanel.Open(row, OnPurchaseConfirmed);
+        }
+
+        /// <summary>
+        /// 二级窗口确认购买：按选定数量扣金币、加库存、弹成功浮窗并刷新界面。
+        /// </summary>
+        private void OnPurchaseConfirmed(int ingredientId, int count)
+        {
+            DRIngredient row = GameEntry.DataTable.GetDataTable<DRIngredient>().GetDataRow(ingredientId);
+            if (row == null || count <= 0)
+            {
+                return;
+            }
+
             VarInt32 goldVar = GameEntry.DataNode.GetData<VarInt32>("Player.Gold");
             int currentGold = goldVar != null ? goldVar.Value : 0;
+            int totalCost = row.ConsumeMoney * count;
 
             // 检查金币是否足够
-            if (currentGold < row.ConsumeMoney)
+            if (currentGold < totalCost)
             {
-                Log.Warning("金币不足，无法购买食材 {0}（需要 {1}，当前 {2}）。", ingredientId, row.ConsumeMoney, currentGold);
+                Log.Warning("金币不足，无法购买食材 {0} x {1}（需要 {2}，当前 {3}）。", ingredientId, count, totalCost, currentGold);
                 return;
             }
 
             // 扣金币
-            int newGold = currentGold - row.ConsumeMoney;
+            int newGold = currentGold - totalCost;
             GameEntry.DataNode.SetData("Player.Gold", (VarInt32)newGold);
 
             // 增加库存
-            IngredientUtility.AddStock(ingredientId, 1);
+            IngredientUtility.AddStock(ingredientId, count);
 
-            Log.Info("购买食材成功：{0}（花费 {1} 金币，剩余 {2}）。", row.Name, row.ConsumeMoney, newGold);
+            Log.Info("购买食材成功：{0} x {1}（花费 {2} 金币，剩余 {3}）。", row.Name, count, totalCost, newGold);
+
+            GameToastView.Instance?.Show(ToastType.PurchaseSuccess, "购买成功");
 
             // 刷新 UI
             RefreshUI();

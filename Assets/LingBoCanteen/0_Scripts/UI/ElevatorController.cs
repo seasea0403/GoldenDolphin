@@ -76,81 +76,10 @@ public class ElevatorController : MonoBehaviour
         UpdateButtonsVisibility();
     }
 
-    void Update()
-    {
-        // ★【修复】移除对humanButtons.activeSelf的检查，确保始终监控SAN值
-        // 即使按钮被隐藏，仍需要检测SAN值并进行自动切换
-        // 只在电梯正在运动时停止检测，其他时间都要实时检测
-        if (isMoving)
-        {
-            return;
-        }
-
-        // 获取当前SAN值
-        if (LingBoCanteen.GameEntry.DataNode == null)
-        {
-            return;
-        }
-
-        VarInt32 sanVar = LingBoCanteen.GameEntry.DataNode.GetData<VarInt32>("Player.San");
-        if (sanVar == null)
-        {
-            return;
-        }
-
-        int currentSan = sanVar.Value;
-        GameRegion targetRegion = GameRegion.Mortal;
-        int targetSan = 50;  // 人间的默认SAN值
-        bool needsSwitch = false;
-
-        // 根据当前区域和SAN值判断是否需要切换
-        if (currentFloor == 0)  // 天堂
-        {
-            // 天堂：SAN >= 57 时留在天堂，否则切换回人间
-            if (currentSan < 43)
-            {
-                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已低于43，需要从天堂切换回人间");
-                targetRegion = GameRegion.Mortal;
-                targetSan = 50;
-                needsSwitch = true;
-            }
-        }
-        else if (currentFloor == 2)  // 地狱
-        {
-            // 地狱：SAN <= 43 时留在地狱，否则切换回人间
-            if (currentSan >= 57)
-            {
-                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已高于57，需要从地狱切换回人间");
-                targetRegion = GameRegion.Mortal;
-                targetSan = 50;
-                needsSwitch = true;
-            }
-        }
-        else  // 人间
-        {
-            // 人间：SAN >= 57 时切换天堂，SAN <= 43 时切换地狱
-            if (currentSan >= 57)
-            {
-                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已高于等于57，需要从人间自动切换到天堂");
-                targetRegion = GameRegion.Heaven;
-                targetSan = Constant.GameConstant.HEAVEN_INIT_SAN;
-                needsSwitch = true;
-            }
-            else if (currentSan <= 43)
-            {
-                Debug.Log($"[ElevatorController] 自动切换：SAN({currentSan})已低于等于43，需要从人间自动切换到地狱");
-                targetRegion = GameRegion.Hell;
-                targetSan = Constant.GameConstant.HELL_INIT_SAN;
-                needsSwitch = true;
-            }
-        }
-
-        // 如果需要切换，触发自动切换并更新SAN值
-        if (needsSwitch)
-        {
-            StartCoroutine(DoAutoTransitionWithSanUpdate(targetRegion, targetSan, null));
-        }
-    }
+    // 区域跳转（人间⇄天堂/地狱）不再由本帧实时的 SAN 值监测直接触发，
+    // 而是统一延后到傍晚结算面板(SettlePanel)点击确定、推进到下一天时，
+    // 由 EveningDayFlow.GetTargetRegionForNextDay() 按 SAN_MORTAL_MIN/MAX 计算目标区域后再调用 AutoTransitionToRegion。
+    // 触及 SAN_BOUNDARY_MIN/MAX(0/100) 直接触发结局的逻辑不受影响，仍在 CustomerSlotManager/SettlePanel 里实时生效。
 
     /// <summary>
     /// 按当前 DataNode 里的 Area.CurrentType 同步电梯楼层索引/名称（不触发移动动画，也不改写任何数据）。
@@ -348,25 +277,6 @@ public class ElevatorController : MonoBehaviour
     public void AutoTransitionToRegion(LingBoCanteen.GameRegion targetRegion, System.Action onComplete = null)
     {
         StartCoroutine(DoAutoTransition(targetRegion, onComplete));
-    }
-
-    /// <summary>
-    /// ★【新增】自动切换带SAN值更新（用于Update中的自动检测切换）。
-    /// </summary>
-    private IEnumerator DoAutoTransitionWithSanUpdate(LingBoCanteen.GameRegion targetRegion, int targetSan, System.Action onComplete)
-    {
-        // 先播放动画切换到目标区域
-        yield return StartCoroutine(DoAutoTransition(targetRegion, null));
-        
-        // 动画完成后，更新SAN值
-        if (LingBoCanteen.GameEntry.DataNode != null)
-        {
-            LingBoCanteen.GameEntry.DataNode.SetData("Player.San", (VarInt32)targetSan);
-            Debug.Log($"[ElevatorController] DoAutoTransitionWithSanUpdate: 更新SAN = {targetSan}");
-        }
-        
-        // 执行完成回调
-        onComplete?.Invoke();
     }
 
     private IEnumerator DoAutoTransition(LingBoCanteen.GameRegion targetRegion, System.Action onComplete)

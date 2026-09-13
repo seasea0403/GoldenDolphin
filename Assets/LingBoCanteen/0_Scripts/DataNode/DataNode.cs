@@ -20,7 +20,7 @@ namespace LingBoCanteen
             GameEntry.DataNode.SetData("Player.HasRecruitHelper", (VarBoolean)false);
 
             // 2. 当前天数与时段状态
-            GameEntry.DataNode.SetData("DayCurrent.Value", (VarInt32)1);
+            GameEntry.DataNode.SetData("DayCurrent.Value", (VarInt32)3);
             GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)false);
             GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)(int)TimeSection.Day);
             // 注：Phase 对应 TimeSection 枚举：0=白天 1=傍晚 2=深夜

@@ -18,6 +18,7 @@ namespace LingBoCanteen
 
             GameEntry.Event.Subscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
             GameEntry.Event.Subscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
+            GameEntry.Event.Subscribe(LoadSceneUpdateEventArgs.EventId, OnLoadSceneUpdate);
 
             Log.Info("进入主游戏流程。");
 
@@ -29,6 +30,7 @@ namespace LingBoCanteen
         {
             GameEntry.Event.Unsubscribe(LoadSceneSuccessEventArgs.EventId, OnLoadSceneSuccess);
             GameEntry.Event.Unsubscribe(LoadSceneFailureEventArgs.EventId, OnLoadSceneFailure);
+            GameEntry.Event.Unsubscribe(LoadSceneUpdateEventArgs.EventId, OnLoadSceneUpdate);
 
             // 卸载主场景
             string mainSceneAssetName = AssetUtility.GetSceneAsset("Main");
@@ -53,10 +55,11 @@ namespace LingBoCanteen
             // 初始化游戏BGM管理器（根据当前Region和TimePhase自动播放BGM）
             SoundManager.Instance?.PlayMusicForCurrentGameState();
 
-            // 执行淡入效果
-            if (SceneTransitionManager.Instance != null)
+            // 隐藏过场动画（由 ProcedureMenu.TransitionToGameProcedure 在点击开始游戏时显示）
+            TransitionCutsceneView.Instance?.SetProgress(1f);
+            if (TransitionCutsceneView.Instance != null)
             {
-                CoroutineExecutor.Instance?.ExecuteCoroutine(SceneTransitionManager.Instance.FadeInScene());
+                CoroutineExecutor.Instance?.ExecuteCoroutine(TransitionCutsceneView.Instance.HideAsync());
             }
         }
 
@@ -69,6 +72,18 @@ namespace LingBoCanteen
             }
 
             Log.Error("Load main scene failure with error message '{0}'.", ne.ErrorMessage);
+        }
+
+        private void OnLoadSceneUpdate(object sender, GameEventArgs e)
+        {
+            LoadSceneUpdateEventArgs ne = (LoadSceneUpdateEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            // 喂入场景加载的真实进度，让过场里的进度条/切菜画面跟着实际加载走，而不是一直停在 0 直到结束才跳变到 1
+            TransitionCutsceneView.Instance?.SetProgress(ne.Progress);
         }
     }
 }

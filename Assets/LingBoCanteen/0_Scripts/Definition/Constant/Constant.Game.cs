@@ -1,4 +1,4 @@
-﻿
+
 namespace LingBoCanteen
 {
     public static partial class Constant
@@ -55,6 +55,9 @@ namespace LingBoCanteen
 
             // 烹调区配置
             public const float COOK_FINISH_HANDLE_TIME = 2f; // 烹饪完成缓冲期内，进度条 handle 保持"完成态"特殊样式的时长（秒）
+
+            // 浮窗配置
+            public const float TOAST_FADE_DURATION = 0.5f;   // 浮窗渐显/渐隐时长（秒）
         }
     }
 }

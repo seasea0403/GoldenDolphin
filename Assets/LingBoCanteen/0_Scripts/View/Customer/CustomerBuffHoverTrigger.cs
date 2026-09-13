@@ -24,7 +24,7 @@ namespace LingBoCanteen
                 return;
             }
 
-            CustomerBuffTooltipView.Instance.Show(CustomerBuffUtility.GetDescription(buff), CustomerBuffUtility.GetEffectDescription(buff));
+            CustomerBuffTooltipView.Instance.Show(CustomerBuffUtility.GetDescription(buff), CustomerBuffUtility.GetEffectDescription(buff), transform);
         }
 
         public void OnPointerExit(PointerEventData eventData)

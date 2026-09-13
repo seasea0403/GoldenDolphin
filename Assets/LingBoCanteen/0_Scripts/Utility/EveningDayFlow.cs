@@ -1,3 +1,5 @@
+using System.Collections;
+using LingBoCanteen.Definition.Enum;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -10,11 +12,21 @@ namespace LingBoCanteen
     /// </summary>
     public static class EveningDayFlow
     {
+        /// <summary>
+        /// 对外仍是同步调用入口（兼容 SettlePanel 现有调用方式），内部转发到协程，
+        /// 全程用 <see cref="TransitionCutsceneView"/> 过场动画盖住"重置数据/剧情判定/重建顾客"
+        /// 这几步的中间过程，避免玩家看到"先出现顾客、又因为剧情弹窗被打断重来"的闪烁。
+        /// </summary>
         public static void AdvanceToNextDay()
+        {
+            CoroutineExecutor.Instance?.ExecuteCoroutine(AdvanceToNextDayRoutine());
+        }
+
+        private static IEnumerator AdvanceToNextDayRoutine()
         {
             if (GameEntry.DataNode == null)
             {
-                return;
+                yield break;
             }
 
             int currentDay = GameEntry.DataNode.GetNode("DayCurrent.Value") != null
@@ -25,9 +37,17 @@ namespace LingBoCanteen
             // 检查是否达到第20天（游戏结束）
             if (currentDay >= Constant.GameConstant.MAX_DAY)
             {
-                // 触发游戏结局
+                // 触发游戏结局（结局自身有独立的黑屏/淡入流程，这里不需要过场动画）
                 TriggerGameEnding();
-                return;
+                yield break;
+            }
+
+            // 过场动画先盖住整个屏幕，下面所有"重置/剧情判定/重建顾客"步骤都在它背后完成，
+            // 玩家只会在动画淡出的一瞬间看到"已经准备好的"最终画面（有剧情就先看到对话框，
+            // 没有剧情则直接看到点单区），不会再看到顾客先冒出来又被剧情打断的中间态。
+            if (TransitionCutsceneView.Instance != null)
+            {
+                yield return TransitionCutsceneView.Instance.ShowAsync();
             }
 
             GameEntry.DataNode.SetData("DayCurrent.Value", (VarInt32)nextDay);
@@ -61,6 +81,8 @@ namespace LingBoCanteen
                 plotManagerObj.AddComponent<PlotTriggerManager>();
             }
 
+            // 该调用如果当天存在剧情会同步打开对话框 UI；由于此刻仍在过场动画背后，
+            // 对话框弹出的这一瞬间玩家看不见，等过场淡出时会和场景一起"整体呈现"。
             PlotTriggerManager.Instance?.CheckAndPlayPlotForDay(nextDay);
 
             // 重新初始化顾客（清理旧顾客，加载新一天的顾客）
@@ -91,9 +113,36 @@ namespace LingBoCanteen
                 AreaSwitchManager.Instance.SwitchToArea(AreaSwitchManager.AreaType.Order);
             }
 
-            // ★【新增】天数改变时，强制重新播放背景音乐
+            // ★【新增】天数改变时，强制重新播放背景音乐（三界切换后的场景 BGM 在过场淡出前就绪）
             // 确保即使是同一首音乐，也会重新播放（例如从傍晚回到白天时的音乐更新）
             SoundManager.Instance?.ForceReplayMusicForCurrentGameState();
+
+            // 过场动画淡出：此时场景（含可能的剧情对话框）已经完全准备好
+            if (TransitionCutsceneView.Instance != null)
+            {
+                yield return TransitionCutsceneView.Instance.HideAsync();
+            }
+
+            // 若当天有新菜品解锁，弹“解锁新配方”提示（放在过场淡出之后，避免和过场自身的文字提示重叠）
+            ShowDishUnlockToastIfAny(nextDay);
+        }
+
+        /// <summary>
+        /// 若 <paramref name="day"/> 对应的 DRDay.UnlockDishIds 非空，弹出“解锁新配方”浮窗。
+        /// 供本类(每日推进) 与 <see cref="CustomerSlotManager"/>(首日进入) 共用。
+        /// </summary>
+        public static void ShowDishUnlockToastIfAny(int day)
+        {
+            if (GameToastView.Instance == null)
+            {
+                return;
+            }
+
+            DRDay dayRow = GameEntry.DataTable.GetDataTable<DRDay>()?.GetDataRow(day);
+            if (dayRow != null && dayRow.UnlockDishIds != null && dayRow.UnlockDishIds.Length > 0)
+            {
+                GameToastView.Instance.Show(ToastType.DishUnlocked, "解锁新配方");
+            }
         }
 
         /// <summary>
@@ -168,6 +217,10 @@ namespace LingBoCanteen
 
         /// <summary>
         /// 执行区域切换的DataNode更新（由ElevatorController在动画完成后调用）。
+        /// 注意：这里是"每日结算后按SAN值自动判定的区域切换"，不等同于玩家手动使用电梯按钮，
+        /// 因此不会写 "Area.ElevatorUsedOnce"（该字段语义是"手动电梯是否已使用"，只应由
+        /// ElevatorController.GoUp/GoDown 在玩家真正点击按钮时设置），否则会导致自动切换回人间后
+        /// 傍晚电梯按钮永久无法再次显示。
         /// </summary>
         public static void ApplyRegionChange(GameRegion targetRegion)
         {
@@ -182,7 +235,6 @@ namespace LingBoCanteen
             if (targetRegion != curRegionType)
             {
                 GameEntry.DataNode.SetData("Area.CurrentType", (VarInt32)(int)targetRegion);
-                GameEntry.DataNode.SetData("Area.ElevatorUsedOnce", (VarBoolean)true);
                 
                 // 同步更新全局标记：15天前是否切换过区域（结局分支用）
                 int currentDay = GameEntry.DataNode.GetData<VarInt32>("DayCurrent.Value").Value;

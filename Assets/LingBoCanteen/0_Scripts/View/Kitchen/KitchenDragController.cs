@@ -10,7 +10,28 @@ namespace LingBoCanteen
     /// </summary>
     public class KitchenDragController : MonoBehaviour
     {
-        public static KitchenDragController Instance { get; private set; }
+        private static KitchenDragController s_Instance;
+
+        /// <summary>
+        /// 惰性查找：KitchenStationBase.OnEnable 会立即向这里注册投放工位，
+        /// 若先于本组件 Awake 执行，Instance 为 null 会导致工位静默注册失败（拖放永不命中）。
+        /// </summary>
+        public static KitchenDragController Instance
+        {
+            get
+            {
+                if (s_Instance == null)
+                {
+                    s_Instance = FindObjectOfType<KitchenDragController>();
+                }
+
+                return s_Instance;
+            }
+            private set
+            {
+                s_Instance = value;
+            }
+        }
 
         [SerializeField] private SpriteRenderer m_GhostRenderer;
         [SerializeField] private Camera m_WorldCamera;
@@ -39,9 +60,9 @@ namespace LingBoCanteen
 
         private void OnDestroy()
         {
-            if (Instance == this)
+            if (s_Instance == this)
             {
-                Instance = null;
+                s_Instance = null;
             }
         }
 

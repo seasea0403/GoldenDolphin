@@ -14,7 +14,29 @@ namespace LingBoCanteen
     /// </summary>
     public class PrepAreaManager : MonoBehaviour
     {
-        public static PrepAreaManager Instance { get; private set; }
+        private static PrepAreaManager s_Instance;
+
+        /// <summary>
+        /// 惰性查找：Ingredient.OnEnable 可能先于 PrepAreaManager.Awake 执行，
+        /// 若只在 Awake 里赋值，先执行的食材会注册失败——之后每天刷新解锁时它们不会被更新，
+        /// 表现为"只有个别食材随天数解锁、首次解锁也不发放默认库存"。
+        /// </summary>
+        public static PrepAreaManager Instance
+        {
+            get
+            {
+                if (s_Instance == null)
+                {
+                    s_Instance = FindObjectOfType<PrepAreaManager>();
+                }
+
+                return s_Instance;
+            }
+            private set
+            {
+                s_Instance = value;
+            }
+        }
 
         [SerializeField] private OutputSlotGroup m_BowlGroup;
         [SerializeField] private OutputSlotGroup m_GlassGroup;
@@ -36,9 +58,9 @@ namespace LingBoCanteen
 
         private void OnDestroy()
         {
-            if (Instance == this)
+            if (s_Instance == this)
             {
-                Instance = null;
+                s_Instance = null;
             }
         }
 

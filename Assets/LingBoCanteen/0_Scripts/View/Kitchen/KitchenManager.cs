@@ -9,7 +9,28 @@ namespace LingBoCanteen
     /// </summary>
     public class KitchenManager : MonoBehaviour
     {
-        public static KitchenManager Instance { get; private set; }
+        private static KitchenManager s_Instance;
+
+        /// <summary>
+        /// 惰性查找：PotController.OnEnable 可能先于 KitchenManager.Awake 执行，
+        /// 若只在 Awake 里赋值会导致锅具注册被静默跳过（登记锅具数=0，桌布永远收不到菜）。
+        /// </summary>
+        public static KitchenManager Instance
+        {
+            get
+            {
+                if (s_Instance == null)
+                {
+                    s_Instance = FindObjectOfType<KitchenManager>();
+                }
+
+                return s_Instance;
+            }
+            private set
+            {
+                s_Instance = value;
+            }
+        }
 
         private readonly List<PotController> m_Pots = new List<PotController>();
 
@@ -20,9 +41,9 @@ namespace LingBoCanteen
 
         private void OnDestroy()
         {
-            if (Instance == this)
+            if (s_Instance == this)
             {
-                Instance = null;
+                s_Instance = null;
             }
         }
 
@@ -50,21 +71,25 @@ namespace LingBoCanteen
                 return;
             }
 
+            Debug.Log($"[KitchenManager] CollectReadyDishes: 登记锅具数={m_Pots.Count}");
             foreach (PotController pot in m_Pots)
             {
                 if (pot == null || !pot.IsReadyToServe)
                 {
+                    Debug.Log($"[KitchenManager] 跳过锅具 {(pot != null ? pot.name : "null")}：未处于已关火(ReadyToServe)状态");
                     continue;
                 }
 
                 if (!counter.HasEmptySlot())
                 {
+                    Debug.Log("[KitchenManager] 上菜区无空槽位，停止收集");
                     break;
                 }
 
                 if (pot.TryPlate(out int dishId, out Sprite sprite))
                 {
-                    counter.TryPlaceDish(dishId, sprite);
+                    bool placed = counter.TryPlaceDish(dishId, sprite);
+                    Debug.Log($"[KitchenManager] 装盘: dishId={dishId}, sprite={(sprite != null ? sprite.name : "null")}, placed={placed}");
                 }
             }
         }

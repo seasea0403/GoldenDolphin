@@ -51,13 +51,13 @@ namespace LingBoCanteen
 
         private IEnumerator TransitionToGameProcedure(ProcedureOwner procedureOwner)
         {
-            // 执行黑屏过渡
-            if (SceneTransitionManager.Instance != null)
+            // 过场动画覆盖场景加载过程，替代原来的纯黑屏过渡
+            if (TransitionCutsceneView.Instance != null)
             {
-                yield return SceneTransitionManager.Instance.TransitionScene(0.3f);
+                yield return TransitionCutsceneView.Instance.ShowAsync();
             }
 
-            // 切换到主游戏流程
+            // 切换到主游戏流程（Main 场景加载完成后由 ProcedureGame 负责隐藏过场）
             ChangeState<ProcedureGame>(procedureOwner);
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using GameFramework;
@@ -79,6 +80,9 @@ namespace LingBoCanteen
 
             DRDay dayRow = GameEntry.DataTable.GetDataTable<DRDay>().GetDataRow(currentDay);
             m_TotalCustomerToday = dayRow != null ? dayRow.CustomerCount : 5;
+
+            // 首次进入游戏（第 1 天）也要检查当天是否有新菜品解锁，后续天数由 EveningDayFlow.AdvanceToNextDay 负责
+            EveningDayFlow.ShowDishUnlockToastIfAny(currentDay);
 
             // 同步到 DataNode 中以供 HUD 实时读取和显示
             GameEntry.DataNode.SetData("Business.TodayTotalGuestCount", (VarInt32)m_TotalCustomerToday);
@@ -522,20 +526,47 @@ namespace LingBoCanteen
 
             if (m_CustomersLeftToday >= m_TotalCustomerToday)
             {
-                Log.Info("本日所有顾客 ({0}位) 已全部处理完毕，标记本日营业结算。", m_TotalCustomerToday);
-                GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)true);
-                GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)(int)TimeSection.Evening);
+                Log.Info("本日所有顾客 ({0}位) 已全部处理完毕，弹出提示浮窗，渐显完成后再跳转傍晚。", m_TotalCustomerToday);
 
-                // 触发BGM切换（从Day切换到Evening，应播放傍晚超市采购BGM）
-                SoundManager.Instance?.PlayMusicForCurrentGameState();
-
-                // 白天营业结束：关闭点单区/备菜区/烹调区的世界物体与 UI，切换显示傍晚(打烊结算)区域
-                if (AreaSwitchManager.Instance != null)
+                // 浮窗渐显（0.5s）播放完毕后，再停留 0.5s 让玩家看清"营业结束"，然后才跳转至傍晚。
+                if (GameToastView.Instance != null)
                 {
-                    AreaSwitchManager.Instance.SwitchToEvening();
+                    GameToastView.Instance.Show(ToastType.CustomerAllServed, "营业结束", () => StartCoroutine(GoEveningAfterDelay()));
+                }
+                else
+                {
+                    CompleteTodayBusinessAndGoEvening();
                 }
             }
             
+        }
+
+        /// <summary>
+        /// 浮窗渐显完成后，再停留 <see cref="Constant.GameConstant.TOAST_FADE_DURATION"/>(0.5s) 才真正跳转，
+        /// 不要渐显一结束就立刻切场景，给玩家留出读到"营业结束"的时间。
+        /// </summary>
+        private IEnumerator GoEveningAfterDelay()
+        {
+            yield return new WaitForSeconds(Constant.GameConstant.TOAST_FADE_DURATION);
+            CompleteTodayBusinessAndGoEvening();
+        }
+
+        /// <summary>
+        /// 标记本日营业结算并切换到傍晚区域，由 <see cref="OnCustomerLeft"/> 在浮窗渐显完成后回调。
+        /// </summary>
+        private void CompleteTodayBusinessAndGoEvening()
+        {
+            GameEntry.DataNode.SetData("DayCurrent.IsDaySettled", (VarBoolean)true);
+            GameEntry.DataNode.SetData("DayCurrent.Phase", (VarInt32)(int)TimeSection.Evening);
+
+            // 触发BGM切换（从Day切换到Evening，应播放傍晚超市采购BGM）
+            SoundManager.Instance?.PlayMusicForCurrentGameState();
+
+            // 白天营业结束：关闭点单区/备菜区/烹调区的世界物体与 UI，切换显示傍晚(打烊结算)区域
+            if (AreaSwitchManager.Instance != null)
+            {
+                AreaSwitchManager.Instance.SwitchToEvening();
+            }
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using LingBoCanteen.Definition.Enum;
 using UnityEngine;
 
 namespace LingBoCanteen
@@ -39,7 +40,13 @@ namespace LingBoCanteen
 
         private void OnMouseDown()
         {
-            if (UIFormSceneInputBlocker.IsSceneInputBlocked) return;
+            if (UIFormSceneInputBlocker.IsSceneInputBlocked)
+            {
+                Debug.Log("[ServingCounter] OnMouseDown 被拦截：指针位于 UI 元素上");
+                return;
+            }
+
+            Debug.Log($"[ServingCounter] OnMouseDown: HasAnyDish={HasAnyDish()}");
 
             // 如果plate上有菜品，优先允许拖拽；否则触发收集菜品
             if (HasAnyDish())
@@ -192,7 +199,7 @@ namespace LingBoCanteen
         /// <summary>
         /// 供 <see cref="ServiceBellController"/> 调用：对每个已摆盘的菜品尝试按现有订单匹配逻辑上菜结算，
         /// 结算成功（<see cref="CustomerSlotManager.ServeDish"/> 内部已经处理金币/San）的清空槽位，
-        /// 没有顾客需要的菜品继续留在桌上，等待下一次点铃或补单。
+        /// 没有顾客需要的菜品继续留在桌上，等待下一次点铃或补单。若本次一道都没能成功上菜，弹出"上菜失败"浮窗。
         /// </summary>
         public void TryServeAll()
         {
@@ -201,6 +208,9 @@ namespace LingBoCanteen
                 return;
             }
 
+            bool anyOccupied = false;
+            bool anyServed = false;
+
             for (int i = 0; i < m_SlotOccupied.Length; i++)
             {
                 if (!m_SlotOccupied[i])
@@ -208,10 +218,18 @@ namespace LingBoCanteen
                     continue;
                 }
 
+                anyOccupied = true;
+
                 if (CustomerSlotManager.Instance.ServeDish(m_SlotDishIds[i]))
                 {
+                    anyServed = true;
                     ClearSlot(i);
                 }
+            }
+
+            if (anyOccupied && !anyServed)
+            {
+                GameToastView.Instance?.Show(ToastType.ServeFailed, "上菜失败");
             }
         }
 

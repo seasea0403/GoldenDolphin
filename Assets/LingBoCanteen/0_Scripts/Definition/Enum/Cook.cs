@@ -1,4 +1,4 @@
-﻿// 食材与烹饪枚举
+// 食材与烹饪枚举
 namespace LingBoCanteen
 {
     /// <summary>
@@ -66,6 +66,7 @@ namespace LingBoCanteen
     /// -&gt; Idle(已选锅/烤箱，等待投料或已投部分料，未开火) -&gt; Cooking(开火烹饪中)
     /// -&gt; Finished(6秒烹饪结束，5秒关火/取出有效期缓冲) -&gt; ReadyToServe(已关火未糊，可装盘)
     /// 或 Finished 超时未关火 -&gt; Burnt(已糊锅，仅可将食物拖去垃圾桶重置为 Empty)。
+    /// Finished / ReadyToServe / Burnt 状态下锅内食物均可拖去垃圾桶倒掉。
     /// </summary>
     public enum PotStationState
     {

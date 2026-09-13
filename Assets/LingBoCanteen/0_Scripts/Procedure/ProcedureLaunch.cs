@@ -2,6 +2,7 @@
 using GameFramework;
 using GameFramework.Event;
 using GameFramework.Resource;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityGameFramework.Runtime;
@@ -18,8 +19,8 @@ namespace LingBoCanteen
         private const string DishIconsFlagKey = "DishIcons";
         private const string IngredientSpritesFlagKey = "IngredientSprites";
         private bool m_InitResourcesComplete = false;
-        
-        private bool temp = false;
+        private bool m_TransitioningToMenu = false;
+
         // 需要加载的所有数据表名称
         private static readonly string[] DataTableNames = new string[]
         {
@@ -44,8 +45,10 @@ namespace LingBoCanteen
  
             //初始化资源标记
             m_InitResourcesComplete = false;
- 
-            temp = false;
+            m_TransitioningToMenu = false;
+
+            // 过场动画从启动开始就覆盖屏幕，掩盖后面资源/数据表加载过程
+            CoroutineExecutor.Instance?.ExecuteCoroutine(TransitionCutsceneView.Instance.ShowAsync());
 
             GameEntry.Event.Subscribe(LoadConfigSuccessEventArgs.EventId, OnLoadConfigSuccess);
             GameEntry.Event.Subscribe(LoadConfigFailureEventArgs.EventId, OnLoadConfigFailure);
@@ -93,15 +96,38 @@ namespace LingBoCanteen
                 return;
             }
 
+            int loadedCount = 0;
             foreach (KeyValuePair<string, bool> loadedFlag in m_LoadedFlag)
             {
-                if (!loadedFlag.Value)
+                if (loadedFlag.Value)
                 {
-                    return;
+                    loadedCount++;
                 }
             }
 
+            if (m_LoadedFlag.Count > 0)
+            {
+                TransitionCutsceneView.Instance?.SetProgress((float)loadedCount / m_LoadedFlag.Count);
+            }
+
+            if (loadedCount < m_LoadedFlag.Count || m_TransitioningToMenu)
+            {
+                return;
+            }
+
+            m_TransitioningToMenu = true;
             Log.Info("启动流程加载完成，进入主菜单流程。");
+            CoroutineExecutor.Instance?.ExecuteCoroutine(TransitionToMenuProcedure(procedureOwner));
+        }
+
+        private IEnumerator TransitionToMenuProcedure(ProcedureOwner procedureOwner)
+        {
+            TransitionCutsceneView.Instance?.SetProgress(1f);
+            if (TransitionCutsceneView.Instance != null)
+            {
+                yield return TransitionCutsceneView.Instance.HideAsync();
+            }
+
             ChangeState<ProcedureMenu>(procedureOwner);
         }
 

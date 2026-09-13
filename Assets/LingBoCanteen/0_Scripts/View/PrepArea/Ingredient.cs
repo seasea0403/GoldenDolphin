@@ -118,7 +118,7 @@ namespace LingBoCanteen
 
             bool isUnlimited = IngredientUtility.IsUnlimitedStock(m_IngredientId);
             int stock = isUnlimited ? 0 : IngredientUtility.GetStock(m_IngredientId);
-            IngredientTooltipView.Instance.Show(transform.position, m_Row.Name, stock, isUnlimited);
+            IngredientTooltipView.Instance.Show(transform.position, m_Row.Name, stock, isUnlimited, transform);
         }
 
         private void OnMouseExit()
